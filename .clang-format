@@ -1,0 +1,9 @@
+---
+BasedOnStyle: Microsoft
+IndentCaseBlocks: true
+IndentCaseLabels: true
+IndentWidth: 4
+TabWidth: 4
+UseTab: False
+PointerAlignment: Left
+MaxEmptyLinesToKeep: 2
