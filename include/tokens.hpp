@@ -48,72 +48,130 @@ class AbstractToken
 
 class KeywordToken : public AbstractToken
 {
+  public:
+    using AbstractToken::AbstractToken;
 };
 
 class WhileToken final : public KeywordToken
 {
+  public:
+    using KeywordToken::KeywordToken;
 };
 
 class IfToken final : public KeywordToken
 {
+  public:
+    using KeywordToken::KeywordToken;
 };
 
 class PrintToken final : public KeywordToken
 {
+  public:
+    using KeywordToken::KeywordToken;
 };
 
 class InputToken final : public KeywordToken
 {
+  public:
+    using KeywordToken::KeywordToken;
 };
 
 /*----------------------------------------------------------------------------------------------------*/
 
 class OperatorToken : public AbstractToken
 {
-};
-
-class UnaryOperatorToken : public OperatorToken
-{
-};
-
-class PositiveToken final : public UnaryOperatorToken
-{
   public:
     using AbstractToken::AbstractToken;
 };
 
+template <typename T>
+class UnaryOperatorToken : public OperatorToken
+{
+  public:
+    using OperatorToken::OperatorToken;
+
+    virtual T calculate(const T& operand) const = 0;
+};
+
+template <typename T>
+class PositiveToken final : public UnaryOperatorToken<T>
+{
+  public:
+    using UnaryOperatorToken::UnaryOperatorToken;
+
+    T calculate(const T& operand) const 
+    {
+        return +operand;
+    }
+};
+
+template <typename T>
 class NegativeToken final : public UnaryOperatorToken
 {
   public:
-    using AbstractToken::AbstractToken;
+    using UnaryOperatorToken::UnaryOperatorToken;
+
+    T calculate(const T& operand) const 
+    {
+        return -operand;
+    }
 };
 
+template <typename T>
 class PrefixIncrementToken final : public UnaryOperatorToken
 {
   public:
-    using AbstractToken::AbstractToken;
+    using UnaryOperatorToken::UnaryOperatorToken;
+
+    T calculate(const T& operand) const 
+    {
+        return ++operand;
+    }
 };
 
+template <typename T>
 class PostfixIncrementToken final : public UnaryOperatorToken
 {
   public:
-    using AbstractToken::AbstractToken;
+    using UnaryOperatorToken::UnaryOperatorToken;
+
+    T calculate(const T& operand) const 
+    {
+        return operand++;
+    }
 };
 
+template <typename T>
 class PrefixDecrementToken final : public UnaryOperatorToken
 {
   public:
-    using AbstractToken::AbstractToken;
+    using UnaryOperatorToken::UnaryOperatorToken;
+
+    T calculate(const T& operand) const 
+    {
+        return --operand;
+    }
 };
 
+template <typename T>
 class PostfixDecrementToken final : public UnaryOperatorToken
 {
   public:
-    using AbstractToken::AbstractToken;
+    using UnaryOperatorToken::UnaryOperatorToken;
+
+    T calculate(const T& operand) const 
+    {
+        return operand--;
+    }
 };
 
+template <typename T>
 class BinaryOperatorToken : public OperatorToken
 {
+  public:
+    using OperatorToken::OperatorToken;
+
+    virtual T calculate(const T& lhs, const T& rhs) const = 0;
 };
 
 // add binary operators
@@ -123,13 +181,15 @@ class BinaryOperatorToken : public OperatorToken
 class BracketToken : public AbstractToken
 {
   public:
+    using AbstractToken::AbstractToken;
+
     virtual bool is_opening() const = 0;
 };
 
 class RoundBracketToken final : public BracketToken
 {
   public:
-    using AbstractToken::AbstractToken;
+    using BracketToken::BracketToken;
 
     bool is_opening() const override
     {
@@ -140,7 +200,7 @@ class RoundBracketToken final : public BracketToken
 class CurlyBracketToken final : public BracketToken
 {
   public:
-    using AbstractToken::AbstractToken;
+    using BracketToken::BracketToken;
 
     bool is_opening() const override
     {
@@ -152,19 +212,22 @@ class CurlyBracketToken final : public BracketToken
 
 class OperandToken : public AbstractToken
 {
+  public:
+    using AbstractToken::AbstractToken;
 };
 
 class IdentifierToken final : public OperandToken
 {
   public:
-    using AbstractToken::AbstractToken;
+    using OperandToken::OperandToken;
 };
 
 template <typename T>
 class LiteralToken final : public OperandToken
 {
   public:
-    using AbstractToken::AbstractToken;
+    LiteralToken(const std::string& token, std::size_t line, std::size_t line_offset, std::size_t abs_offset) : ()
+    {}
 
     LiteralToken(const T& value, std::size_t line, std::size_t line_offset, std::size_t abs_offset) : ()
     {}
