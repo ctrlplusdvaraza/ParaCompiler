@@ -1,60 +1,62 @@
 #pragma once
 
 #include "abstract_token.hpp"
+#include "visitor.hpp"
 
 namespace compiler
 {
 
 /*----------------------------------------------------------------------------------------------------*/
 
-class OperatorToken : public BaseToken<OperatorToken>
+template <typename Derived>
+class BaseOperatorToken : public BaseToken<Derived>
 {
-  public:
-    using AbstractToken::AbstractToken;
+  protected:
+    using BaseToken<Derived>::BaseToken;
 };
 
 /*----------------------------------------------------------------------------------------------------*/
 
-class PlusToken final : public OperatorToken
+class PlusToken final : public BaseOperatorToken<PlusToken>
 {
   public:
-    using OperatorToken::OperatorToken;
+    using BaseOperatorToken::BaseOperatorToken;
 };
 
-class MinusToken final : public OperatorToken
+class MinusToken final : public BaseOperatorToken<MinusToken>
 {
   public:
-    using OperatorToken::OperatorToken;
+    using BaseOperatorToken::BaseOperatorToken;
 };
 
-class IncrementToken final : public OperatorToken
+class IncrementToken final : public BaseOperatorToken<IncrementToken>
 {
   public:
-    using OperatorToken::OperatorToken;
+    using BaseOperatorToken::BaseOperatorToken;
 };
 
-class DecrementToken final : public OperatorToken
+class DecrementToken final : public BaseOperatorToken<DecrementToken>
 {
   public:
-    using OperatorToken::OperatorToken;
+    using BaseOperatorToken::BaseOperatorToken;
 };
 
 /*----------------------------------------------------------------------------------------------------*/
 
-template <typename T>
-class UnaryOperatorToken : public OperatorToken
+template <typename Derived, typename T>
+class BaseUnaryOperatorToken : public BaseOperatorToken<Derived>
 {
-  public:
-    using OperatorToken::OperatorToken;
+  protected:
+    using BaseOperatorToken<Derived>::BaseOperatorToken;
 
     virtual T calculate(const T& operand) const = 0;
 };
 
-template <typename T>
-class BinaryOperatorToken : public OperatorToken
+template <typename Derived, typename T>
+class BaseBinaryOperatorToken : public BaseOperatorToken<Derived>
 {
-  public:
-    using OperatorToken::OperatorToken;
+  protected:
+    using BaseOperatorToken<Derived>::BaseOperatorToken;
 
     virtual T calculate(const T& lhs, const T& rhs) const = 0;
 };
@@ -62,19 +64,19 @@ class BinaryOperatorToken : public OperatorToken
 /*----------------------------------------------------------------------------------------------------*/
 
 template <typename T>
-class PositiveToken final : public UnaryOperatorToken<T>
+class PositiveToken final : public BaseUnaryOperatorToken<PositiveToken<T>, T>
 {
   public:
-    using UnaryOperatorToken<T>::UnaryOperatorToken;
+    using BaseUnaryOperatorToken<PositiveToken<T>, T>::BaseUnaryOperatorToken;
 
     T calculate(const T& operand) const override { return +operand; }
 };
 
 template <typename T>
-class AddToken final : public BinaryOperatorToken<T>
+class AddToken final : public BaseBinaryOperatorToken<AddToken<T>, T>
 {
   public:
-    using BinaryOperatorToken<T>::BinaryOperatorToken;
+    using BaseBinaryOperatorToken<AddToken<T>, T>::BaseBinaryOperatorToken;
 
     T calculate(const T& lhs, const T& rhs) const { return lhs + rhs; }
 };
@@ -82,19 +84,19 @@ class AddToken final : public BinaryOperatorToken<T>
 /*----------------------------------------------------------------------------------------------------*/
 
 template <typename T>
-class NegativeToken final : public UnaryOperatorToken<T>
+class NegativeToken final : public BaseUnaryOperatorToken<NegativeToken<T>, T>
 {
   public:
-    using UnaryOperatorToken<T>::UnaryOperatorToken;
+    using BaseUnaryOperatorToken<NegativeToken<T>, T>::BaseUnaryOperatorToken;
 
     T calculate(const T& operand) const override { return -operand; }
 };
 
 template <typename T>
-class SubToken final : public BinaryOperatorToken<T>
+class SubToken final : public BaseBinaryOperatorToken<SubToken<T>, T>
 {
   public:
-    using BinaryOperatorToken<T>::BinaryOperatorToken;
+    using BaseBinaryOperatorToken<SubToken<T>, T>::BaseBinaryOperatorToken;
 
     T calculate(const T& lhs, const T& rhs) const { return lhs - rhs; }
 };
@@ -102,19 +104,19 @@ class SubToken final : public BinaryOperatorToken<T>
 /*----------------------------------------------------------------------------------------------------*/
 
 template <typename T>
-class PrefixIncrementToken final : public UnaryOperatorToken<T>
+class PrefixIncrementToken final : public BaseUnaryOperatorToken<PrefixIncrementToken<T>, T>
 {
   public:
-    using UnaryOperatorToken<T>::UnaryOperatorToken;
+    using BaseUnaryOperatorToken<PrefixIncrementToken<T>, T>::BaseUnaryOperatorToken;
 
     T calculate(const T& operand) const { return ++operand; }
 };
 
 template <typename T>
-class PostfixIncrementToken final : public UnaryOperatorToken<T>
+class PostfixIncrementToken final : public BaseUnaryOperatorToken<PostfixIncrementToken<T>, T>
 {
   public:
-    using UnaryOperatorToken<T>::UnaryOperatorToken;
+    using BaseUnaryOperatorToken<PostfixIncrementToken<T>, T>::BaseUnaryOperatorToken;
 
     T calculate(const T& operand) const { return operand++; }
 };
@@ -122,19 +124,19 @@ class PostfixIncrementToken final : public UnaryOperatorToken<T>
 // /*----------------------------------------------------------------------------------------------------*/
 
 template <typename T>
-class PrefixDecrementToken final : public UnaryOperatorToken<T>
+class PrefixDecrementToken final : public BaseUnaryOperatorToken<PrefixDecrementToken<T>, T>
 {
   public:
-    using UnaryOperatorToken<T>::UnaryOperatorToken;
+    using BaseUnaryOperatorToken<PrefixDecrementToken<T>, T>::BaseUnaryOperatorToken;
 
     T calculate(const T& operand) const override { return --operand; }
 };
 
 template <typename T>
-class PostfixDecrementToken final : public UnaryOperatorToken<T>
+class PostfixDecrementToken final : public BaseUnaryOperatorToken<PostfixDecrementToken<T>, T>
 {
   public:
-    using UnaryOperatorToken<T>::UnaryOperatorToken;
+    using BaseUnaryOperatorToken<PostfixDecrementToken<T>, T>::BaseUnaryOperatorToken;
 
     T calculate(const T& operand) const override { return operand--; }
 };

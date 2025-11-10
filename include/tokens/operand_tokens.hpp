@@ -1,42 +1,46 @@
 #pragma once
 
 #include "abstract_token.hpp"
+#include "visitor.hpp"
 
 namespace compiler
 {
 
-class OperandToken : public BaseToken<OperandToken>
+template <typename Derived>
+class BaseOperandToken : public BaseToken<Derived>
 {
-  public:
-    using AbstractToken::AbstractToken;
+  protected:
+    using BaseToken<Derived>::BaseToken;
 };
 
-class IdentifierToken final : public OperandToken
+class IdentifierToken final : public BaseOperandToken<IdentifierToken>
 {
   public:
-    using OperandToken::OperandToken;
+    using BaseOperandToken::BaseOperandToken;
 };
 
-template <typename T>
-class LiteralToken final : public OperandToken
+// template <typename T>
+class LiteralToken final : public BaseOperandToken<LiteralToken>
 {
   public:
-    LiteralToken(const std::string& token, std::size_t line, std::size_t line_offset,
-                 std::size_t abs_offset)
-        : ()
-    {
-    }
+    using BaseOperandToken::BaseOperandToken;
 
-    LiteralToken(const T& value, std::size_t line, std::size_t line_offset, std::size_t abs_offset)
-        : ()
-    {
-    }
+    // LiteralToken(const std::string& token, std::size_t line, std::size_t line_offset,
+    //              std::size_t abs_offset)
+    //     : ()
+    // {
+    // }
 
-  public:
-    const T& get_value() const { return value_; }
+    // LiteralToken(const T& value, std::size_t line, std::size_t line_offset, std::size_t abs_offset)
+    //     : ()
+    // {
+    // }
+
+//   public:
+    // const T& get_value() const { return value_; }
 
   private:
-    T value_;
+    // T value_;
 };
 
 }; // namespace compiler

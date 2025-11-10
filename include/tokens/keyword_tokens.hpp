@@ -1,38 +1,40 @@
 #pragma once
 
 #include "abstract_token.hpp"
+#include "visitor.hpp"
 
 namespace compiler
 {
 
-class KeywordToken : public BaseToken<KeywordToken>
+template <typename Derived>
+class BaseKeywordToken : public BaseToken<Derived>
 {
-  public:
-    using AbstractToken::AbstractToken;
+  protected:
+    using BaseToken<Derived>::BaseToken;
 };
 
-class WhileToken final : public KeywordToken
+class WhileToken final : public BaseKeywordToken<WhileToken>
 {
   public:
-    using KeywordToken::KeywordToken;
+    using BaseKeywordToken::BaseKeywordToken;
 };
 
-class IfToken final : public KeywordToken
+class IfToken final : public BaseKeywordToken<IfToken>
 {
   public:
-    using KeywordToken::KeywordToken;
+    using BaseKeywordToken::BaseKeywordToken;
 };
 
-class PrintToken final : public KeywordToken
+class PrintToken final : public BaseKeywordToken<PrintToken>
 {
   public:
-    using KeywordToken::KeywordToken;
+    using BaseKeywordToken::BaseKeywordToken;
 };
 
-class InputToken final : public KeywordToken
+class InputToken final : public BaseKeywordToken<InputToken>
 {
   public:
-    using KeywordToken::KeywordToken;
+    using BaseKeywordToken::BaseKeywordToken;
 };
 
 }; // namespace compiler

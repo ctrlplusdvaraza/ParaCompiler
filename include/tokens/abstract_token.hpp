@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include <string>
 
 namespace compiler
@@ -10,7 +11,7 @@ class AbstractToken
   public:
     AbstractToken(std::string token, std::size_t line, std::size_t line_offset,
                   std::size_t abs_offset)
-        : token_(token_), line_(line), line_offset_(line_offset), abs_offset_(abs_offset)
+        : token_(token), line_(line), line_offset_(line_offset), abs_offset_(abs_offset)
     {
     }
 
@@ -24,22 +25,16 @@ class AbstractToken
 
   public:
     class Visitor;
-    virtual void accept(const Visitor& visitor) const = 0;
+    virtual void accept(Visitor& visitor) = 0;
+
+    template <typename T>
+    bool is_token_of_type();
 
   private:
     std::string token_;
     std::size_t line_;
     std::size_t line_offset_;
     std::size_t abs_offset_;
-};
-
-template <typename Derived>
-class BaseToken : public AbstractToken
-{
-    void accept(const Visitor& visitor) const override
-    {
-        visitor.visit(static_cast<Derived&>(*this));
-    }
 };
 
 }; // namespace compiler
