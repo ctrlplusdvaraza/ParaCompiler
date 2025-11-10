@@ -19,28 +19,10 @@ class IdentifierToken final : public BaseOperandToken<IdentifierToken>
     using BaseOperandToken::BaseOperandToken;
 };
 
-// template <typename T>
 class LiteralToken final : public BaseOperandToken<LiteralToken>
 {
   public:
     using BaseOperandToken::BaseOperandToken;
-
-    // LiteralToken(const std::string& token, std::size_t line, std::size_t line_offset,
-    //              std::size_t abs_offset)
-    //     : ()
-    // {
-    // }
-
-    // LiteralToken(const T& value, std::size_t line, std::size_t line_offset, std::size_t abs_offset)
-    //     : ()
-    // {
-    // }
-
-//   public:
-    // const T& get_value() const { return value_; }
-
-  private:
-    // T value_;
 };
 
 }; // namespace compiler

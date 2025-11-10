@@ -21,25 +21,19 @@ class AbstractToken::Visitor
     virtual void visit(const class IdentifierToken& token) = 0;
     virtual void visit(const class LiteralToken& token) = 0;
 
-    // virtual void visit(const class BaseOperatorToken& token) = 0;
     virtual void visit(const class PlusToken& token) = 0;
-    // template <typename T>
     virtual void visit(const class PositiveToken& token) = 0;
-    // template <typename T>
     virtual void visit(const class AddToken& token) = 0;
 };
 
 template <typename Derived>
 class BaseToken : public AbstractToken
 {
-  protected:
+  public:
     using AbstractToken::AbstractToken;
 
   public:
-    virtual void accept(Visitor& visitor) override
-    {
-        visitor.visit(static_cast<Derived&>(*this));
-    }
+    virtual void accept(Visitor& visitor) override { visitor.visit(static_cast<Derived&>(*this)); }
 };
 
 template <typename T>
@@ -50,24 +44,20 @@ class TypeCheckVisitor : public AbstractToken::Visitor
 
   public:
     // clang-format off
-    // void visit(const BaseBracketToken& token) override  { check_type<BaseBracketToken>(); }
     void visit(const RoundBracketToken& token) override { check_type<RoundBracketToken>(); }
     void visit(const CurlyBracketToken& token) override { check_type<CurlyBracketToken>(); }
 
-    // void visit(const BaseKeywordToken& token) override  { check_type<BaseKeywordToken>(); }
     void visit(const WhileToken& token) override        { check_type<WhileToken>(); }
-    void visit(const IfToken& token) override           { check_type<IfToken>(); }
+    void visit(const IfToken& token)    override        { check_type<IfToken>(); }
     void visit(const PrintToken& token) override        { check_type<PrintToken>(); }
     void visit(const InputToken& token) override        { check_type<InputToken>(); }
 
-    // void visit(const BaseOperandToken& token) override  { check_type<BaseOperandToken>(); }
     void visit(const IdentifierToken& token) override   { check_type<IdentifierToken>(); }
-    void visit(const LiteralToken& token) override      { check_type<LiteralToken>(); }
+    void visit(const LiteralToken& token)    override   { check_type<LiteralToken>(); }
 
-    // void visit(const BaseOperatorToken& token) override { check_type<BaseOperatorToken>(); }
-    void visit(const PlusToken& token) override         { check_type<PlusToken>(); }
+    void visit(const PlusToken& token)     override     { check_type<PlusToken>(); }
     void visit(const PositiveToken& token) override     { check_type<PositiveToken>(); }
-    void visit(const AddToken& token) override          { check_type<AddToken>(); }
+    void visit(const AddToken& token)      override     { check_type<AddToken>(); }
     // clang-format on
 
   private:

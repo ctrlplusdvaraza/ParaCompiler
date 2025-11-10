@@ -9,10 +9,9 @@ namespace compiler
 template <typename Derived>
 class BaseBracketToken : public BaseToken<Derived>
 {
-  protected:
+  public:
     using BaseToken<Derived>::BaseToken;
 
-  public:
     virtual bool is_opening() const = 0;
 };
 
