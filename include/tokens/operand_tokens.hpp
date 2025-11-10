@@ -5,7 +5,7 @@
 namespace compiler
 {
 
-class OperandToken : public AbstractToken
+class OperandToken : public BaseToken<OperandToken>
 {
   public:
     using AbstractToken::AbstractToken;
@@ -33,13 +33,10 @@ class LiteralToken final : public OperandToken
     }
 
   public:
-    const T& get_value() const
-    {
-        return value_;
-    }
+    const T& get_value() const { return value_; }
 
   private:
     T value_;
 };
-    
-}; //namespace compiler
+
+}; // namespace compiler

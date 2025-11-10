@@ -12,54 +12,43 @@ class AbstractToken::Visitor
     virtual void visit(const class RoundBracketToken& token) const = 0;
     virtual void visit(const class CurlyBracketToken& token) const = 0;
 
-    virtual void visit(class KeywordToken& token) = 0;
-    virtual void visit(class OperatorToken& token) = 0;
+    virtual void visit(const class KeywordToken& token) const = 0;
+    virtual void visit(const class WhileToken& token) const = 0;
+    virtual void visit(const class IfToken& token) const = 0;
+    virtual void visit(const class PrintToken& token) const = 0;
+    virtual void visit(const class InputToken& token) const = 0;
+
+    virtual void visit(const class OperandToken& token) const = 0;
+    virtual void visit(const class IdentifierToken& token) const = 0;
+    virtual void visit(const class LiteralToken& token) const = 0;
+
+    virtual void visit(const class OperatorToken& token) const = 0;
 };
 
 template <typename T>
 class TypeCheckVisitor : public AbstractToken::Visitor
 {
   public:
-    bool is_type() const
-    {
-        return result;
-    }
+    bool is_type() const { return result; }
 
   public:
-    void visit(const BracketToken& token) const override
-    {
-        check_type<BracketToken>();
-    }
+    // clang-format off
+    void visit(const BracketToken& token) const override      { check_type<BracketToken>(); }
+    void visit(const RoundBracketToken& token) const override { check_type<RoundBracketToken>(); }
+    void visit(const CurlyBracketToken& token) const override { check_type<CurlyBracketToken>(); }
 
-    void visit(const RoundBracketToken& token) const override
-    {
-        check_type<RoundBracketToken>();
-    }
+    void visit(const KeywordToken& token) const override { check_type<KeywordToken>(); }
+    void visit(const WhileToken& token) const override   { check_type<WhileToken>(); }
+    void visit(const IfToken& token) const override      { check_type<IfToken>(); }
+    void visit(const PrintToken& token) const override   { check_type<PrintToken>(); }
+    void visit(const InputToken& token) const override   { check_type<InputToken>(); }
 
-    void visit(const CurlyBracketToken& token) const override
-    {
-        check_type<CurlyBracketToken>();
-    }
+    void visit(const OperandToken& token) const override    { check_type<OperandToken>(); }
+    void visit(const IdentifierToken& token) const override { check_type<IdentifierToken>(); }
+    void visit(const LiteralToken& token) const override    { check_type<LiteralToken>(); }
 
-    // void visit(const KeywordToken& token) const override
-    // {
-    //     result = std::is_same_v<T, KeywordToken>;
-    // }
-
-    // void visit(const OperatorToken& token) const override
-    // {
-    //     result = std::is_same_v<T, OperatorToken>;
-    // }
-
-    // void visit(const PlusToken& token) const override
-    // {
-    //     result = std::is_same_v<T, PlusToken>;
-    // }
-
-    // void visit(const MinusToken& token) const override
-    // {
-    //     result = std::is_same_v<T, MinusToken>;
-    // }
+    void visit(const OperatorToken& token) const override { check_type<OperatorToken>(); }
+    // clang-format on
 
   private:
     template <typename U>

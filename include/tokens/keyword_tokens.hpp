@@ -5,7 +5,7 @@
 namespace compiler
 {
 
-class KeywordToken : public AbstractToken
+class KeywordToken : public BaseToken<KeywordToken>
 {
   public:
     using AbstractToken::AbstractToken;
@@ -35,4 +35,4 @@ class InputToken final : public KeywordToken
     using KeywordToken::KeywordToken;
 };
 
-}; //namespace compiler
+}; // namespace compiler
