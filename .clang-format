@@ -9,3 +9,4 @@ PointerAlignment: Left
 MaxEmptyLinesToKeep: 2
 BreakTemplateDeclarations: Yes
 ColumnLimit: 100
+AllowShortFunctionsOnASingleLine: All
