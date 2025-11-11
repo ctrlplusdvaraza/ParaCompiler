@@ -35,6 +35,7 @@ void count();
 "=="			{ count(); return(EQ_OP); }
 "!="			{ count(); return(NE_OP); }
 
+","			{ count(); return(','); }
 ";"			{ count(); return(';'); }
 
 ("{"|"<%")		{ count(); return('{'); }
@@ -54,7 +55,6 @@ void count();
 .			{ /* ignore bad characters */ }
 
 
-/* ---------------------USER CODE SECTION--------------------- */
 %%
 
 comment()
