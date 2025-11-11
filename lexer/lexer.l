@@ -22,9 +22,9 @@ void comment();
 "?"				{ count(); return(STDIN_GET_NUM); }
 "print"		    { count(); return(PRINT); }
 
-{L}({L}|{D})*		{ count(); yylval.sval = strdup(yytext); return(IDENTIFIER); }
+{L}({L}|{D})*		{ count(); return(IDENTIFIER); }
 {D}+   				{ count(); return(CONSTANT); }
-\"(\\.|[^\\"])*\"	{ count(); yylval.sval = strdup(yytext); return(STRING_LITERAL); }
+\"(\\.|[^\\"])*\"	{ count(); return(STRING_LITERAL); }
 
 "+="			{ count(); return(ADD_ASSIGN); }
 "-="			{ count(); return(SUB_ASSIGN); }

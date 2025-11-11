@@ -2,7 +2,6 @@ fst = 0;
 
 snd = 1;
 
-/*
 iters = ?;
 
 while (iters > 0) {
@@ -13,4 +12,3 @@ while (iters > 0) {
 }
 
 print snd;
-*/

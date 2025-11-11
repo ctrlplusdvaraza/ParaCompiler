@@ -30,6 +30,7 @@ AST *root = NULL;
 %token LE_OP GE_OP EQ_OP NE_OP
 
 
+
 /* nonterminals typed */
 %type <node> translation_unit stmt_list stmt expression assignment_expression additive_expression multiplicative_expression primary_expression print_stmt compound_stmt if_stmt while_stmt expr_stmt
 /* terminals typed */
@@ -41,6 +42,8 @@ AST *root = NULL;
 /** grammar rule entry point */
 %start translation_unit
 
+
+/* WHAT ?????*/
 /* operator precedence (so expressions parse correctly) */
 %left ','            /* not used heavily but keep */
 %left '='           /* assignment right-assoc; we'll handle explicitly */
@@ -51,94 +54,124 @@ AST *root = NULL;
 
 %%
 
-/* ------------------ grammar rules & actions ------------------ */
+/* ------------------ grammar rules ------------------ */
 
 translation_unit
-    : stmt_list            { root = $1; }
+    : stmt_list
     ;
 
 stmt_list
-    : /* empty */          { $$ = NULL; }
-    | stmt_list stmt       { $$ = $1 ? new_seq($1, $2) : $2; }
+    : /* empty */
+    | stmt_list stmt
     ;
 
 stmt
-    : expr_stmt            { $$ = $1; }
-    | compound_stmt        { $$ = $1; }
-    | if_stmt              { $$ = $1; }
-    | while_stmt           { $$ = $1; }
-    | print_stmt           { $$ = $1; }
+    : expr_stmt
+    | compound_stmt
+    | if_stmt
+    | while_stmt
+    | print_stmt
     ;
 
 expr_stmt
-    : ';'                  { $$ = NULL; } 
-    | expression ';'       { $$ = new_expr_stmt($1); }
+    : ';' 
+    | expression ';'
     ;
 
 compound_stmt
-    : '{' stmt_list '}'    { $$ = $2; }   /* block yields sequence as a single node (linked seq) */
+    : '{' stmt_list '}'
     ;
 
 if_stmt
-    : IF '(' expression ')' stmt %prec '='    { $$ = new_if($3, $5, NULL); }
-    | IF '(' expression ')' stmt ELSE stmt    { $$ = new_if($3, $5, $7); }
+    : IF '(' expression ')' stmt %prec '='
+    | IF '(' expression ')' stmt ELSE stmt
     ;
 
 while_stmt
-    : WHILE '(' expression ')' stmt            { $$ = new_while($3, $5); }
+    : WHILE '(' expression ')' stmt
     ;
 
 print_stmt
-    : PRINT expression ';'                     { $$ = new_print($2); }
+    : PRINT expression ';'
     ;
 
 /* Expression levels */
 
 expression
-    : assignment_expression                    { $$ = $1; }
+    : assignment_expression
+    ;
+
+
+
+relational_expression
+	: additive_expression
+	| relational_expression '<' additive_expression
+	| relational_expression '>' additive_expression
+    ;
+
+equality_expression
+	: relational_expression
+    ;
+
+and_expression
+	: equality_expression
+    ;
+
+exclusive_or_expression
+	: and_expression
+    ;
+
+inclusive_or_expression
+	: exclusive_or_expression
+    ;
+
+logical_and_expression
+	: inclusive_or_expression
+    ;
+
+logical_or_expression
+	: logical_and_expression
+    ;
+
+conditional_expression
+	: logical_or_expression
     ;
 
 assignment_expression
-    : IDENTIFIER '=' assignment_expression     { $$ = new_assign($1, $3); /* lexer must have strdup'd $1 */ }
-    | IDENTIFIER ADD_ASSIGN assignment_expression { /* a += b  -> a = a + b */
-            AST *lhs = new_id($1); $$ = new_assign($1, new_binop('+', lhs, $3)); }
-    | IDENTIFIER SUB_ASSIGN assignment_expression {
-            AST *lhs = new_id($1); $$ = new_assign($1, new_binop('-', lhs, $3)); }
-    | IDENTIFIER MUL_ASSIGN assignment_expression {
-            AST *lhs = new_id($1); $$ = new_assign($1, new_binop('*', lhs, $3)); }
-    | IDENTIFIER DIV_ASSIGN assignment_expression {
-            AST *lhs = new_id($1); $$ = new_assign($1, new_binop('/', lhs, $3)); }
-    | IDENTIFIER MOD_ASSIGN assignment_expression {
-            AST *lhs = new_id($1); $$ = new_assign($1, new_binop('%', lhs, $3)); }
-    | additive_expression                        { $$ = $1; }
+    : conditional_expression
+    | IDENTIFIER assignment_operator assignment_expression
     ;
 
+assignment_operator
+	: '='
+	| MUL_ASSIGN
+	| DIV_ASSIGN
+	| MOD_ASSIGN
+	| ADD_ASSIGN
+	| SUB_ASSIGN
+	;
+
+
 additive_expression
-    : multiplicative_expression                 { $$ = $1; }
-    | additive_expression '+' multiplicative_expression { $$ = new_binop('+',$1,$3); }
-    | additive_expression '-' multiplicative_expression { $$ = new_binop('-',$1,$3); }
+    : multiplicative_expression
+    | additive_expression '+' multiplicative_expression
+    | additive_expression '-' multiplicative_expression
     ;
 
 multiplicative_expression
-    : primary_expression                        { $$ = $1; }
-    | multiplicative_expression '*' primary_expression { $$ = new_binop('*',$1,$3); }
-    | multiplicative_expression '/' primary_expression { $$ = new_binop('/',$1,$3); }
-    | multiplicative_expression '%' primary_expression { $$ = new_binop('%',$1,$3); }
+    : primary_expression
+    | multiplicative_expression '*' primary_expression
+    | multiplicative_expression '/' primary_expression
+    | multiplicative_expression '%' primary_expression
     ;
 
 /* primary expression includes numbers, identifiers, input '?', parenthesized */
 primary_expression
-    : IDENTIFIER                                { $$ = new_id($1); }
-    | CONSTANT                                  { $$ = new_num($1); }
-    | STDIN_GET_NUM                             { $$ = new_input(); }
-    | '(' expression ')'                        { $$ = $2; }
+    : IDENTIFIER
+    | CONSTANT
+    | STDIN_GET_NUM
+    | '(' expression ')'
     ;
-
-/* Note: comparisons are expressed as binary ops using LE_OP etc.
-   The lexer returns LE_OP, GE_OP, EQ_OP, NE_OP tokens; treat them here. */
-
-
-
 
 %%
 
@@ -153,7 +186,9 @@ int yyerror(const char *s) {
 
 /* main: call yyparse (scanner should read stdin or file redirection) */
 int main(void) {
-    if (yyparse() == 0) {
+    int res = yyparse();
+
+    if (res == 0) {
         return 0;
     }
     return 1;
