@@ -59,9 +59,7 @@ AST *root = NULL;
 /* ------------------ grammar rules & actions ------------------ */
 
 translation_unit
-    : stmt_list            { root = $1; /* after parse, execute */ 
-                             /* execute top-level sequence */ 
-                             if (root) exec_stmt(root); }
+    : stmt_list            { root = $1; }
     ;
 
 stmt_list
@@ -161,9 +159,6 @@ int yyerror(const char *s) {
 /* main: call yyparse (scanner should read stdin or file redirection) */
 int main(void) {
     if (yyparse() == 0) {
-        /* parsing done; root was executed inside rule, but if you'd prefer, execute here:
-           if (root) exec_stmt(root);
-        */
         return 0;
     }
     return 1;
