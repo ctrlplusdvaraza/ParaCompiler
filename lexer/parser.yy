@@ -10,7 +10,7 @@
 %define parse.assert
 
 %code requires {
-  # include <string>
+  #include <string>
   class driver;
 }
 
@@ -46,28 +46,33 @@
 
 %printer { yyo << $$; } <*>;
 
-
 %%
 %start unit;
-unit: assignments exp  { drv.result = $2; };
+unit: 
+  assignments exp { std::cout << "result : " << $2 << "\n"; drv.result = $2; };
+  ;
 
 assignments:
-  %empty                 {}
-| assignments assignment {};
+  | assignments assignment {};
+  ;
 
 assignment:
-  "identifier" ":=" exp { drv.variables[$1] = $3; };
+  IDENTIFIER ASSIGN exp { drv.variables[$1] = $3; };
+  ;
 
 %left "+" "-";
 %left "*" "/";
+
 exp:
-  "number"
-| "identifier"  { $$ = drv.variables[$1]; }
-| exp "+" exp   { $$ = $1 + $3; }
-| exp "-" exp   { $$ = $1 - $3; }
-| exp "*" exp   { $$ = $1 * $3; }
-| exp "/" exp   { $$ = $1 / $3; }
-| "(" exp ")"   { $$ = $2; }
+    NUMBER        { $$ = $1; }
+  | IDENTIFIER    { $$ = drv.variables[$1]; }
+  | exp "+" exp   { $$ = $1 + $3;  std::cout << "+ expr : " << $$ << "\n";}
+  | exp "-" exp   { $$ = $1 - $3; }
+  | exp "*" exp   { $$ = $1 * $3; }
+  | exp "/" exp   { $$ = $1 / $3; }
+  | "(" exp ")"   { $$ = $2; }
+  ;
+
 %%
 
 void

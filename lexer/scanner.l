@@ -30,5 +30,5 @@ ID      [A-Za-z_][A-Za-z0-9_]*
 \n          { /* skip newline */ }
 .           { /* ignore other chars */ }
 
-<<EOF>>     { return yy::parser::symbol_type(); }   /* EOF -> empty/default symbol */
+<<EOF>>     { yy::parser::make_YYEOF(drv.location); }   /* EOF -> empty/default symbol */
 %%

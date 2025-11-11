@@ -805,7 +805,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
 #line 33 "scanner.l"
-{ return yy::parser::symbol_type(); }   /* EOF -> empty/default symbol */
+{ yy::parser::make_YYEOF(drv.location); }   /* EOF -> empty/default symbol */
 	YY_BREAK
 case 13:
 YY_RULE_SETUP

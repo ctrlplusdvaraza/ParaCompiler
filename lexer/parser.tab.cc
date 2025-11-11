@@ -608,73 +608,67 @@ namespace yy {
           switch (yyn)
             {
   case 2: // unit: assignments exp
-#line 52 "parser.yy"
-                       { drv.result = yystack_[0].value.as < int > (); }
+#line 53 "parser.yy"
+                  { std::cout << "result : " << yystack_[0].value.as < int > () << "\n"; drv.result = yystack_[0].value.as < int > (); }
 #line 614 "parser.tab.cc"
     break;
 
-  case 3: // assignments: %empty
-#line 55 "parser.yy"
-                         {}
+  case 4: // assignments: assignments assignment
+#line 57 "parser.yy"
+                           {}
 #line 620 "parser.tab.cc"
     break;
 
-  case 4: // assignments: assignments assignment
-#line 56 "parser.yy"
-                         {}
+  case 5: // assignment: "identifier" ":=" exp
+#line 61 "parser.yy"
+                        { drv.variables[yystack_[2].value.as < std::string > ()] = yystack_[0].value.as < int > (); }
 #line 626 "parser.tab.cc"
     break;
 
-  case 5: // assignment: "identifier" ":=" exp
-#line 59 "parser.yy"
-                        { drv.variables[yystack_[2].value.as < std::string > ()] = yystack_[0].value.as < int > (); }
+  case 6: // exp: "number"
+#line 68 "parser.yy"
+                  { yylhs.value.as < int > () = yystack_[0].value.as < int > (); }
 #line 632 "parser.tab.cc"
     break;
 
-  case 6: // exp: "number"
-#line 64 "parser.yy"
-  { yylhs.value.as < int > () = yystack_[0].value.as < int > (); }
+  case 7: // exp: "identifier"
+#line 69 "parser.yy"
+                  { yylhs.value.as < int > () = drv.variables[yystack_[0].value.as < std::string > ()]; }
 #line 638 "parser.tab.cc"
     break;
 
-  case 7: // exp: "identifier"
-#line 65 "parser.yy"
-                { yylhs.value.as < int > () = drv.variables[yystack_[0].value.as < std::string > ()]; }
+  case 8: // exp: exp "+" exp
+#line 70 "parser.yy"
+                  { yylhs.value.as < int > () = yystack_[2].value.as < int > () + yystack_[0].value.as < int > ();  std::cout << "+ expr : " << yylhs.value.as < int > () << "\n";}
 #line 644 "parser.tab.cc"
     break;
 
-  case 8: // exp: exp "+" exp
-#line 66 "parser.yy"
-                { yylhs.value.as < int > () = yystack_[2].value.as < int > () + yystack_[0].value.as < int > (); }
+  case 9: // exp: exp "-" exp
+#line 71 "parser.yy"
+                  { yylhs.value.as < int > () = yystack_[2].value.as < int > () - yystack_[0].value.as < int > (); }
 #line 650 "parser.tab.cc"
     break;
 
-  case 9: // exp: exp "-" exp
-#line 67 "parser.yy"
-                { yylhs.value.as < int > () = yystack_[2].value.as < int > () - yystack_[0].value.as < int > (); }
+  case 10: // exp: exp "*" exp
+#line 72 "parser.yy"
+                  { yylhs.value.as < int > () = yystack_[2].value.as < int > () * yystack_[0].value.as < int > (); }
 #line 656 "parser.tab.cc"
     break;
 
-  case 10: // exp: exp "*" exp
-#line 68 "parser.yy"
-                { yylhs.value.as < int > () = yystack_[2].value.as < int > () * yystack_[0].value.as < int > (); }
+  case 11: // exp: exp "/" exp
+#line 73 "parser.yy"
+                  { yylhs.value.as < int > () = yystack_[2].value.as < int > () / yystack_[0].value.as < int > (); }
 #line 662 "parser.tab.cc"
     break;
 
-  case 11: // exp: exp "/" exp
-#line 69 "parser.yy"
-                { yylhs.value.as < int > () = yystack_[2].value.as < int > () / yystack_[0].value.as < int > (); }
+  case 12: // exp: "(" exp ")"
+#line 74 "parser.yy"
+                  { yylhs.value.as < int > () = yystack_[1].value.as < int > (); }
 #line 668 "parser.tab.cc"
     break;
 
-  case 12: // exp: "(" exp ")"
-#line 70 "parser.yy"
-                { yylhs.value.as < int > () = yystack_[1].value.as < int > (); }
-#line 674 "parser.tab.cc"
-    break;
 
-
-#line 678 "parser.tab.cc"
+#line 672 "parser.tab.cc"
 
             default:
               break;
@@ -1206,8 +1200,8 @@ namespace yy {
   const signed char
   parser::yyrline_[] =
   {
-       0,    52,    52,    55,    56,    59,    64,    65,    66,    67,
-      68,    69,    70
+       0,    53,    53,    56,    57,    61,    68,    69,    70,    71,
+      72,    73,    74
   };
 
   void
@@ -1239,9 +1233,9 @@ namespace yy {
 
 
 } // yy
-#line 1243 "parser.tab.cc"
+#line 1237 "parser.tab.cc"
 
-#line 71 "parser.yy"
+#line 77 "parser.yy"
 
 
 void

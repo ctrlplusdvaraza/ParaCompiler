@@ -47,7 +47,7 @@
 // "%code requires" blocks.
 #line 12 "parser.yy"
 
-  # include <string>
+  #include <string>
   class driver;
 
 #line 54 "parser.tab.hh"
