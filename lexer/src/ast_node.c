@@ -2,12 +2,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <assert.h>
-#include "symtab.h"
 #include "ast_node.h"
-
-/* ------------------ C user code: constructors, interpreter ------------------ */
-
-static Sym *symtab = NULL;
 
 AST *new_num(int v) {
     AST *n = (AST*)malloc(sizeof(AST));
@@ -81,27 +76,4 @@ AST *new_expr_stmt(AST *e) {
     AST *n = (AST*)malloc(sizeof(AST));
     n->type = N_EXPR_STMT; n->left = e; n->right = n->third = n->next = NULL; n->name = NULL; n->op = 0;
     return n;
-}
-
-/* symbol table helpers */
-void set_var(const char *name, int val) {
-    assert(name);
-
-    Sym *s = symtab;
-    while (s) {
-        if (strcmp(s->name, name) == 0) { s->val = val; return; }
-        s = s->next;
-    }
-    s = (Sym*)malloc(sizeof(Sym));
-    s->name = strdup(name);
-    s->val = val;
-    s->next = symtab;
-    symtab = s;
-}
-int get_var(const char *name) {
-    assert(name);
-
-    Sym *s = symtab;
-    while (s) { if (strcmp(s->name, name) == 0) return s->val; s = s->next; }
-    return 0; /* default 0 if not set */
 }

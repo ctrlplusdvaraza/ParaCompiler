@@ -1,7 +1,4 @@
-/* parser.y - minimal grammar + AST + interpreter for your language */
-
 %{
-/* C prologue */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -13,12 +10,9 @@ int yyerror(const char *s);
 void count(void);
 void comment(void);
 
-/* root */
 AST *root = NULL;
-
 %}
 
-/* semantic value union */
 %union {
     int ival;
     char *sval;
@@ -29,22 +23,22 @@ AST *root = NULL;
 #include "ast_node.h"
 }
 
-
-
-/* token declarations (must match lexer token names) */
 %token ELSE IF WHILE STDIN_GET_NUM PRINT
 
-%token <sval> IDENTIFIER STRING_LITERAL
-%token <ival> CONSTANT 
 
 %token ADD_ASSIGN SUB_ASSIGN MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN
 %token LE_OP GE_OP EQ_OP NE_OP
 
-/* single-char tokens are returned as character literal tokens: ';' ',' '=' '+' '-' ... */
 
 /* nonterminals typed */
 %type <node> translation_unit stmt_list stmt expression assignment_expression additive_expression multiplicative_expression primary_expression print_stmt compound_stmt if_stmt while_stmt expr_stmt
+/* terminals typed */
+%token <sval> IDENTIFIER STRING_LITERAL
+%token <ival> CONSTANT 
 
+
+
+/** grammar rule entry point */
 %start translation_unit
 
 /* operator precedence (so expressions parse correctly) */
@@ -54,6 +48,7 @@ AST *root = NULL;
 %left LE_OP GE_OP EQ_OP NE_OP '<' '>'
 %left '+' '-'
 %left '*' '/' '%'
+
 %%
 
 /* ------------------ grammar rules & actions ------------------ */

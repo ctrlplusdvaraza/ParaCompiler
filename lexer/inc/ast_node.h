@@ -41,10 +41,6 @@ AST *new_if(AST *cond, AST *thenb, AST *elseb);
 AST *new_while(AST *cond, AST *body);
 AST *new_expr_stmt(AST *e);
 
-/* symbol table helpers */
-void set_var(const char *name, int val);
-int get_var(const char *name);
-
 #endif
 
 

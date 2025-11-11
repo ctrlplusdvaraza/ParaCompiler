@@ -22,9 +22,9 @@ void comment();
 "?"				{ count(); return(STDIN_GET_NUM); }
 "print"		    { count(); return(PRINT); }
 
-{L}({L}|{D})*		{ count(); return(IDENTIFIER); }
+{L}({L}|{D})*		{ count(); yylval.sval = strdup(yytext); return(IDENTIFIER); }
 {D}+   				{ count(); return(CONSTANT); }
-\"(\\.|[^\\"])*\"	{ count(); return(STRING_LITERAL); }
+\"(\\.|[^\\"])*\"	{ count(); yylval.sval = strdup(yytext); return(STRING_LITERAL); }
 
 "+="			{ count(); return(ADD_ASSIGN); }
 "-="			{ count(); return(SUB_ASSIGN); }
@@ -36,6 +36,9 @@ void comment();
 ">="			{ count(); return(GE_OP); }
 "=="			{ count(); return(EQ_OP); }
 "!="			{ count(); return(NE_OP); }
+
+"<"			{ count(); return('<'); }
+">"			{ count(); return('>'); }
 
 ","			{ count(); return(','); }
 ";"			{ count(); return(';'); }
@@ -54,7 +57,7 @@ void comment();
 "%"			{ count(); return('%'); }
 
 [ \t\v\n\f] { count(); }
-.			{ /* ignore bad characters */ }
+.			{ fprintf(stderr, "Unknown character: %s\n", yytext); exit(1);}
 
 
 %%

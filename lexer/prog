@@ -1,0 +1,16 @@
+fst = 0;
+
+snd = 1;
+
+/*
+iters = ?;
+
+while (iters > 0) {
+    tmp = fst;
+    fst = snd;
+    snd = snd + temp;
+    iters = iters - 1;
+}
+
+print snd;
+*/
