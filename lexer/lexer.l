@@ -7,6 +7,8 @@ L			[a-zA-Z_]
 #include "parser.h"
 
 void count();
+void comment();
+
 %}
 
 
@@ -57,7 +59,7 @@ void count();
 
 %%
 
-comment()
+void comment()
 {
 	char c, c1;
 

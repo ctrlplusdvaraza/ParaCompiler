@@ -73,67 +73,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "ast_node.h"
 
-/* Forward of yylex / yyerror */
+
 int yylex(void);
 int yyerror(const char *s);
-
-/* AST node definitions */
-typedef enum {
-    N_NUM,
-    N_ID,
-    N_BINOP,
-    N_ASSIGN,
-    N_PRINT,
-    N_INPUT,   /* '?' */
-    N_SEQ,     /* sequence/list of statements */
-    N_IF,
-    N_WHILE,
-    N_EXPR_STMT
-} NodeType;
-
-typedef struct AST {
-    NodeType type;
-    char op;            /* for binary ops: '+','-','*','/' '%' or comparator as token char */
-    int ival;           /* for N_NUM */
-    char *name;         /* for N_ID and assignment target */
-    struct AST *left;   /* generic children */
-    struct AST *right;
-    struct AST *third;  /* for if: else branch or unused */
-    struct AST *next;   /* for sequence linking */
-} AST;
-
-/* constructors */
-AST *new_num(int v);
-AST *new_id(char *name);
-AST *new_binop(char op, AST *l, AST *r);
-AST *new_assign(char *name, AST *expr);
-AST *new_print(AST *expr);
-AST *new_input(void);
-AST *new_seq(AST *a, AST *b);
-AST *new_if(AST *cond, AST *thenb, AST *elseb);
-AST *new_while(AST *cond, AST *body);
-AST *new_expr_stmt(AST *e);
-
-/* interpreter */
-int eval_expr(AST *n);
-void exec_stmt(AST *n);
-
-/* simple symbol table (string -> int) */
-typedef struct Sym {
-    char *name;
-    int val;
-    struct Sym *next;
-} Sym;
-static Sym *symtab = NULL;
-void set_var(const char *name, int val);
-int get_var(const char *name);
+void count(void);
+void comment(void);
 
 /* root */
 AST *root = NULL;
 
 
-#line 137 "./parser.c"
+#line 89 "parser.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -598,10 +550,10 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,   107,   107,   113,   114,   118,   119,   120,   121,   122,
-     126,   127,   131,   135,   136,   140,   144,   150,   154,   155,
-     157,   159,   161,   163,   165,   169,   170,   171,   175,   176,
-     177,   178,   183,   184,   185,   186
+       0,    62,    62,    68,    69,    73,    74,    75,    76,    77,
+      81,    82,    86,    90,    91,    95,    99,   105,   109,   110,
+     112,   114,   116,   118,   120,   124,   125,   126,   130,   131,
+     132,   133,   138,   139,   140,   141
 };
 #endif
 
@@ -1203,218 +1155,218 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* translation_unit: stmt_list  */
-#line 107 "parser.y"
+#line 62 "parser.y"
                            { root = (yyvsp[0].node); /* after parse, execute */ 
                              /* execute top-level sequence */ 
                              if (root) exec_stmt(root); }
-#line 1211 "./parser.c"
+#line 1163 "parser.c"
     break;
 
   case 3: /* stmt_list: %empty  */
-#line 113 "parser.y"
+#line 68 "parser.y"
                            { (yyval.node) = NULL; }
-#line 1217 "./parser.c"
+#line 1169 "parser.c"
     break;
 
   case 4: /* stmt_list: stmt_list stmt  */
-#line 114 "parser.y"
+#line 69 "parser.y"
                            { (yyval.node) = (yyvsp[-1].node) ? new_seq((yyvsp[-1].node), (yyvsp[0].node)) : (yyvsp[0].node); }
-#line 1223 "./parser.c"
+#line 1175 "parser.c"
     break;
 
   case 5: /* stmt: expr_stmt  */
-#line 118 "parser.y"
+#line 73 "parser.y"
                            { (yyval.node) = (yyvsp[0].node); }
-#line 1229 "./parser.c"
+#line 1181 "parser.c"
     break;
 
   case 6: /* stmt: compound_stmt  */
-#line 119 "parser.y"
+#line 74 "parser.y"
                            { (yyval.node) = (yyvsp[0].node); }
-#line 1235 "./parser.c"
+#line 1187 "parser.c"
     break;
 
   case 7: /* stmt: if_stmt  */
-#line 120 "parser.y"
+#line 75 "parser.y"
                            { (yyval.node) = (yyvsp[0].node); }
-#line 1241 "./parser.c"
+#line 1193 "parser.c"
     break;
 
   case 8: /* stmt: while_stmt  */
-#line 121 "parser.y"
+#line 76 "parser.y"
                            { (yyval.node) = (yyvsp[0].node); }
-#line 1247 "./parser.c"
+#line 1199 "parser.c"
     break;
 
   case 9: /* stmt: print_stmt  */
-#line 122 "parser.y"
+#line 77 "parser.y"
                            { (yyval.node) = (yyvsp[0].node); }
-#line 1253 "./parser.c"
+#line 1205 "parser.c"
     break;
 
   case 10: /* expr_stmt: ';'  */
-#line 126 "parser.y"
+#line 81 "parser.y"
                            { (yyval.node) = NULL; }
-#line 1259 "./parser.c"
+#line 1211 "parser.c"
     break;
 
   case 11: /* expr_stmt: expression ';'  */
-#line 127 "parser.y"
+#line 82 "parser.y"
                            { (yyval.node) = new_expr_stmt((yyvsp[-1].node)); }
-#line 1265 "./parser.c"
+#line 1217 "parser.c"
     break;
 
   case 12: /* compound_stmt: '{' stmt_list '}'  */
-#line 131 "parser.y"
+#line 86 "parser.y"
                            { (yyval.node) = (yyvsp[-1].node); }
-#line 1271 "./parser.c"
+#line 1223 "parser.c"
     break;
 
   case 13: /* if_stmt: IF '(' expression ')' stmt  */
-#line 135 "parser.y"
+#line 90 "parser.y"
                                               { (yyval.node) = new_if((yyvsp[-2].node), (yyvsp[0].node), NULL); }
-#line 1277 "./parser.c"
+#line 1229 "parser.c"
     break;
 
   case 14: /* if_stmt: IF '(' expression ')' stmt ELSE stmt  */
-#line 136 "parser.y"
+#line 91 "parser.y"
                                               { (yyval.node) = new_if((yyvsp[-4].node), (yyvsp[-2].node), (yyvsp[0].node)); }
-#line 1283 "./parser.c"
+#line 1235 "parser.c"
     break;
 
   case 15: /* while_stmt: WHILE '(' expression ')' stmt  */
-#line 140 "parser.y"
+#line 95 "parser.y"
                                                { (yyval.node) = new_while((yyvsp[-2].node), (yyvsp[0].node)); }
-#line 1289 "./parser.c"
+#line 1241 "parser.c"
     break;
 
   case 16: /* print_stmt: PRINT expression ';'  */
-#line 144 "parser.y"
+#line 99 "parser.y"
                                                { (yyval.node) = new_print((yyvsp[-1].node)); }
-#line 1295 "./parser.c"
+#line 1247 "parser.c"
     break;
 
   case 17: /* expression: assignment_expression  */
-#line 150 "parser.y"
+#line 105 "parser.y"
                                                { (yyval.node) = (yyvsp[0].node); }
-#line 1301 "./parser.c"
+#line 1253 "parser.c"
     break;
 
   case 18: /* assignment_expression: IDENTIFIER '=' assignment_expression  */
-#line 154 "parser.y"
+#line 109 "parser.y"
                                                { (yyval.node) = new_assign((yyvsp[-2].sval), (yyvsp[0].node)); /* lexer must have strdup'd $1 */ }
-#line 1307 "./parser.c"
+#line 1259 "parser.c"
     break;
 
   case 19: /* assignment_expression: IDENTIFIER ADD_ASSIGN assignment_expression  */
-#line 155 "parser.y"
+#line 110 "parser.y"
                                                   { /* a += b  -> a = a + b */
             AST *lhs = new_id((yyvsp[-2].sval)); (yyval.node) = new_assign((yyvsp[-2].sval), new_binop('+', lhs, (yyvsp[0].node))); }
-#line 1314 "./parser.c"
+#line 1266 "parser.c"
     break;
 
   case 20: /* assignment_expression: IDENTIFIER SUB_ASSIGN assignment_expression  */
-#line 157 "parser.y"
+#line 112 "parser.y"
                                                   {
             AST *lhs = new_id((yyvsp[-2].sval)); (yyval.node) = new_assign((yyvsp[-2].sval), new_binop('-', lhs, (yyvsp[0].node))); }
-#line 1321 "./parser.c"
+#line 1273 "parser.c"
     break;
 
   case 21: /* assignment_expression: IDENTIFIER MUL_ASSIGN assignment_expression  */
-#line 159 "parser.y"
+#line 114 "parser.y"
                                                   {
             AST *lhs = new_id((yyvsp[-2].sval)); (yyval.node) = new_assign((yyvsp[-2].sval), new_binop('*', lhs, (yyvsp[0].node))); }
-#line 1328 "./parser.c"
+#line 1280 "parser.c"
     break;
 
   case 22: /* assignment_expression: IDENTIFIER DIV_ASSIGN assignment_expression  */
-#line 161 "parser.y"
+#line 116 "parser.y"
                                                   {
             AST *lhs = new_id((yyvsp[-2].sval)); (yyval.node) = new_assign((yyvsp[-2].sval), new_binop('/', lhs, (yyvsp[0].node))); }
-#line 1335 "./parser.c"
+#line 1287 "parser.c"
     break;
 
   case 23: /* assignment_expression: IDENTIFIER MOD_ASSIGN assignment_expression  */
-#line 163 "parser.y"
+#line 118 "parser.y"
                                                   {
             AST *lhs = new_id((yyvsp[-2].sval)); (yyval.node) = new_assign((yyvsp[-2].sval), new_binop('%', lhs, (yyvsp[0].node))); }
-#line 1342 "./parser.c"
+#line 1294 "parser.c"
     break;
 
   case 24: /* assignment_expression: additive_expression  */
-#line 165 "parser.y"
+#line 120 "parser.y"
                                                  { (yyval.node) = (yyvsp[0].node); }
-#line 1348 "./parser.c"
+#line 1300 "parser.c"
     break;
 
   case 25: /* additive_expression: multiplicative_expression  */
-#line 169 "parser.y"
+#line 124 "parser.y"
                                                 { (yyval.node) = (yyvsp[0].node); }
-#line 1354 "./parser.c"
+#line 1306 "parser.c"
     break;
 
   case 26: /* additive_expression: additive_expression '+' multiplicative_expression  */
-#line 170 "parser.y"
+#line 125 "parser.y"
                                                         { (yyval.node) = new_binop('+',(yyvsp[-2].node),(yyvsp[0].node)); }
-#line 1360 "./parser.c"
+#line 1312 "parser.c"
     break;
 
   case 27: /* additive_expression: additive_expression '-' multiplicative_expression  */
-#line 171 "parser.y"
+#line 126 "parser.y"
                                                         { (yyval.node) = new_binop('-',(yyvsp[-2].node),(yyvsp[0].node)); }
-#line 1366 "./parser.c"
+#line 1318 "parser.c"
     break;
 
   case 28: /* multiplicative_expression: primary_expression  */
-#line 175 "parser.y"
+#line 130 "parser.y"
                                                 { (yyval.node) = (yyvsp[0].node); }
-#line 1372 "./parser.c"
+#line 1324 "parser.c"
     break;
 
   case 29: /* multiplicative_expression: multiplicative_expression '*' primary_expression  */
-#line 176 "parser.y"
+#line 131 "parser.y"
                                                        { (yyval.node) = new_binop('*',(yyvsp[-2].node),(yyvsp[0].node)); }
-#line 1378 "./parser.c"
+#line 1330 "parser.c"
     break;
 
   case 30: /* multiplicative_expression: multiplicative_expression '/' primary_expression  */
-#line 177 "parser.y"
+#line 132 "parser.y"
                                                        { (yyval.node) = new_binop('/',(yyvsp[-2].node),(yyvsp[0].node)); }
-#line 1384 "./parser.c"
+#line 1336 "parser.c"
     break;
 
   case 31: /* multiplicative_expression: multiplicative_expression '%' primary_expression  */
-#line 178 "parser.y"
+#line 133 "parser.y"
                                                        { (yyval.node) = new_binop('%',(yyvsp[-2].node),(yyvsp[0].node)); }
-#line 1390 "./parser.c"
+#line 1342 "parser.c"
     break;
 
   case 32: /* primary_expression: IDENTIFIER  */
-#line 183 "parser.y"
+#line 138 "parser.y"
                                                 { (yyval.node) = new_id((yyvsp[0].sval)); }
-#line 1396 "./parser.c"
+#line 1348 "parser.c"
     break;
 
   case 33: /* primary_expression: CONSTANT  */
-#line 184 "parser.y"
+#line 139 "parser.y"
                                                 { (yyval.node) = new_num((yyvsp[0].ival)); }
-#line 1402 "./parser.c"
+#line 1354 "parser.c"
     break;
 
   case 34: /* primary_expression: STDIN_GET_NUM  */
-#line 185 "parser.y"
+#line 140 "parser.y"
                                                 { (yyval.node) = new_input(); }
-#line 1408 "./parser.c"
+#line 1360 "parser.c"
     break;
 
   case 35: /* primary_expression: '(' expression ')'  */
-#line 186 "parser.y"
+#line 141 "parser.y"
                                                 { (yyval.node) = (yyvsp[-1].node); }
-#line 1414 "./parser.c"
+#line 1366 "parser.c"
     break;
 
 
-#line 1418 "./parser.c"
+#line 1370 "parser.c"
 
       default: break;
     }
@@ -1607,157 +1559,8 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 191 "parser.y"
+#line 150 "parser.y"
 
-
-/* ------------------ C user code: constructors, interpreter ------------------ */
-
-AST *new_num(int v) {
-    AST *n = (AST*)malloc(sizeof(AST));
-    n->type = N_NUM; n->ival = v; n->name = NULL; n->op = 0; n->left = n->right = n->third = n->next = NULL;
-    return n;
-}
-AST *new_id(char *name) {
-    AST *n = (AST*)malloc(sizeof(AST));
-    n->type = N_ID; n->name = strdup(name); n->op = 0; n->left = n->right = n->third = n->next = NULL;
-    return n;
-}
-AST *new_binop(char op, AST *l, AST *r) {
-    AST *n = (AST*)malloc(sizeof(AST));
-    n->type = N_BINOP; n->op = op; n->left = l; n->right = r; n->third = n->next = NULL; n->name = NULL;
-    return n;
-}
-AST *new_assign(char *name, AST *expr) {
-    AST *n = (AST*)malloc(sizeof(AST));
-    n->type = N_ASSIGN; n->name = strdup(name); n->left = expr; n->right = NULL; n->third = n->next = NULL; n->op = 0;
-    return n;
-}
-AST *new_print(AST *expr) {
-    AST *n = (AST*)malloc(sizeof(AST));
-    n->type = N_PRINT; n->left = expr; n->right = n->third = n->next = NULL; n->name = NULL; n->op = 0;
-    return n;
-}
-AST *new_input(void) {
-    AST *n = (AST*)malloc(sizeof(AST));
-    n->type = N_INPUT; n->left = n->right = n->third = n->next = NULL; n->name = NULL; n->op = 0;
-    return n;
-}
-AST *new_seq(AST *a, AST *b) {
-    if (!a) return b;
-    if (!b) return a;
-    /* append b at end of a */
-    AST *t = a;
-    while (t->next) t = t->next;
-    t->next = b;
-    return a;
-}
-AST *new_if(AST *cond, AST *thenb, AST *elseb) {
-    AST *n = (AST*)malloc(sizeof(AST));
-    n->type = N_IF; n->left = cond; n->right = thenb; n->third = elseb; n->next = NULL; n->name = NULL; n->op = 0;
-    return n;
-}
-AST *new_while(AST *cond, AST *body) {
-    AST *n = (AST*)malloc(sizeof(AST));
-    n->type = N_WHILE; n->left = cond; n->right = body; n->third = NULL; n->next = NULL; n->name = NULL; n->op = 0;
-    return n;
-}
-AST *new_expr_stmt(AST *e) {
-    AST *n = (AST*)malloc(sizeof(AST));
-    n->type = N_EXPR_STMT; n->left = e; n->right = n->third = n->next = NULL; n->name = NULL; n->op = 0;
-    return n;
-}
-
-/* symbol table helpers */
-void set_var(const char *name, int val) {
-    Sym *s = symtab;
-    while (s) {
-        if (strcmp(s->name, name) == 0) { s->val = val; return; }
-        s = s->next;
-    }
-    s = (Sym*)malloc(sizeof(Sym));
-    s->name = strdup(name);
-    s->val = val;
-    s->next = symtab;
-    symtab = s;
-}
-int get_var(const char *name) {
-    Sym *s = symtab;
-    while (s) { if (strcmp(s->name, name) == 0) return s->val; s = s->next; }
-    return 0; /* default 0 if not set */
-}
-
-/* evaluate expression, returns int */
-int eval_expr(AST *n) {
-    if (!n) return 0;
-    switch (n->type) {
-        case N_NUM: return n->ival;
-        case N_ID: return get_var(n->name);
-        case N_INPUT: {
-            int v = 0;
-            if (scanf("%d", &v) != 1) v = 0;
-            return v;
-        }
-        case N_BINOP: {
-            int a = eval_expr(n->left);
-            int b = eval_expr(n->right);
-            switch (n->op) {
-                case '+': return a + b;
-                case '-': return a - b;
-                case '*': return a * b;
-                case '/': return b ? (a / b) : 0;
-                case '%': return b ? (a % b) : 0;
-                case '<': return a < b;
-                case '>': return a > b;
-                case '=': return a == b;
-                case '!' : return a != b;
-                case 'L': return a <= b; /* we map LE_OP -> 'L' below when creating node */
-                case 'G': return a >= b; /* GE_OP -> 'G' */
-                default: return 0;
-            }
-        }
-        case N_ASSIGN: {
-            int val = eval_expr(n->left);
-            set_var(n->name, val);
-            return val;
-        }
-        default:
-            return 0;
-    }
-}
-
-/* execute statement node(s) */
-void exec_stmt(AST *n) {
-    for (AST *cur = n; cur; cur = cur->next) {
-        if (!cur) continue;
-        switch (cur->type) {
-            case N_EXPR_STMT: if (cur->left) eval_expr(cur->left); break;
-            case N_PRINT: {
-                int v = eval_expr(cur->left);
-                printf("%d\n", v);
-                break;
-            }
-            case N_IF: {
-                int c = eval_expr(cur->left);
-                if (c) exec_stmt(cur->right);
-                else if (cur->third) exec_stmt(cur->third);
-                break;
-            }
-            case N_WHILE: {
-                while (eval_expr(cur->left)) {
-                    exec_stmt(cur->right);
-                }
-                break;
-            }
-            case N_ASSIGN: { /* top-level assignment as statement */
-                eval_expr(cur);
-                break;
-            }
-            default:
-                /* also handle sequences (already flattened via next) */
-                break;
-        }
-    }
-}
 
 /* Bison will produce code that references yylval.* for tokens */
 /* NOTE: your lexer must set yylval.ival for CONSTANT and yylval.sval for IDENTIFIER */
