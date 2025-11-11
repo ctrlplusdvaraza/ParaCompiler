@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <assert.h>
-#include "ast_node.h"
+#include "ast_node.hpp"
 
 AST *new_num(int v) {
     AST *n = (AST*)malloc(sizeof(AST));

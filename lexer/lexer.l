@@ -1,99 +1,137 @@
-/* --------------------- FLEX DEFINITIONS SECTION --------------------- */
-D			[0-9]
-L			[a-zA-Z_]
+%option c++
+%option noyywrap
 
 %{
-#include <stdio.h>
-#include "parser.h"
+#include <iostream>
+#include "parser.hpp"
 
-void count();
-void comment();
+int mylineno = 0;
+void count(); // keep count function
+
+// Token type enum
+enum class TokenType {
+    // Keywords
+    ELSE,
+    IF,
+    WHILE,
+    PRINT,
+    STDIN_GET_NUM,
+
+    // Identifiers and literals
+    IDENTIFIER,
+    CONSTANT,
+    STRING_LITERAL,
+
+    // Assignment operators
+    ADD_ASSIGN,
+    SUB_ASSIGN,
+    MUL_ASSIGN,
+    DIV_ASSIGN,
+    MOD_ASSIGN,
+
+    // Comparison operators
+    LE_OP,
+    GE_OP,
+    EQ_OP,
+    NE_OP,
+
+    // Single-character symbols
+    LESS,
+    GREATER,
+    COMMA,
+    SEMICOLON,
+    LBRACE,
+    RBRACE,
+    ASSIGN,
+    LPAREN,
+    RPAREN,
+    MINUS,
+    PLUS,
+    MUL,
+    DIV,
+    MOD
+};
 
 %}
 
-
-/* --------------------- LEXICAL RULES SECTION --------------------- */
-%%
-"/*"			{ comment(); }
-
-"else"			{ count(); return(ELSE); }
-"if"			{ count(); return(IF); }
-"while"			{ count(); return(WHILE); }
-"?"				{ count(); return(STDIN_GET_NUM); }
-"print"		    { count(); return(PRINT); }
-
-{L}({L}|{D})*		{ count(); return(IDENTIFIER); }
-{D}+   				{ count(); return(CONSTANT); }
-\"(\\.|[^\\"])*\"	{ count(); return(STRING_LITERAL); }
-
-"+="			{ count(); return(ADD_ASSIGN); }
-"-="			{ count(); return(SUB_ASSIGN); }
-"*="			{ count(); return(MUL_ASSIGN); }
-"/="			{ count(); return(DIV_ASSIGN); }
-"%="			{ count(); return(MOD_ASSIGN); }
-
-"<="			{ count(); return(LE_OP); }
-">="			{ count(); return(GE_OP); }
-"=="			{ count(); return(EQ_OP); }
-"!="			{ count(); return(NE_OP); }
-
-"<"			{ count(); return('<'); }
-">"			{ count(); return('>'); }
-
-","			{ count(); return(','); }
-";"			{ count(); return(';'); }
-
-("{"|"<%")		{ count(); return('{'); }
-("}"|"%>")		{ count(); return('}'); }
-
-"="			{ count(); return('='); }
-"("			{ count(); return('('); }
-")"			{ count(); return(')'); }
-
-"-"			{ count(); return('-'); }
-"+"			{ count(); return('+'); }
-"*"			{ count(); return('*'); }
-"/"			{ count(); return('/'); }
-"%"			{ count(); return('%'); }
-
-[ \t\v\n\f] { count(); }
-.			{ fprintf(stderr, "Unknown character: %s\n", yytext); exit(1);}
-
+D       [0-9]
+L       [a-zA-Z_]
 
 %%
 
-void comment()
-{
-	char c, c1;
+"/*"           	{ 
+				int c;
 
-loop:
-	while ((c = input()) != '*' && c != 0)
-		putchar(c);
+				while((c = yyinput()) != 0)
+					{
+					if(c == '\n')
+						++mylineno;
 
-	if ((c1 = input()) != '/' && c != 0)
-	{
-		unput(c1);
-		goto loop;
-	}
+					else if(c == '*')
+						{
+						if((c = yyinput()) == '/')
+							break;
+						else
+							unput(c);
+						}
+					}
+				}
 
-	if (c != 0)
-		putchar(c1);
-}
+"else"          { count(); return (int)TokenType::ELSE; }
+"if"            { count(); return (int)TokenType::IF; }
+"while"         { count(); return (int)TokenType::WHILE; }
+"?"             { count(); return (int)TokenType::STDIN_GET_NUM; }
+"print"         { count(); return (int)TokenType::PRINT; }
+
+{L}({L}|{D})*   { count(); return (int)TokenType::IDENTIFIER; }
+{D}+            { count(); return (int)TokenType::CONSTANT; }
+\"(\\.|[^\\"])*\" { count(); return (int)TokenType::STRING_LITERAL; }
+
+"+="            { count(); return (int)TokenType::ADD_ASSIGN; }
+"-="            { count(); return (int)TokenType::SUB_ASSIGN; }
+"*="            { count(); return (int)TokenType::MUL_ASSIGN; }
+"/="            { count(); return (int)TokenType::DIV_ASSIGN; }
+"%="            { count(); return (int)TokenType::MOD_ASSIGN; }
+
+"<="            { count(); return (int)TokenType::LE_OP; }
+">="            { count(); return (int)TokenType::GE_OP; }
+"=="            { count(); return (int)TokenType::EQ_OP; }
+"!="            { count(); return (int)TokenType::NE_OP; }
+
+"<"             { count(); return (int)TokenType::LESS; }
+">"             { count(); return (int)TokenType::GREATER; }
+
+","             { count(); return (int)TokenType::COMMA; }
+";"             { count(); return (int)TokenType::SEMICOLON; }
+
+("{"|"<%")      { count(); return (int)TokenType::LBRACE; }
+("}"|"%>")      { count(); return (int)TokenType::RBRACE; }
+
+"="             { count(); return (int)TokenType::ASSIGN; }
+"("             { count(); return (int)TokenType::LPAREN; }
+")"             { count(); return (int)TokenType::RPAREN; }
+
+"-"             { count(); return (int)TokenType::MINUS; }
+"+"             { count(); return (int)TokenType::PLUS; }
+"*"             { count(); return (int)TokenType::MUL; }
+"/"             { count(); return (int)TokenType::DIV; }
+"%"             { count(); return (int)TokenType::MOD; }
+
+[ \t\v\n\f]     { count(); }
+.               { std::cerr << "Unknown character: " << yytext << std::endl; std::exit(1); }
+
+%%
 
 
 int column = 0;
 
-void count()
+void count(yyFlexLexer* scanner)
 {
-	int i;
-
-	for (i = 0; yytext[i] != '\0'; i++)
-		if (yytext[i] == '\n')
-			column = 0;
-		else if (yytext[i] == '\t')
-			column += 8 - (column % 8);
-		else
-			column++;
-
-	ECHO;
+    for (int i = 0; scanner->YYText()[i] != '\0'; i++)
+        if (scanner->YYText()[i] == '\n')
+            column = 0;
+        else if (scanner->YYText()[i] == '\t')
+            column += 8 - (column % 8);
+        else
+            column++;
 }

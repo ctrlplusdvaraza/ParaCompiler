@@ -1,9 +1,4 @@
-#ifndef AST_NODE_H
-#define AST_NODE_H
-
-
-#ifndef AST_H
-#define AST_H
+#pragma once
 
 typedef enum {
     N_NUM,
@@ -40,8 +35,3 @@ AST *new_seq(AST *a, AST *b);
 AST *new_if(AST *cond, AST *thenb, AST *elseb);
 AST *new_while(AST *cond, AST *body);
 AST *new_expr_stmt(AST *e);
-
-#endif
-
-
-#endif // AST_NODE_H

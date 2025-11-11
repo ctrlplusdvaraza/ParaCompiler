@@ -1,8 +1,12 @@
+%require "3.2"
+%language "c++"
+
 %{
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "ast_node.h"
+#include "ast_node.hpp"
 
 
 int yylex(void);
@@ -20,7 +24,7 @@ AST *root = NULL;
 }
 
 %code requires {
-#include "ast_node.h"
+    #include "ast_node.hpp"
 }
 
 %token ELSE IF WHILE STDIN_GET_NUM PRINT
@@ -139,7 +143,7 @@ conditional_expression
 
 assignment_expression
     : conditional_expression
-    | IDENTIFIER assignment_operator assignment_expression
+    | IDENTIFIER assignment_operator assignment_expression {printf("var = x\n");}
     ;
 
 assignment_operator
