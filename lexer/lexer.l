@@ -19,8 +19,8 @@ void comment();
 "else"			{ count(); return(ELSE); }
 "if"			{ count(); return(IF); }
 "while"			{ count(); return(WHILE); }
-"?"				{ count(); return('STDIN_GET_NUM'); }
-"print"		    { count(); return('PRINT'); }
+"?"				{ count(); return(STDIN_GET_NUM); }
+"print"		    { count(); return(PRINT); }
 
 {L}({L}|{D})*		{ count(); return(IDENTIFIER); }
 {D}+   				{ count(); return(CONSTANT); }

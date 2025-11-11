@@ -789,12 +789,12 @@ YY_RULE_SETUP
 case 5:
 YY_RULE_SETUP
 #line 22 "lexer.l"
-{ count(); return('STDIN_GET_NUM'); }
+{ count(); return(STDIN_GET_NUM); }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
 #line 23 "lexer.l"
-{ count(); return('PRINT'); }
+{ count(); return(PRINT); }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
