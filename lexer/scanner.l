@@ -1,12 +1,13 @@
+%option c++
 %option noyywrap
+
 %{
 #include "parser.tab.hh"
 #include "driver.hh"
-#include <cstdlib>
-#include <string>
+#include <FlexLexer.h>     
 
 #undef YY_DECL
-#define YY_DECL yy::parser::symbol_type yylex (driver& drv)
+#define YY_DECL yy::parser::symbol_type yylex(driver& drv)
 %}
 
 DIGIT   [0-9]+
@@ -30,5 +31,4 @@ ID      [A-Za-z_][A-Za-z0-9_]*
 \n          { /* skip newline */ }
 .           { /* ignore other chars */ }
 
-<<EOF>>     { yy::parser::make_YYEOF(drv.location); }   /* EOF -> empty/default symbol */
 %%
