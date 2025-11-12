@@ -551,7 +551,28 @@ namespace yy {
         S_CONSTANT = 32,                         // CONSTANT
         S_STRING_LITERAL = 33,                   // STRING_LITERAL
         S_YYACCEPT = 34,                         // $accept
-        S_unit = 35                              // unit
+        S_translation_unit = 35,                 // translation_unit
+        S_stmt_list = 36,                        // stmt_list
+        S_stmt = 37,                             // stmt
+        S_expr_stmt = 38,                        // expr_stmt
+        S_compound_stmt = 39,                    // compound_stmt
+        S_if_stmt = 40,                          // if_stmt
+        S_while_stmt = 41,                       // while_stmt
+        S_print_stmt = 42,                       // print_stmt
+        S_expression = 43,                       // expression
+        S_relational_expression = 44,            // relational_expression
+        S_equality_expression = 45,              // equality_expression
+        S_and_expression = 46,                   // and_expression
+        S_exclusive_or_expression = 47,          // exclusive_or_expression
+        S_inclusive_or_expression = 48,          // inclusive_or_expression
+        S_logical_and_expression = 49,           // logical_and_expression
+        S_logical_or_expression = 50,            // logical_or_expression
+        S_conditional_expression = 51,           // conditional_expression
+        S_assignment_expression = 52,            // assignment_expression
+        S_assignment_operator = 53,              // assignment_operator
+        S_additive_expression = 54,              // additive_expression
+        S_multiplicative_expression = 55,        // multiplicative_expression
+        S_primary_expression = 56                // primary_expression
       };
     };
 
@@ -1473,7 +1494,7 @@ switch (yykind)
 
 #if YYDEBUG
     // YYRLINE[YYN] -- Source line where rule number YYN was defined.
-    static const signed char yyrline_[];
+    static const unsigned char yyrline_[];
     /// Report on the debug stream that the rule \a r is going to be reduced.
     virtual void yy_reduce_print_ (int r) const;
     /// Print the state stack on the debug stream.
@@ -1709,9 +1730,9 @@ switch (yykind)
     /// Constants.
     enum
     {
-      yylast_ = 0,     ///< Last index in yytable_.
-      yynnts_ = 2,  ///< Number of nonterminal symbols.
-      yyfinal_ = 2 ///< Termination state number.
+      yylast_ = 67,     ///< Last index in yytable_.
+      yynnts_ = 23,  ///< Number of nonterminal symbols.
+      yyfinal_ = 3 ///< Termination state number.
     };
 
 
@@ -1895,7 +1916,7 @@ switch (yykind)
 
 
 } // yy
-#line 1899 "parser.hh"
+#line 1920 "parser.hh"
 
 
 

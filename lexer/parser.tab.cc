@@ -795,7 +795,14 @@ namespace yy {
     "end of file", "error", "invalid token", "else", "if", "while", "?",
   "print", "+=", "-=", "*=", "/=", "%=", "<=", ">=", "==", "!=", "<", ">",
   ",", ";", "{", "}", "=", "(", ")", "-", "+", "*", "/", "%", "IDENTIFIER",
-  "CONSTANT", "STRING_LITERAL", "$accept", "unit", YY_NULLPTR
+  "CONSTANT", "STRING_LITERAL", "$accept", "translation_unit", "stmt_list",
+  "stmt", "expr_stmt", "compound_stmt", "if_stmt", "while_stmt",
+  "print_stmt", "expression", "relational_expression",
+  "equality_expression", "and_expression", "exclusive_or_expression",
+  "inclusive_or_expression", "logical_and_expression",
+  "logical_or_expression", "conditional_expression",
+  "assignment_expression", "assignment_operator", "additive_expression",
+  "multiplicative_expression", "primary_expression", YY_NULLPTR
     };
     return yy_sname[yysymbol];
   }
@@ -1064,72 +1071,121 @@ namespace yy {
   }
 
 
-  const signed char parser::yypact_ninf_ = -1;
+  const signed char parser::yypact_ninf_ = -23;
 
   const signed char parser::yytable_ninf_ = -1;
 
   const signed char
   parser::yypact_[] =
   {
-      -1,     0,    -1
+     -23,     4,     1,   -23,   -14,    -5,   -23,     5,   -23,   -23,
+       5,    32,   -23,   -23,   -23,   -23,   -23,   -23,   -23,    10,
+      -3,   -23,   -23,   -23,   -23,   -23,   -23,   -23,   -23,    21,
+      22,   -23,     5,     5,    36,    -4,    35,   -23,   -23,   -23,
+     -23,   -23,   -23,     5,   -23,     7,     7,     7,     7,     7,
+       7,     7,    37,    38,   -23,   -23,   -23,   -23,   -23,    21,
+      21,    22,    22,   -23,   -23,   -23,     1,     1,    23,   -23,
+       1,   -23
   };
 
   const signed char
   parser::yydefact_[] =
   {
-       2,     0,     1
+       3,     0,     2,     1,     0,     0,    45,     0,    10,     3,
+       0,    43,    44,     4,     5,     6,     7,     8,     9,     0,
+      21,    22,    23,    24,    25,    26,    27,    28,    17,    18,
+      36,    39,     0,     0,     0,     0,     0,    34,    35,    31,
+      32,    33,    30,     0,    11,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,    16,    12,    46,    29,    43,    19,
+      20,    38,    37,    40,    41,    42,     0,     0,    13,    15,
+       0,    14
   };
 
   const signed char
   parser::yypgoto_[] =
   {
-      -1,    -1
+     -23,   -23,    52,   -21,   -23,   -23,   -23,   -23,   -23,     2,
+     -23,   -23,   -23,   -23,   -23,   -23,   -23,   -23,    24,   -23,
+     -22,     6,     8
   };
 
   const signed char
   parser::yydefgoto_[] =
   {
-       0,     1
+       0,     1,     2,    13,    14,    15,    16,    17,    18,    19,
+      20,    21,    22,    23,    24,    25,    26,    27,    28,    43,
+      29,    30,    31
   };
 
   const signed char
   parser::yytable_[] =
   {
-       2
+       4,     5,     6,     7,     3,     4,     5,     6,     7,    34,
+      32,     6,    36,     6,    45,    46,     8,     9,    55,    33,
+      10,     8,     9,    59,    60,    10,    70,    11,    12,    10,
+      44,    10,    11,    12,    52,    53,    11,    12,    58,    12,
+      37,    38,    39,    40,    41,    68,    69,    47,    48,    71,
+      49,    50,    51,    61,    62,    42,    54,    63,    64,    65,
+      56,    35,    66,    67,     0,     0,     0,    57
   };
 
   const signed char
   parser::yycheck_[] =
   {
-       0
+       4,     5,     6,     7,     0,     4,     5,     6,     7,     7,
+      24,     6,    10,     6,    17,    18,    20,    21,    22,    24,
+      24,    20,    21,    45,    46,    24,     3,    31,    32,    24,
+      20,    24,    31,    32,    32,    33,    31,    32,    31,    32,
+       8,     9,    10,    11,    12,    66,    67,    26,    27,    70,
+      28,    29,    30,    47,    48,    23,    20,    49,    50,    51,
+      25,     9,    25,    25,    -1,    -1,    -1,    43
   };
 
   const signed char
   parser::yystos_[] =
   {
-       0,    35,     0
+       0,    35,    36,     0,     4,     5,     6,     7,    20,    21,
+      24,    31,    32,    37,    38,    39,    40,    41,    42,    43,
+      44,    45,    46,    47,    48,    49,    50,    51,    52,    54,
+      55,    56,    24,    24,    43,    36,    43,     8,     9,    10,
+      11,    12,    23,    53,    20,    17,    18,    26,    27,    28,
+      29,    30,    43,    43,    20,    22,    25,    52,    31,    54,
+      54,    55,    55,    56,    56,    56,    25,    25,    37,    37,
+       3,    37
   };
 
   const signed char
   parser::yyr1_[] =
   {
-       0,    34,    35
+       0,    34,    35,    36,    36,    37,    37,    37,    37,    37,
+      38,    38,    39,    40,    40,    41,    42,    43,    44,    44,
+      44,    45,    46,    47,    48,    49,    50,    51,    52,    52,
+      53,    53,    53,    53,    53,    53,    54,    54,    54,    55,
+      55,    55,    55,    56,    56,    56,    56
   };
 
   const signed char
   parser::yyr2_[] =
   {
-       0,     2,     0
+       0,     2,     1,     0,     2,     1,     1,     1,     1,     1,
+       1,     2,     3,     5,     7,     5,     3,     1,     1,     3,
+       3,     1,     1,     1,     1,     1,     1,     1,     1,     3,
+       1,     1,     1,     1,     1,     1,     1,     3,     3,     1,
+       3,     3,     3,     1,     1,     1,     3
   };
 
 
 
 
 #if YYDEBUG
-  const signed char
+  const unsigned char
   parser::yyrline_[] =
   {
-       0,    77,    77
+       0,    80,    80,    84,    85,    89,    90,    91,    92,    93,
+      97,    98,   102,   106,   107,   111,   115,   121,   126,   127,
+     128,   132,   136,   140,   144,   148,   152,   156,   160,   161,
+     165,   166,   167,   168,   169,   170,   175,   176,   177,   181,
+     182,   183,   184,   189,   190,   191,   192
   };
 
   void
@@ -1161,9 +1217,9 @@ namespace yy {
 
 
 } // yy
-#line 1165 "parser.tab.cc"
+#line 1221 "parser.tab.cc"
 
-#line 79 "parser.yy"
+#line 195 "parser.yy"
 
 
 void

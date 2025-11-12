@@ -1,3 +1,12 @@
-three := 3
-seven := one + two * three
-seven * seven
+fst = 0;
+snd = 0;
+iters = ?;
+
+while (iters > 0) {
+    tmp = fst;
+    fst = snd;
+    snd = snd + tmp;
+    iters = iters - 1;
+}
+
+print snd;
