@@ -551,10 +551,10 @@ int yy_flex_debug = 1;
 
 static const flex_int16_t yy_rule_linenum[34] =
     {   0,
-       43,   44,   45,   46,   47,   49,   50,   52,   53,   54,
-       55,   56,   58,   59,   60,   61,   63,   64,   65,   66,
-       68,   69,   71,   72,   73,   75,   76,   77,   78,   79,
-       81,   82,   84
+       36,   37,   38,   39,   40,   42,   43,   45,   46,   47,
+       48,   49,   51,   52,   53,   54,   56,   57,   58,   59,
+       61,   62,   64,   65,   66,   68,   69,   70,   71,   72,
+       74,   75,   77
     } ;
 
 /* The intent behind this definition is that it'll catch
@@ -577,17 +577,12 @@ char *yytext;
 # include "driver.hh"
 # include "parser.hh"
 #line 579 "scanner.yy.cc"
-#line 17 "scanner.l"
-  // A number symbol corresponding to the value in S.
-  yy::parser::symbol_type
-  make_NUMBER (const std::string &s, const yy::parser::location_type& loc);
-#line 584 "scanner.yy.cc"
-#line 28 "scanner.l"
+#line 21 "scanner.l"
   // Code run each time a pattern is matched.
   # define YY_USER_ACTION  loc.columns (yyleng);
-#line 588 "scanner.yy.cc"
+#line 583 "scanner.yy.cc"
 /* --------------------- LEXICAL RULES SECTION --------------------- */
-#line 590 "scanner.yy.cc"
+#line 585 "scanner.yy.cc"
 
 #define INITIAL 0
 
@@ -865,18 +860,18 @@ YY_DECL
 
 	{
 /* %% [7.0] user's declarations go here */
-#line 33 "scanner.l"
+#line 26 "scanner.l"
 
 
 
-#line 37 "scanner.l"
+#line 30 "scanner.l"
   // A handy shortcut to the location held by the driver.
   yy::location& loc = drv.location;
   // Code run each time yylex is called.
-  loc.step ();
+  loc.step();
 
 
-#line 879 "scanner.yy.cc"
+#line 874 "scanner.yy.cc"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -954,168 +949,168 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 43 "scanner.l"
+#line 36 "scanner.l"
 { return yy::parser::make_ELSE(loc); }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 44 "scanner.l"
+#line 37 "scanner.l"
 { return yy::parser::make_IF(loc); }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 45 "scanner.l"
+#line 38 "scanner.l"
 { return yy::parser::make_WHILE(loc); }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 46 "scanner.l"
+#line 39 "scanner.l"
 { return yy::parser::make_STDIN_GET_NUM(loc); }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 47 "scanner.l"
+#line 40 "scanner.l"
 { return yy::parser::make_PRINT(loc); }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 49 "scanner.l"
+#line 42 "scanner.l"
 { return yy::parser::make_IDENTIFIER(yytext, loc); }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 50 "scanner.l"
+#line 43 "scanner.l"
 { return yy::parser::make_CONSTANT(std::stoi(yytext), loc); }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 52 "scanner.l"
+#line 45 "scanner.l"
 { return yy::parser::make_ADD_ASSIGN(loc); }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 53 "scanner.l"
+#line 46 "scanner.l"
 { return yy::parser::make_SUB_ASSIGN(loc); }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 54 "scanner.l"
+#line 47 "scanner.l"
 { return yy::parser::make_MUL_ASSIGN(loc); }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 55 "scanner.l"
+#line 48 "scanner.l"
 { return yy::parser::make_DIV_ASSIGN(loc); }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 56 "scanner.l"
+#line 49 "scanner.l"
 { return yy::parser::make_MOD_ASSIGN(loc); }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 58 "scanner.l"
+#line 51 "scanner.l"
 { return yy::parser::make_LE_OP(loc); }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 59 "scanner.l"
+#line 52 "scanner.l"
 { return yy::parser::make_GE_OP(loc); }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 60 "scanner.l"
+#line 53 "scanner.l"
 { return yy::parser::make_EQ_OP(loc); }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 61 "scanner.l"
+#line 54 "scanner.l"
 { return yy::parser::make_NE_OP(loc); }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 63 "scanner.l"
+#line 56 "scanner.l"
 { return yy::parser::make_LESS(loc); }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 64 "scanner.l"
+#line 57 "scanner.l"
 { return yy::parser::make_GREATER(loc); }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 65 "scanner.l"
+#line 58 "scanner.l"
 { return yy::parser::make_COMMA(loc); }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 66 "scanner.l"
+#line 59 "scanner.l"
 { return yy::parser::make_SEMICOLON(loc); }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 68 "scanner.l"
+#line 61 "scanner.l"
 { return yy::parser::make_LBRACE(loc); }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 69 "scanner.l"
+#line 62 "scanner.l"
 { return yy::parser::make_RBRACE(loc); }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 71 "scanner.l"
+#line 64 "scanner.l"
 { return yy::parser::make_ASSIGN(loc); }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 72 "scanner.l"
+#line 65 "scanner.l"
 { return yy::parser::make_LPAREN(loc); }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 73 "scanner.l"
+#line 66 "scanner.l"
 { return yy::parser::make_RPAREN(loc); }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 75 "scanner.l"
+#line 68 "scanner.l"
 { return yy::parser::make_MINUS(loc); }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 76 "scanner.l"
+#line 69 "scanner.l"
 { return yy::parser::make_PLUS(loc); }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 77 "scanner.l"
+#line 70 "scanner.l"
 { return yy::parser::make_STAR(loc); }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 78 "scanner.l"
+#line 71 "scanner.l"
 { return yy::parser::make_SLASH(loc); }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 79 "scanner.l"
+#line 72 "scanner.l"
 { return yy::parser::make_PERCENT(loc); }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 81 "scanner.l"
+#line 74 "scanner.l"
 { loc.step(); }
 	YY_BREAK
 case 32:
 /* rule 32 can match eol */
 YY_RULE_SETUP
-#line 82 "scanner.l"
+#line 75 "scanner.l"
 { loc.lines(yyleng); loc.step(); }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 84 "scanner.l"
+#line 77 "scanner.l"
 {
                         throw yy::parser::syntax_error(
                             loc, "Unknown character: " + std::string(yytext)
@@ -1123,15 +1118,15 @@ YY_RULE_SETUP
                       }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-#line 90 "scanner.l"
+#line 83 "scanner.l"
 { return yy::parser::make_YYEOF(loc); }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 92 "scanner.l"
+#line 85 "scanner.l"
 ECHO;
 	YY_BREAK
-#line 1134 "scanner.yy.cc"
+#line 1129 "scanner.yy.cc"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2236,7 +2231,7 @@ void yyfree (void * ptr )
 
 /* %ok-for-header */
 
-#line 92 "scanner.l"
+#line 85 "scanner.l"
 
 
 /* --------------------- USER CODE SECTION --------------------- */

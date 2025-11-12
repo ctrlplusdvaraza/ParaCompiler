@@ -47,10 +47,13 @@
 // "%code requires" blocks.
 #line 10 "parser.yy"
 
-  # include <string>
+  #include <string>
+  #include <memory>
+  #include "inc/ast.hh"
+
   class driver;
 
-#line 54 "parser.hh"
+#line 57 "parser.hh"
 
 # include <cassert>
 # include <cstdlib> // std::abort
@@ -190,7 +193,7 @@
 #endif
 
 namespace yy {
-#line 194 "parser.hh"
+#line 197 "parser.hh"
 
 
 
@@ -412,9 +415,37 @@ namespace yy {
       // CONSTANT
       char dummy1[sizeof (int)];
 
+      // expression
+      // logical_or_expression
+      // logical_and_expression
+      // equality_expression
+      // relational_expression
+      // and_expression
+      // exclusive_or_expression
+      // inclusive_or_expression
+      // conditional_expression
+      // assignment_expression
+      // additive_expression
+      // multiplicative_expression
+      // primary_expression
+      char dummy2[sizeof (std::shared_ptr<Expression>)];
+
+      // stmt
+      // expr_stmt
+      // compound_stmt
+      // if_stmt
+      // while_stmt
+      // print_stmt
+      char dummy3[sizeof (std::shared_ptr<Statement>)];
+
+      // translation_unit
+      // stmt_list
+      char dummy4[sizeof (std::shared_ptr<TranslationUnit>)];
+
       // IDENTIFIER
       // STRING_LITERAL
-      char dummy2[sizeof (std::string)];
+      // assignment_operator
+      char dummy5[sizeof (std::string)];
     };
 
     /// The size of the largest semantic type.
@@ -514,7 +545,7 @@ namespace yy {
     {
       enum symbol_kind_type
       {
-        YYNTOKENS = 34, ///< Number of tokens.
+        YYNTOKENS = 41, ///< Number of tokens.
         S_YYEMPTY = -2,
         S_YYEOF = 0,                             // "end of file"
         S_YYerror = 1,                           // error
@@ -550,29 +581,36 @@ namespace yy {
         S_IDENTIFIER = 31,                       // IDENTIFIER
         S_CONSTANT = 32,                         // CONSTANT
         S_STRING_LITERAL = 33,                   // STRING_LITERAL
-        S_YYACCEPT = 34,                         // $accept
-        S_translation_unit = 35,                 // translation_unit
-        S_stmt_list = 36,                        // stmt_list
-        S_stmt = 37,                             // stmt
-        S_expr_stmt = 38,                        // expr_stmt
-        S_compound_stmt = 39,                    // compound_stmt
-        S_if_stmt = 40,                          // if_stmt
-        S_while_stmt = 41,                       // while_stmt
-        S_print_stmt = 42,                       // print_stmt
-        S_expression = 43,                       // expression
-        S_relational_expression = 44,            // relational_expression
-        S_equality_expression = 45,              // equality_expression
-        S_and_expression = 46,                   // and_expression
-        S_exclusive_or_expression = 47,          // exclusive_or_expression
-        S_inclusive_or_expression = 48,          // inclusive_or_expression
-        S_logical_and_expression = 49,           // logical_and_expression
-        S_logical_or_expression = 50,            // logical_or_expression
-        S_conditional_expression = 51,           // conditional_expression
-        S_assignment_expression = 52,            // assignment_expression
-        S_assignment_operator = 53,              // assignment_operator
-        S_additive_expression = 54,              // additive_expression
-        S_multiplicative_expression = 55,        // multiplicative_expression
-        S_primary_expression = 56                // primary_expression
+        S_34_ = 34,                              // "||"
+        S_35_ = 35,                              // "&&"
+        S_36_ = 36,                              // '&'
+        S_37_ = 37,                              // '^'
+        S_38_ = 38,                              // '|'
+        S_39_ = 39,                              // '?'
+        S_40_ = 40,                              // ':'
+        S_YYACCEPT = 41,                         // $accept
+        S_translation_unit = 42,                 // translation_unit
+        S_stmt_list = 43,                        // stmt_list
+        S_stmt = 44,                             // stmt
+        S_expr_stmt = 45,                        // expr_stmt
+        S_compound_stmt = 46,                    // compound_stmt
+        S_if_stmt = 47,                          // if_stmt
+        S_while_stmt = 48,                       // while_stmt
+        S_print_stmt = 49,                       // print_stmt
+        S_expression = 50,                       // expression
+        S_logical_or_expression = 51,            // logical_or_expression
+        S_logical_and_expression = 52,           // logical_and_expression
+        S_equality_expression = 53,              // equality_expression
+        S_relational_expression = 54,            // relational_expression
+        S_and_expression = 55,                   // and_expression
+        S_exclusive_or_expression = 56,          // exclusive_or_expression
+        S_inclusive_or_expression = 57,          // inclusive_or_expression
+        S_conditional_expression = 58,           // conditional_expression
+        S_assignment_expression = 59,            // assignment_expression
+        S_assignment_operator = 60,              // assignment_operator
+        S_additive_expression = 61,              // additive_expression
+        S_multiplicative_expression = 62,        // multiplicative_expression
+        S_primary_expression = 63                // primary_expression
       };
     };
 
@@ -613,8 +651,39 @@ namespace yy {
         value.move< int > (std::move (that.value));
         break;
 
+      case symbol_kind::S_expression: // expression
+      case symbol_kind::S_logical_or_expression: // logical_or_expression
+      case symbol_kind::S_logical_and_expression: // logical_and_expression
+      case symbol_kind::S_equality_expression: // equality_expression
+      case symbol_kind::S_relational_expression: // relational_expression
+      case symbol_kind::S_and_expression: // and_expression
+      case symbol_kind::S_exclusive_or_expression: // exclusive_or_expression
+      case symbol_kind::S_inclusive_or_expression: // inclusive_or_expression
+      case symbol_kind::S_conditional_expression: // conditional_expression
+      case symbol_kind::S_assignment_expression: // assignment_expression
+      case symbol_kind::S_additive_expression: // additive_expression
+      case symbol_kind::S_multiplicative_expression: // multiplicative_expression
+      case symbol_kind::S_primary_expression: // primary_expression
+        value.move< std::shared_ptr<Expression> > (std::move (that.value));
+        break;
+
+      case symbol_kind::S_stmt: // stmt
+      case symbol_kind::S_expr_stmt: // expr_stmt
+      case symbol_kind::S_compound_stmt: // compound_stmt
+      case symbol_kind::S_if_stmt: // if_stmt
+      case symbol_kind::S_while_stmt: // while_stmt
+      case symbol_kind::S_print_stmt: // print_stmt
+        value.move< std::shared_ptr<Statement> > (std::move (that.value));
+        break;
+
+      case symbol_kind::S_translation_unit: // translation_unit
+      case symbol_kind::S_stmt_list: // stmt_list
+        value.move< std::shared_ptr<TranslationUnit> > (std::move (that.value));
+        break;
+
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
       case symbol_kind::S_STRING_LITERAL: // STRING_LITERAL
+      case symbol_kind::S_assignment_operator: // assignment_operator
         value.move< std::string > (std::move (that.value));
         break;
 
@@ -649,6 +718,48 @@ namespace yy {
       {}
 #else
       basic_symbol (typename Base::kind_type t, const int& v, const location_type& l)
+        : Base (t)
+        , value (v)
+        , location (l)
+      {}
+#endif
+
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, std::shared_ptr<Expression>&& v, location_type&& l)
+        : Base (t)
+        , value (std::move (v))
+        , location (std::move (l))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const std::shared_ptr<Expression>& v, const location_type& l)
+        : Base (t)
+        , value (v)
+        , location (l)
+      {}
+#endif
+
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, std::shared_ptr<Statement>&& v, location_type&& l)
+        : Base (t)
+        , value (std::move (v))
+        , location (std::move (l))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const std::shared_ptr<Statement>& v, const location_type& l)
+        : Base (t)
+        , value (v)
+        , location (l)
+      {}
+#endif
+
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, std::shared_ptr<TranslationUnit>&& v, location_type&& l)
+        : Base (t)
+        , value (std::move (v))
+        , location (std::move (l))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const std::shared_ptr<TranslationUnit>& v, const location_type& l)
         : Base (t)
         , value (v)
         , location (l)
@@ -697,8 +808,39 @@ switch (yykind)
         value.template destroy< int > ();
         break;
 
+      case symbol_kind::S_expression: // expression
+      case symbol_kind::S_logical_or_expression: // logical_or_expression
+      case symbol_kind::S_logical_and_expression: // logical_and_expression
+      case symbol_kind::S_equality_expression: // equality_expression
+      case symbol_kind::S_relational_expression: // relational_expression
+      case symbol_kind::S_and_expression: // and_expression
+      case symbol_kind::S_exclusive_or_expression: // exclusive_or_expression
+      case symbol_kind::S_inclusive_or_expression: // inclusive_or_expression
+      case symbol_kind::S_conditional_expression: // conditional_expression
+      case symbol_kind::S_assignment_expression: // assignment_expression
+      case symbol_kind::S_additive_expression: // additive_expression
+      case symbol_kind::S_multiplicative_expression: // multiplicative_expression
+      case symbol_kind::S_primary_expression: // primary_expression
+        value.template destroy< std::shared_ptr<Expression> > ();
+        break;
+
+      case symbol_kind::S_stmt: // stmt
+      case symbol_kind::S_expr_stmt: // expr_stmt
+      case symbol_kind::S_compound_stmt: // compound_stmt
+      case symbol_kind::S_if_stmt: // if_stmt
+      case symbol_kind::S_while_stmt: // while_stmt
+      case symbol_kind::S_print_stmt: // print_stmt
+        value.template destroy< std::shared_ptr<Statement> > ();
+        break;
+
+      case symbol_kind::S_translation_unit: // translation_unit
+      case symbol_kind::S_stmt_list: // stmt_list
+        value.template destroy< std::shared_ptr<TranslationUnit> > ();
+        break;
+
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
       case symbol_kind::S_STRING_LITERAL: // STRING_LITERAL
+      case symbol_kind::S_assignment_operator: // assignment_operator
         value.template destroy< std::string > ();
         break;
 
@@ -800,7 +942,13 @@ switch (yykind)
       {
 #if !defined _MSC_VER || defined __clang__
         YY_ASSERT (tok == token::TOK_YYEOF
-                   || (token::TOK_YYerror <= tok && tok <= token::TOK_PERCENT));
+                   || (token::TOK_YYerror <= tok && tok <= token::TOK_PERCENT)
+                   || (289 <= tok && tok <= 290)
+                   || tok == 38
+                   || tok == 94
+                   || tok == 124
+                   || tok == 63
+                   || tok == 58);
 #endif
       }
 #if 201103L <= YY_CPLUSPLUS
@@ -1494,7 +1642,7 @@ switch (yykind)
 
 #if YYDEBUG
     // YYRLINE[YYN] -- Source line where rule number YYN was defined.
-    static const unsigned char yyrline_[];
+    static const short yyrline_[];
     /// Report on the debug stream that the rule \a r is going to be reduced.
     virtual void yy_reduce_print_ (int r) const;
     /// Print the state stack on the debug stream.
@@ -1730,7 +1878,7 @@ switch (yykind)
     /// Constants.
     enum
     {
-      yylast_ = 67,     ///< Last index in yytable_.
+      yylast_ = 87,     ///< Last index in yytable_.
       yynnts_ = 23,  ///< Number of nonterminal symbols.
       yyfinal_ = 3 ///< Termination state number.
     };
@@ -1754,16 +1902,16 @@ switch (yykind)
        0,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,    36,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,    40,     2,
+       2,     2,     2,    39,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,    37,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,    38,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -1779,10 +1927,11 @@ switch (yykind)
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
       15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
-      25,    26,    27,    28,    29,    30,    31,    32,    33
+      25,    26,    27,    28,    29,    30,    31,    32,    33,    34,
+      35
     };
     // Last valid token kind.
-    const int code_max = 288;
+    const int code_max = 290;
 
     if (t <= 0)
       return symbol_kind::S_YYEOF;
@@ -1805,8 +1954,39 @@ switch (yykind)
         value.copy< int > (YY_MOVE (that.value));
         break;
 
+      case symbol_kind::S_expression: // expression
+      case symbol_kind::S_logical_or_expression: // logical_or_expression
+      case symbol_kind::S_logical_and_expression: // logical_and_expression
+      case symbol_kind::S_equality_expression: // equality_expression
+      case symbol_kind::S_relational_expression: // relational_expression
+      case symbol_kind::S_and_expression: // and_expression
+      case symbol_kind::S_exclusive_or_expression: // exclusive_or_expression
+      case symbol_kind::S_inclusive_or_expression: // inclusive_or_expression
+      case symbol_kind::S_conditional_expression: // conditional_expression
+      case symbol_kind::S_assignment_expression: // assignment_expression
+      case symbol_kind::S_additive_expression: // additive_expression
+      case symbol_kind::S_multiplicative_expression: // multiplicative_expression
+      case symbol_kind::S_primary_expression: // primary_expression
+        value.copy< std::shared_ptr<Expression> > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_stmt: // stmt
+      case symbol_kind::S_expr_stmt: // expr_stmt
+      case symbol_kind::S_compound_stmt: // compound_stmt
+      case symbol_kind::S_if_stmt: // if_stmt
+      case symbol_kind::S_while_stmt: // while_stmt
+      case symbol_kind::S_print_stmt: // print_stmt
+        value.copy< std::shared_ptr<Statement> > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_translation_unit: // translation_unit
+      case symbol_kind::S_stmt_list: // stmt_list
+        value.copy< std::shared_ptr<TranslationUnit> > (YY_MOVE (that.value));
+        break;
+
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
       case symbol_kind::S_STRING_LITERAL: // STRING_LITERAL
+      case symbol_kind::S_assignment_operator: // assignment_operator
         value.copy< std::string > (YY_MOVE (that.value));
         break;
 
@@ -1845,8 +2025,39 @@ switch (yykind)
         value.move< int > (YY_MOVE (s.value));
         break;
 
+      case symbol_kind::S_expression: // expression
+      case symbol_kind::S_logical_or_expression: // logical_or_expression
+      case symbol_kind::S_logical_and_expression: // logical_and_expression
+      case symbol_kind::S_equality_expression: // equality_expression
+      case symbol_kind::S_relational_expression: // relational_expression
+      case symbol_kind::S_and_expression: // and_expression
+      case symbol_kind::S_exclusive_or_expression: // exclusive_or_expression
+      case symbol_kind::S_inclusive_or_expression: // inclusive_or_expression
+      case symbol_kind::S_conditional_expression: // conditional_expression
+      case symbol_kind::S_assignment_expression: // assignment_expression
+      case symbol_kind::S_additive_expression: // additive_expression
+      case symbol_kind::S_multiplicative_expression: // multiplicative_expression
+      case symbol_kind::S_primary_expression: // primary_expression
+        value.move< std::shared_ptr<Expression> > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S_stmt: // stmt
+      case symbol_kind::S_expr_stmt: // expr_stmt
+      case symbol_kind::S_compound_stmt: // compound_stmt
+      case symbol_kind::S_if_stmt: // if_stmt
+      case symbol_kind::S_while_stmt: // while_stmt
+      case symbol_kind::S_print_stmt: // print_stmt
+        value.move< std::shared_ptr<Statement> > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S_translation_unit: // translation_unit
+      case symbol_kind::S_stmt_list: // stmt_list
+        value.move< std::shared_ptr<TranslationUnit> > (YY_MOVE (s.value));
+        break;
+
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
       case symbol_kind::S_STRING_LITERAL: // STRING_LITERAL
+      case symbol_kind::S_assignment_operator: // assignment_operator
         value.move< std::string > (YY_MOVE (s.value));
         break;
 
@@ -1916,7 +2127,7 @@ switch (yykind)
 
 
 } // yy
-#line 1920 "parser.hh"
+#line 2131 "parser.hh"
 
 
 

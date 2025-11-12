@@ -13,13 +13,6 @@
 # include "parser.hh"
 %}
 
-%{
-  // A number symbol corresponding to the value in S.
-  yy::parser::symbol_type
-  make_NUMBER (const std::string &s, const yy::parser::location_type& loc);
-%}
-
-
 id    [a-zA-Z][a-zA-Z_0-9]*
 int   [0-9]+
 blank [ \t\r]
@@ -36,7 +29,7 @@ blank [ \t\r]
   // A handy shortcut to the location held by the driver.
   yy::location& loc = drv.location;
   // Code run each time yylex is called.
-  loc.step ();
+  loc.step();
 %}
 
 "else"                { return yy::parser::make_ELSE(loc); }

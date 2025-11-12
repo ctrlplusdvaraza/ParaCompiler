@@ -3,6 +3,7 @@
 # include <string>
 # include <map>
 # include "parser.hh"
+#include "inc/ast.hh"
 
 
 // Give Flex the prototype of yylex we want ...
@@ -18,9 +19,7 @@ class driver
 public:
     driver();
 
-    std::map<std::string, int> variables;
-
-    int result; // (or AST* root) — parse result / root of AST.
+    std::shared_ptr<ASTNode> result; // (or AST* root) — parse result / root of AST.
     // Run the parser on file F.  Return 0 on success.
     int parse (const std::string& f);
     

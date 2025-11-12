@@ -42,7 +42,7 @@
 
 
 // Unqualified %code blocks.
-#line 24 "parser.yy"
+#line 27 "parser.yy"
 
 # include "driver.hh"
 
@@ -211,8 +211,39 @@ namespace yy {
         value.YY_MOVE_OR_COPY< int > (YY_MOVE (that.value));
         break;
 
+      case symbol_kind::S_expression: // expression
+      case symbol_kind::S_logical_or_expression: // logical_or_expression
+      case symbol_kind::S_logical_and_expression: // logical_and_expression
+      case symbol_kind::S_equality_expression: // equality_expression
+      case symbol_kind::S_relational_expression: // relational_expression
+      case symbol_kind::S_and_expression: // and_expression
+      case symbol_kind::S_exclusive_or_expression: // exclusive_or_expression
+      case symbol_kind::S_inclusive_or_expression: // inclusive_or_expression
+      case symbol_kind::S_conditional_expression: // conditional_expression
+      case symbol_kind::S_assignment_expression: // assignment_expression
+      case symbol_kind::S_additive_expression: // additive_expression
+      case symbol_kind::S_multiplicative_expression: // multiplicative_expression
+      case symbol_kind::S_primary_expression: // primary_expression
+        value.YY_MOVE_OR_COPY< std::shared_ptr<Expression> > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_stmt: // stmt
+      case symbol_kind::S_expr_stmt: // expr_stmt
+      case symbol_kind::S_compound_stmt: // compound_stmt
+      case symbol_kind::S_if_stmt: // if_stmt
+      case symbol_kind::S_while_stmt: // while_stmt
+      case symbol_kind::S_print_stmt: // print_stmt
+        value.YY_MOVE_OR_COPY< std::shared_ptr<Statement> > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_translation_unit: // translation_unit
+      case symbol_kind::S_stmt_list: // stmt_list
+        value.YY_MOVE_OR_COPY< std::shared_ptr<TranslationUnit> > (YY_MOVE (that.value));
+        break;
+
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
       case symbol_kind::S_STRING_LITERAL: // STRING_LITERAL
+      case symbol_kind::S_assignment_operator: // assignment_operator
         value.YY_MOVE_OR_COPY< std::string > (YY_MOVE (that.value));
         break;
 
@@ -235,8 +266,39 @@ namespace yy {
         value.move< int > (YY_MOVE (that.value));
         break;
 
+      case symbol_kind::S_expression: // expression
+      case symbol_kind::S_logical_or_expression: // logical_or_expression
+      case symbol_kind::S_logical_and_expression: // logical_and_expression
+      case symbol_kind::S_equality_expression: // equality_expression
+      case symbol_kind::S_relational_expression: // relational_expression
+      case symbol_kind::S_and_expression: // and_expression
+      case symbol_kind::S_exclusive_or_expression: // exclusive_or_expression
+      case symbol_kind::S_inclusive_or_expression: // inclusive_or_expression
+      case symbol_kind::S_conditional_expression: // conditional_expression
+      case symbol_kind::S_assignment_expression: // assignment_expression
+      case symbol_kind::S_additive_expression: // additive_expression
+      case symbol_kind::S_multiplicative_expression: // multiplicative_expression
+      case symbol_kind::S_primary_expression: // primary_expression
+        value.move< std::shared_ptr<Expression> > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_stmt: // stmt
+      case symbol_kind::S_expr_stmt: // expr_stmt
+      case symbol_kind::S_compound_stmt: // compound_stmt
+      case symbol_kind::S_if_stmt: // if_stmt
+      case symbol_kind::S_while_stmt: // while_stmt
+      case symbol_kind::S_print_stmt: // print_stmt
+        value.move< std::shared_ptr<Statement> > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_translation_unit: // translation_unit
+      case symbol_kind::S_stmt_list: // stmt_list
+        value.move< std::shared_ptr<TranslationUnit> > (YY_MOVE (that.value));
+        break;
+
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
       case symbol_kind::S_STRING_LITERAL: // STRING_LITERAL
+      case symbol_kind::S_assignment_operator: // assignment_operator
         value.move< std::string > (YY_MOVE (that.value));
         break;
 
@@ -259,8 +321,39 @@ namespace yy {
         value.copy< int > (that.value);
         break;
 
+      case symbol_kind::S_expression: // expression
+      case symbol_kind::S_logical_or_expression: // logical_or_expression
+      case symbol_kind::S_logical_and_expression: // logical_and_expression
+      case symbol_kind::S_equality_expression: // equality_expression
+      case symbol_kind::S_relational_expression: // relational_expression
+      case symbol_kind::S_and_expression: // and_expression
+      case symbol_kind::S_exclusive_or_expression: // exclusive_or_expression
+      case symbol_kind::S_inclusive_or_expression: // inclusive_or_expression
+      case symbol_kind::S_conditional_expression: // conditional_expression
+      case symbol_kind::S_assignment_expression: // assignment_expression
+      case symbol_kind::S_additive_expression: // additive_expression
+      case symbol_kind::S_multiplicative_expression: // multiplicative_expression
+      case symbol_kind::S_primary_expression: // primary_expression
+        value.copy< std::shared_ptr<Expression> > (that.value);
+        break;
+
+      case symbol_kind::S_stmt: // stmt
+      case symbol_kind::S_expr_stmt: // expr_stmt
+      case symbol_kind::S_compound_stmt: // compound_stmt
+      case symbol_kind::S_if_stmt: // if_stmt
+      case symbol_kind::S_while_stmt: // while_stmt
+      case symbol_kind::S_print_stmt: // print_stmt
+        value.copy< std::shared_ptr<Statement> > (that.value);
+        break;
+
+      case symbol_kind::S_translation_unit: // translation_unit
+      case symbol_kind::S_stmt_list: // stmt_list
+        value.copy< std::shared_ptr<TranslationUnit> > (that.value);
+        break;
+
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
       case symbol_kind::S_STRING_LITERAL: // STRING_LITERAL
+      case symbol_kind::S_assignment_operator: // assignment_operator
         value.copy< std::string > (that.value);
         break;
 
@@ -282,8 +375,39 @@ namespace yy {
         value.move< int > (that.value);
         break;
 
+      case symbol_kind::S_expression: // expression
+      case symbol_kind::S_logical_or_expression: // logical_or_expression
+      case symbol_kind::S_logical_and_expression: // logical_and_expression
+      case symbol_kind::S_equality_expression: // equality_expression
+      case symbol_kind::S_relational_expression: // relational_expression
+      case symbol_kind::S_and_expression: // and_expression
+      case symbol_kind::S_exclusive_or_expression: // exclusive_or_expression
+      case symbol_kind::S_inclusive_or_expression: // inclusive_or_expression
+      case symbol_kind::S_conditional_expression: // conditional_expression
+      case symbol_kind::S_assignment_expression: // assignment_expression
+      case symbol_kind::S_additive_expression: // additive_expression
+      case symbol_kind::S_multiplicative_expression: // multiplicative_expression
+      case symbol_kind::S_primary_expression: // primary_expression
+        value.move< std::shared_ptr<Expression> > (that.value);
+        break;
+
+      case symbol_kind::S_stmt: // stmt
+      case symbol_kind::S_expr_stmt: // expr_stmt
+      case symbol_kind::S_compound_stmt: // compound_stmt
+      case symbol_kind::S_if_stmt: // if_stmt
+      case symbol_kind::S_while_stmt: // while_stmt
+      case symbol_kind::S_print_stmt: // print_stmt
+        value.move< std::shared_ptr<Statement> > (that.value);
+        break;
+
+      case symbol_kind::S_translation_unit: // translation_unit
+      case symbol_kind::S_stmt_list: // stmt_list
+        value.move< std::shared_ptr<TranslationUnit> > (that.value);
+        break;
+
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
       case symbol_kind::S_STRING_LITERAL: // STRING_LITERAL
+      case symbol_kind::S_assignment_operator: // assignment_operator
         value.move< std::string > (that.value);
         break;
 
@@ -324,21 +448,153 @@ namespace yy {
         switch (yykind)
     {
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
-#line 71 "parser.yy"
+#line 86 "parser.yy"
                  { yyo << yysym.value.template as < std::string > (); }
-#line 330 "parser.tab.cc"
+#line 454 "parser.tab.cc"
         break;
 
       case symbol_kind::S_CONSTANT: // CONSTANT
-#line 71 "parser.yy"
+#line 86 "parser.yy"
                  { yyo << yysym.value.template as < int > (); }
-#line 336 "parser.tab.cc"
+#line 460 "parser.tab.cc"
         break;
 
       case symbol_kind::S_STRING_LITERAL: // STRING_LITERAL
-#line 71 "parser.yy"
+#line 86 "parser.yy"
                  { yyo << yysym.value.template as < std::string > (); }
-#line 342 "parser.tab.cc"
+#line 466 "parser.tab.cc"
+        break;
+
+      case symbol_kind::S_translation_unit: // translation_unit
+#line 86 "parser.yy"
+                 { yyo << yysym.value.template as < std::shared_ptr<TranslationUnit> > (); }
+#line 472 "parser.tab.cc"
+        break;
+
+      case symbol_kind::S_stmt_list: // stmt_list
+#line 86 "parser.yy"
+                 { yyo << yysym.value.template as < std::shared_ptr<TranslationUnit> > (); }
+#line 478 "parser.tab.cc"
+        break;
+
+      case symbol_kind::S_stmt: // stmt
+#line 86 "parser.yy"
+                 { yyo << yysym.value.template as < std::shared_ptr<Statement> > (); }
+#line 484 "parser.tab.cc"
+        break;
+
+      case symbol_kind::S_expr_stmt: // expr_stmt
+#line 86 "parser.yy"
+                 { yyo << yysym.value.template as < std::shared_ptr<Statement> > (); }
+#line 490 "parser.tab.cc"
+        break;
+
+      case symbol_kind::S_compound_stmt: // compound_stmt
+#line 86 "parser.yy"
+                 { yyo << yysym.value.template as < std::shared_ptr<Statement> > (); }
+#line 496 "parser.tab.cc"
+        break;
+
+      case symbol_kind::S_if_stmt: // if_stmt
+#line 86 "parser.yy"
+                 { yyo << yysym.value.template as < std::shared_ptr<Statement> > (); }
+#line 502 "parser.tab.cc"
+        break;
+
+      case symbol_kind::S_while_stmt: // while_stmt
+#line 86 "parser.yy"
+                 { yyo << yysym.value.template as < std::shared_ptr<Statement> > (); }
+#line 508 "parser.tab.cc"
+        break;
+
+      case symbol_kind::S_print_stmt: // print_stmt
+#line 86 "parser.yy"
+                 { yyo << yysym.value.template as < std::shared_ptr<Statement> > (); }
+#line 514 "parser.tab.cc"
+        break;
+
+      case symbol_kind::S_expression: // expression
+#line 86 "parser.yy"
+                 { yyo << yysym.value.template as < std::shared_ptr<Expression> > (); }
+#line 520 "parser.tab.cc"
+        break;
+
+      case symbol_kind::S_logical_or_expression: // logical_or_expression
+#line 86 "parser.yy"
+                 { yyo << yysym.value.template as < std::shared_ptr<Expression> > (); }
+#line 526 "parser.tab.cc"
+        break;
+
+      case symbol_kind::S_logical_and_expression: // logical_and_expression
+#line 86 "parser.yy"
+                 { yyo << yysym.value.template as < std::shared_ptr<Expression> > (); }
+#line 532 "parser.tab.cc"
+        break;
+
+      case symbol_kind::S_equality_expression: // equality_expression
+#line 86 "parser.yy"
+                 { yyo << yysym.value.template as < std::shared_ptr<Expression> > (); }
+#line 538 "parser.tab.cc"
+        break;
+
+      case symbol_kind::S_relational_expression: // relational_expression
+#line 86 "parser.yy"
+                 { yyo << yysym.value.template as < std::shared_ptr<Expression> > (); }
+#line 544 "parser.tab.cc"
+        break;
+
+      case symbol_kind::S_and_expression: // and_expression
+#line 86 "parser.yy"
+                 { yyo << yysym.value.template as < std::shared_ptr<Expression> > (); }
+#line 550 "parser.tab.cc"
+        break;
+
+      case symbol_kind::S_exclusive_or_expression: // exclusive_or_expression
+#line 86 "parser.yy"
+                 { yyo << yysym.value.template as < std::shared_ptr<Expression> > (); }
+#line 556 "parser.tab.cc"
+        break;
+
+      case symbol_kind::S_inclusive_or_expression: // inclusive_or_expression
+#line 86 "parser.yy"
+                 { yyo << yysym.value.template as < std::shared_ptr<Expression> > (); }
+#line 562 "parser.tab.cc"
+        break;
+
+      case symbol_kind::S_conditional_expression: // conditional_expression
+#line 86 "parser.yy"
+                 { yyo << yysym.value.template as < std::shared_ptr<Expression> > (); }
+#line 568 "parser.tab.cc"
+        break;
+
+      case symbol_kind::S_assignment_expression: // assignment_expression
+#line 86 "parser.yy"
+                 { yyo << yysym.value.template as < std::shared_ptr<Expression> > (); }
+#line 574 "parser.tab.cc"
+        break;
+
+      case symbol_kind::S_assignment_operator: // assignment_operator
+#line 86 "parser.yy"
+                 { yyo << yysym.value.template as < std::string > (); }
+#line 580 "parser.tab.cc"
+        break;
+
+      case symbol_kind::S_additive_expression: // additive_expression
+#line 86 "parser.yy"
+                 { yyo << yysym.value.template as < std::shared_ptr<Expression> > (); }
+#line 586 "parser.tab.cc"
+        break;
+
+      case symbol_kind::S_multiplicative_expression: // multiplicative_expression
+#line 86 "parser.yy"
+                 { yyo << yysym.value.template as < std::shared_ptr<Expression> > (); }
+#line 592 "parser.tab.cc"
+        break;
+
+      case symbol_kind::S_primary_expression: // primary_expression
+#line 86 "parser.yy"
+                 { yyo << yysym.value.template as < std::shared_ptr<Expression> > (); }
+#line 598 "parser.tab.cc"
         break;
 
       default:
@@ -582,8 +838,39 @@ namespace yy {
         yylhs.value.emplace< int > ();
         break;
 
+      case symbol_kind::S_expression: // expression
+      case symbol_kind::S_logical_or_expression: // logical_or_expression
+      case symbol_kind::S_logical_and_expression: // logical_and_expression
+      case symbol_kind::S_equality_expression: // equality_expression
+      case symbol_kind::S_relational_expression: // relational_expression
+      case symbol_kind::S_and_expression: // and_expression
+      case symbol_kind::S_exclusive_or_expression: // exclusive_or_expression
+      case symbol_kind::S_inclusive_or_expression: // inclusive_or_expression
+      case symbol_kind::S_conditional_expression: // conditional_expression
+      case symbol_kind::S_assignment_expression: // assignment_expression
+      case symbol_kind::S_additive_expression: // additive_expression
+      case symbol_kind::S_multiplicative_expression: // multiplicative_expression
+      case symbol_kind::S_primary_expression: // primary_expression
+        yylhs.value.emplace< std::shared_ptr<Expression> > ();
+        break;
+
+      case symbol_kind::S_stmt: // stmt
+      case symbol_kind::S_expr_stmt: // expr_stmt
+      case symbol_kind::S_compound_stmt: // compound_stmt
+      case symbol_kind::S_if_stmt: // if_stmt
+      case symbol_kind::S_while_stmt: // while_stmt
+      case symbol_kind::S_print_stmt: // print_stmt
+        yylhs.value.emplace< std::shared_ptr<Statement> > ();
+        break;
+
+      case symbol_kind::S_translation_unit: // translation_unit
+      case symbol_kind::S_stmt_list: // stmt_list
+        yylhs.value.emplace< std::shared_ptr<TranslationUnit> > ();
+        break;
+
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
       case symbol_kind::S_STRING_LITERAL: // STRING_LITERAL
+      case symbol_kind::S_assignment_operator: // assignment_operator
         yylhs.value.emplace< std::string > ();
         break;
 
@@ -607,8 +894,486 @@ namespace yy {
         {
           switch (yyn)
             {
+  case 2: // translation_unit: stmt_list
+#line 95 "parser.yy"
+                { drv.result = yystack_[0].value.as < std::shared_ptr<TranslationUnit> > (); }
+#line 901 "parser.tab.cc"
+    break;
 
-#line 612 "parser.tab.cc"
+  case 3: // stmt_list: %empty
+#line 99 "parser.yy"
+             { yylhs.value.as < std::shared_ptr<TranslationUnit> > () = std::make_shared<TranslationUnit>(); }
+#line 907 "parser.tab.cc"
+    break;
+
+  case 4: // stmt_list: stmt_list stmt
+#line 100 "parser.yy"
+                     {
+        auto tu = std::dynamic_pointer_cast<TranslationUnit>(yystack_[1].value.as < std::shared_ptr<TranslationUnit> > ());
+        tu->stmts.push_back(std::dynamic_pointer_cast<Statement>(yystack_[0].value.as < std::shared_ptr<Statement> > ()));
+        yylhs.value.as < std::shared_ptr<TranslationUnit> > () = tu;
+    }
+#line 917 "parser.tab.cc"
+    break;
+
+  case 5: // stmt: expr_stmt
+#line 108 "parser.yy"
+                    { yylhs.value.as < std::shared_ptr<Statement> > () = yystack_[0].value.as < std::shared_ptr<Statement> > (); }
+#line 923 "parser.tab.cc"
+    break;
+
+  case 6: // stmt: compound_stmt
+#line 109 "parser.yy"
+                    { yylhs.value.as < std::shared_ptr<Statement> > () = yystack_[0].value.as < std::shared_ptr<Statement> > (); }
+#line 929 "parser.tab.cc"
+    break;
+
+  case 7: // stmt: if_stmt
+#line 110 "parser.yy"
+                    { yylhs.value.as < std::shared_ptr<Statement> > () = yystack_[0].value.as < std::shared_ptr<Statement> > (); }
+#line 935 "parser.tab.cc"
+    break;
+
+  case 8: // stmt: while_stmt
+#line 111 "parser.yy"
+                    { yylhs.value.as < std::shared_ptr<Statement> > () = yystack_[0].value.as < std::shared_ptr<Statement> > (); }
+#line 941 "parser.tab.cc"
+    break;
+
+  case 9: // stmt: print_stmt
+#line 112 "parser.yy"
+                    { yylhs.value.as < std::shared_ptr<Statement> > () = yystack_[0].value.as < std::shared_ptr<Statement> > (); }
+#line 947 "parser.tab.cc"
+    break;
+
+  case 10: // expr_stmt: ";"
+#line 116 "parser.yy"
+                { yylhs.value.as < std::shared_ptr<Statement> > () = std::make_shared<ExprStmt>(); }
+#line 953 "parser.tab.cc"
+    break;
+
+  case 11: // expr_stmt: expression ";"
+#line 117 "parser.yy"
+                           { 
+        auto s = std::make_shared<ExprStmt>();
+        s->expr = std::dynamic_pointer_cast<Expression>(yystack_[1].value.as < std::shared_ptr<Expression> > ());
+        yylhs.value.as < std::shared_ptr<Statement> > () = s;
+    }
+#line 963 "parser.tab.cc"
+    break;
+
+  case 12: // compound_stmt: "{" stmt_list "}"
+#line 125 "parser.yy"
+                              { 
+        auto s = std::make_shared<CompoundStmt>();
+        auto tu = std::dynamic_pointer_cast<TranslationUnit>(yystack_[1].value.as < std::shared_ptr<TranslationUnit> > ());
+        s->stmts = tu->stmts;
+        yylhs.value.as < std::shared_ptr<Statement> > () = s;
+    }
+#line 974 "parser.tab.cc"
+    break;
+
+  case 13: // if_stmt: "if" "(" expression ")" stmt
+#line 134 "parser.yy"
+                                       {
+        auto s = std::make_shared<IfStmt>();
+        s->cond = std::dynamic_pointer_cast<Expression>(yystack_[2].value.as < std::shared_ptr<Expression> > ());
+        s->thenStmt = std::dynamic_pointer_cast<Statement>(yystack_[0].value.as < std::shared_ptr<Statement> > ());
+        s->elseStmt = nullptr;
+        yylhs.value.as < std::shared_ptr<Statement> > () = s;
+    }
+#line 986 "parser.tab.cc"
+    break;
+
+  case 14: // if_stmt: "if" "(" expression ")" stmt "else" stmt
+#line 141 "parser.yy"
+                                                 {
+        auto s = std::make_shared<IfStmt>();
+        s->cond = std::dynamic_pointer_cast<Expression>(yystack_[4].value.as < std::shared_ptr<Expression> > ());
+        s->thenStmt = std::dynamic_pointer_cast<Statement>(yystack_[2].value.as < std::shared_ptr<Statement> > ());
+        s->elseStmt = std::dynamic_pointer_cast<Statement>(yystack_[0].value.as < std::shared_ptr<Statement> > ());
+        yylhs.value.as < std::shared_ptr<Statement> > () = s;
+    }
+#line 998 "parser.tab.cc"
+    break;
+
+  case 15: // while_stmt: "while" "(" expression ")" stmt
+#line 151 "parser.yy"
+                                          {
+        auto s = std::make_shared<WhileStmt>();
+        s->cond = std::dynamic_pointer_cast<Expression>(yystack_[2].value.as < std::shared_ptr<Expression> > ());
+        s->body = std::dynamic_pointer_cast<Statement>(yystack_[0].value.as < std::shared_ptr<Statement> > ());
+        yylhs.value.as < std::shared_ptr<Statement> > () = s;
+    }
+#line 1009 "parser.tab.cc"
+    break;
+
+  case 16: // print_stmt: "print" expression ";"
+#line 160 "parser.yy"
+                                 {
+        auto s = std::make_shared<PrintStmt>();
+        s->expr = std::dynamic_pointer_cast<Expression>(yystack_[1].value.as < std::shared_ptr<Expression> > ());
+        yylhs.value.as < std::shared_ptr<Statement> > () = s;
+    }
+#line 1019 "parser.tab.cc"
+    break;
+
+  case 17: // expression: assignment_expression
+#line 168 "parser.yy"
+                            { yylhs.value.as < std::shared_ptr<Expression> > () = yystack_[0].value.as < std::shared_ptr<Expression> > (); }
+#line 1025 "parser.tab.cc"
+    break;
+
+  case 18: // logical_or_expression: logical_and_expression
+#line 172 "parser.yy"
+                             { yylhs.value.as < std::shared_ptr<Expression> > () = yystack_[0].value.as < std::shared_ptr<Expression> > (); }
+#line 1031 "parser.tab.cc"
+    break;
+
+  case 19: // logical_or_expression: logical_or_expression "||" logical_and_expression
+#line 173 "parser.yy"
+                                                        {
+        auto e = std::make_shared<BinaryExpr>();
+        e->lhs = std::dynamic_pointer_cast<Expression>(yystack_[2].value.as < std::shared_ptr<Expression> > ());
+        e->rhs = std::dynamic_pointer_cast<Expression>(yystack_[0].value.as < std::shared_ptr<Expression> > ());
+        e->op = "||";
+        yylhs.value.as < std::shared_ptr<Expression> > () = e;
+    }
+#line 1043 "parser.tab.cc"
+    break;
+
+  case 20: // logical_and_expression: inclusive_or_expression
+#line 183 "parser.yy"
+                              { yylhs.value.as < std::shared_ptr<Expression> > () = yystack_[0].value.as < std::shared_ptr<Expression> > (); }
+#line 1049 "parser.tab.cc"
+    break;
+
+  case 21: // logical_and_expression: logical_and_expression "&&" inclusive_or_expression
+#line 184 "parser.yy"
+                                                          {
+        auto e = std::make_shared<BinaryExpr>();
+        e->lhs = std::dynamic_pointer_cast<Expression>(yystack_[2].value.as < std::shared_ptr<Expression> > ());
+        e->rhs = std::dynamic_pointer_cast<Expression>(yystack_[0].value.as < std::shared_ptr<Expression> > ());
+        e->op = "&&";
+        yylhs.value.as < std::shared_ptr<Expression> > () = e;
+    }
+#line 1061 "parser.tab.cc"
+    break;
+
+  case 22: // equality_expression: relational_expression
+#line 194 "parser.yy"
+                            { yylhs.value.as < std::shared_ptr<Expression> > () = yystack_[0].value.as < std::shared_ptr<Expression> > (); }
+#line 1067 "parser.tab.cc"
+    break;
+
+  case 23: // equality_expression: equality_expression "==" relational_expression
+#line 195 "parser.yy"
+                                                      {
+        auto e = std::make_shared<BinaryExpr>();
+        e->lhs = std::dynamic_pointer_cast<Expression>(yystack_[2].value.as < std::shared_ptr<Expression> > ());
+        e->rhs = std::dynamic_pointer_cast<Expression>(yystack_[0].value.as < std::shared_ptr<Expression> > ());
+        e->op = "==";
+        yylhs.value.as < std::shared_ptr<Expression> > () = e;
+    }
+#line 1079 "parser.tab.cc"
+    break;
+
+  case 24: // equality_expression: equality_expression "!=" relational_expression
+#line 202 "parser.yy"
+                                                      {
+        auto e = std::make_shared<BinaryExpr>();
+        e->lhs = std::dynamic_pointer_cast<Expression>(yystack_[2].value.as < std::shared_ptr<Expression> > ());
+        e->rhs = std::dynamic_pointer_cast<Expression>(yystack_[0].value.as < std::shared_ptr<Expression> > ());
+        e->op = "!=";
+        yylhs.value.as < std::shared_ptr<Expression> > () = e;
+    }
+#line 1091 "parser.tab.cc"
+    break;
+
+  case 25: // relational_expression: additive_expression
+#line 212 "parser.yy"
+                          { yylhs.value.as < std::shared_ptr<Expression> > () = yystack_[0].value.as < std::shared_ptr<Expression> > (); }
+#line 1097 "parser.tab.cc"
+    break;
+
+  case 26: // relational_expression: relational_expression "<" additive_expression
+#line 213 "parser.yy"
+                                                     {
+        auto e = std::make_shared<BinaryExpr>();
+        e->lhs = std::dynamic_pointer_cast<Expression>(yystack_[2].value.as < std::shared_ptr<Expression> > ());
+        e->rhs = std::dynamic_pointer_cast<Expression>(yystack_[0].value.as < std::shared_ptr<Expression> > ());
+        e->op = "<";
+        yylhs.value.as < std::shared_ptr<Expression> > () = e;
+    }
+#line 1109 "parser.tab.cc"
+    break;
+
+  case 27: // relational_expression: relational_expression ">" additive_expression
+#line 220 "parser.yy"
+                                                        {
+        auto e = std::make_shared<BinaryExpr>();
+        e->lhs = std::dynamic_pointer_cast<Expression>(yystack_[2].value.as < std::shared_ptr<Expression> > ());
+        e->rhs = std::dynamic_pointer_cast<Expression>(yystack_[0].value.as < std::shared_ptr<Expression> > ());
+        e->op = ">";
+        yylhs.value.as < std::shared_ptr<Expression> > () = e;
+    }
+#line 1121 "parser.tab.cc"
+    break;
+
+  case 28: // relational_expression: relational_expression "<=" additive_expression
+#line 227 "parser.yy"
+                                                      {
+        auto e = std::make_shared<BinaryExpr>();
+        e->lhs = std::dynamic_pointer_cast<Expression>(yystack_[2].value.as < std::shared_ptr<Expression> > ());
+        e->rhs = std::dynamic_pointer_cast<Expression>(yystack_[0].value.as < std::shared_ptr<Expression> > ());
+        e->op = "<=";
+        yylhs.value.as < std::shared_ptr<Expression> > () = e;
+    }
+#line 1133 "parser.tab.cc"
+    break;
+
+  case 29: // relational_expression: relational_expression ">=" additive_expression
+#line 234 "parser.yy"
+                                                      {
+        auto e = std::make_shared<BinaryExpr>();
+        e->lhs = std::dynamic_pointer_cast<Expression>(yystack_[2].value.as < std::shared_ptr<Expression> > ());
+        e->rhs = std::dynamic_pointer_cast<Expression>(yystack_[0].value.as < std::shared_ptr<Expression> > ());
+        e->op = ">=";
+        yylhs.value.as < std::shared_ptr<Expression> > () = e;
+    }
+#line 1145 "parser.tab.cc"
+    break;
+
+  case 30: // and_expression: equality_expression
+#line 244 "parser.yy"
+                          { yylhs.value.as < std::shared_ptr<Expression> > () = yystack_[0].value.as < std::shared_ptr<Expression> > (); }
+#line 1151 "parser.tab.cc"
+    break;
+
+  case 31: // and_expression: and_expression '&' equality_expression
+#line 245 "parser.yy"
+                                             {
+        auto e = std::make_shared<BinaryExpr>();
+        e->lhs = std::dynamic_pointer_cast<Expression>(yystack_[2].value.as < std::shared_ptr<Expression> > ());
+        e->rhs = std::dynamic_pointer_cast<Expression>(yystack_[0].value.as < std::shared_ptr<Expression> > ());
+        e->op = "&";
+        yylhs.value.as < std::shared_ptr<Expression> > () = e;
+    }
+#line 1163 "parser.tab.cc"
+    break;
+
+  case 32: // exclusive_or_expression: and_expression
+#line 255 "parser.yy"
+                     { yylhs.value.as < std::shared_ptr<Expression> > () = yystack_[0].value.as < std::shared_ptr<Expression> > (); }
+#line 1169 "parser.tab.cc"
+    break;
+
+  case 33: // exclusive_or_expression: exclusive_or_expression '^' and_expression
+#line 256 "parser.yy"
+                                                 {
+        auto e = std::make_shared<BinaryExpr>();
+        e->lhs = std::dynamic_pointer_cast<Expression>(yystack_[2].value.as < std::shared_ptr<Expression> > ());
+        e->rhs = std::dynamic_pointer_cast<Expression>(yystack_[0].value.as < std::shared_ptr<Expression> > ());
+        e->op = "^";
+        yylhs.value.as < std::shared_ptr<Expression> > () = e;
+    }
+#line 1181 "parser.tab.cc"
+    break;
+
+  case 34: // inclusive_or_expression: exclusive_or_expression
+#line 266 "parser.yy"
+                              { yylhs.value.as < std::shared_ptr<Expression> > () = yystack_[0].value.as < std::shared_ptr<Expression> > (); }
+#line 1187 "parser.tab.cc"
+    break;
+
+  case 35: // inclusive_or_expression: inclusive_or_expression '|' exclusive_or_expression
+#line 267 "parser.yy"
+                                                          {
+        auto e = std::make_shared<BinaryExpr>();
+        e->lhs = std::dynamic_pointer_cast<Expression>(yystack_[2].value.as < std::shared_ptr<Expression> > ());
+        e->rhs = std::dynamic_pointer_cast<Expression>(yystack_[0].value.as < std::shared_ptr<Expression> > ());
+        e->op = "|";
+        yylhs.value.as < std::shared_ptr<Expression> > () = e;
+    }
+#line 1199 "parser.tab.cc"
+    break;
+
+  case 36: // conditional_expression: logical_or_expression
+#line 277 "parser.yy"
+                            { yylhs.value.as < std::shared_ptr<Expression> > () = yystack_[0].value.as < std::shared_ptr<Expression> > (); }
+#line 1205 "parser.tab.cc"
+    break;
+
+  case 37: // conditional_expression: logical_or_expression '?' expression ':' conditional_expression
+#line 278 "parser.yy"
+                                                                      {
+        // Represent ternary as a special BinaryExpr with op="?:"
+        auto e = std::make_shared<BinaryExpr>();
+        e->op = "?:";
+        e->lhs = std::dynamic_pointer_cast<Expression>(yystack_[4].value.as < std::shared_ptr<Expression> > ()); // condition
+        // encode middle and last expressions as a pair using BinaryExpr for simplicity
+        auto middle = std::make_shared<BinaryExpr>();
+        middle->lhs = std::dynamic_pointer_cast<Expression>(yystack_[2].value.as < std::shared_ptr<Expression> > ()); // true branch
+        middle->rhs = std::dynamic_pointer_cast<Expression>(yystack_[0].value.as < std::shared_ptr<Expression> > ()); // false branch
+        middle->op = ":"; // optional, just to differentiate
+        e->rhs = middle;
+        yylhs.value.as < std::shared_ptr<Expression> > () = e;
+    }
+#line 1223 "parser.tab.cc"
+    break;
+
+  case 38: // assignment_expression: conditional_expression
+#line 294 "parser.yy"
+                             { yylhs.value.as < std::shared_ptr<Expression> > () = yystack_[0].value.as < std::shared_ptr<Expression> > (); }
+#line 1229 "parser.tab.cc"
+    break;
+
+  case 39: // assignment_expression: IDENTIFIER assignment_operator assignment_expression
+#line 295 "parser.yy"
+                                                           {
+        auto e = std::make_shared<BinaryExpr>();
+        e->lhs = std::make_shared<Identifier>(yystack_[2].value.as < std::string > ());
+        e->op = yystack_[1].value.as < std::string > ();
+        e->rhs = std::dynamic_pointer_cast<Expression>(yystack_[0].value.as < std::shared_ptr<Expression> > ());
+        yylhs.value.as < std::shared_ptr<Expression> > () = e;
+    }
+#line 1241 "parser.tab.cc"
+    break;
+
+  case 40: // assignment_operator: "="
+#line 305 "parser.yy"
+                   { yylhs.value.as < std::string > () = "="; }
+#line 1247 "parser.tab.cc"
+    break;
+
+  case 41: // assignment_operator: "*="
+#line 306 "parser.yy"
+                   { yylhs.value.as < std::string > () = "*="; }
+#line 1253 "parser.tab.cc"
+    break;
+
+  case 42: // assignment_operator: "/="
+#line 307 "parser.yy"
+                   { yylhs.value.as < std::string > () = "/="; }
+#line 1259 "parser.tab.cc"
+    break;
+
+  case 43: // assignment_operator: "%="
+#line 308 "parser.yy"
+                   { yylhs.value.as < std::string > () = "%="; }
+#line 1265 "parser.tab.cc"
+    break;
+
+  case 44: // assignment_operator: "+="
+#line 309 "parser.yy"
+                   { yylhs.value.as < std::string > () = "+="; }
+#line 1271 "parser.tab.cc"
+    break;
+
+  case 45: // assignment_operator: "-="
+#line 310 "parser.yy"
+                   { yylhs.value.as < std::string > () = "-="; }
+#line 1277 "parser.tab.cc"
+    break;
+
+  case 46: // additive_expression: multiplicative_expression
+#line 314 "parser.yy"
+                                { yylhs.value.as < std::shared_ptr<Expression> > () = yystack_[0].value.as < std::shared_ptr<Expression> > (); }
+#line 1283 "parser.tab.cc"
+    break;
+
+  case 47: // additive_expression: additive_expression "+" multiplicative_expression
+#line 315 "parser.yy"
+                                                         {
+        auto e = std::make_shared<BinaryExpr>();
+        e->lhs = std::dynamic_pointer_cast<Expression>(yystack_[2].value.as < std::shared_ptr<Expression> > ());
+        e->rhs = std::dynamic_pointer_cast<Expression>(yystack_[0].value.as < std::shared_ptr<Expression> > ());
+        e->op = "+";
+        yylhs.value.as < std::shared_ptr<Expression> > () = e;
+    }
+#line 1295 "parser.tab.cc"
+    break;
+
+  case 48: // additive_expression: additive_expression "-" multiplicative_expression
+#line 322 "parser.yy"
+                                                          {
+        auto e = std::make_shared<BinaryExpr>();
+        e->lhs = std::dynamic_pointer_cast<Expression>(yystack_[2].value.as < std::shared_ptr<Expression> > ());
+        e->rhs = std::dynamic_pointer_cast<Expression>(yystack_[0].value.as < std::shared_ptr<Expression> > ());
+        e->op = "-";
+        yylhs.value.as < std::shared_ptr<Expression> > () = e;
+    }
+#line 1307 "parser.tab.cc"
+    break;
+
+  case 49: // multiplicative_expression: primary_expression
+#line 332 "parser.yy"
+                         { yylhs.value.as < std::shared_ptr<Expression> > () = yystack_[0].value.as < std::shared_ptr<Expression> > (); }
+#line 1313 "parser.tab.cc"
+    break;
+
+  case 50: // multiplicative_expression: multiplicative_expression "*" primary_expression
+#line 333 "parser.yy"
+                                                        {
+        auto e = std::make_shared<BinaryExpr>();
+        e->lhs = std::dynamic_pointer_cast<Expression>(yystack_[2].value.as < std::shared_ptr<Expression> > ());
+        e->rhs = std::dynamic_pointer_cast<Expression>(yystack_[0].value.as < std::shared_ptr<Expression> > ());
+        e->op = "*";
+        yylhs.value.as < std::shared_ptr<Expression> > () = e;
+    }
+#line 1325 "parser.tab.cc"
+    break;
+
+  case 51: // multiplicative_expression: multiplicative_expression "/" primary_expression
+#line 340 "parser.yy"
+                                                         {
+        auto e = std::make_shared<BinaryExpr>();
+        e->lhs = std::dynamic_pointer_cast<Expression>(yystack_[2].value.as < std::shared_ptr<Expression> > ());
+        e->rhs = std::dynamic_pointer_cast<Expression>(yystack_[0].value.as < std::shared_ptr<Expression> > ());
+        e->op = "/";
+        yylhs.value.as < std::shared_ptr<Expression> > () = e;
+    }
+#line 1337 "parser.tab.cc"
+    break;
+
+  case 52: // multiplicative_expression: multiplicative_expression "%" primary_expression
+#line 347 "parser.yy"
+                                                           {
+        auto e = std::make_shared<BinaryExpr>();
+        e->lhs = std::dynamic_pointer_cast<Expression>(yystack_[2].value.as < std::shared_ptr<Expression> > ());
+        e->rhs = std::dynamic_pointer_cast<Expression>(yystack_[0].value.as < std::shared_ptr<Expression> > ());
+        e->op = "%";
+        yylhs.value.as < std::shared_ptr<Expression> > () = e;
+    }
+#line 1349 "parser.tab.cc"
+    break;
+
+  case 53: // primary_expression: IDENTIFIER
+#line 357 "parser.yy"
+                 { yylhs.value.as < std::shared_ptr<Expression> > () = std::make_shared<Identifier>(yystack_[0].value.as < std::string > ()); }
+#line 1355 "parser.tab.cc"
+    break;
+
+  case 54: // primary_expression: CONSTANT
+#line 358 "parser.yy"
+                 { yylhs.value.as < std::shared_ptr<Expression> > () = std::make_shared<Constant>(yystack_[0].value.as < int > ()); }
+#line 1361 "parser.tab.cc"
+    break;
+
+  case 55: // primary_expression: "?"
+#line 359 "parser.yy"
+                    { yylhs.value.as < std::shared_ptr<Expression> > () = std::make_shared<StdInGetNum>(); }
+#line 1367 "parser.tab.cc"
+    break;
+
+  case 56: // primary_expression: "(" expression ")"
+#line 360 "parser.yy"
+                               { yylhs.value.as < std::shared_ptr<Expression> > () = yystack_[1].value.as < std::shared_ptr<Expression> > (); }
+#line 1373 "parser.tab.cc"
+    break;
+
+
+#line 1377 "parser.tab.cc"
 
             default:
               break;
@@ -795,12 +1560,12 @@ namespace yy {
     "end of file", "error", "invalid token", "else", "if", "while", "?",
   "print", "+=", "-=", "*=", "/=", "%=", "<=", ">=", "==", "!=", "<", ">",
   ",", ";", "{", "}", "=", "(", ")", "-", "+", "*", "/", "%", "IDENTIFIER",
-  "CONSTANT", "STRING_LITERAL", "$accept", "translation_unit", "stmt_list",
-  "stmt", "expr_stmt", "compound_stmt", "if_stmt", "while_stmt",
-  "print_stmt", "expression", "relational_expression",
-  "equality_expression", "and_expression", "exclusive_or_expression",
-  "inclusive_or_expression", "logical_and_expression",
-  "logical_or_expression", "conditional_expression",
+  "CONSTANT", "STRING_LITERAL", "||", "&&", "'&'", "'^'", "'|'", "'?'",
+  "':'", "$accept", "translation_unit", "stmt_list", "stmt", "expr_stmt",
+  "compound_stmt", "if_stmt", "while_stmt", "print_stmt", "expression",
+  "logical_or_expression", "logical_and_expression", "equality_expression",
+  "relational_expression", "and_expression", "exclusive_or_expression",
+  "inclusive_or_expression", "conditional_expression",
   "assignment_expression", "assignment_operator", "additive_expression",
   "multiplicative_expression", "primary_expression", YY_NULLPTR
     };
@@ -1071,42 +1836,46 @@ namespace yy {
   }
 
 
-  const signed char parser::yypact_ninf_ = -23;
+  const signed char parser::yypact_ninf_ = -76;
 
   const signed char parser::yytable_ninf_ = -1;
 
   const signed char
   parser::yypact_[] =
   {
-     -23,     4,     1,   -23,   -14,    -5,   -23,     5,   -23,   -23,
-       5,    32,   -23,   -23,   -23,   -23,   -23,   -23,   -23,    10,
-      -3,   -23,   -23,   -23,   -23,   -23,   -23,   -23,   -23,    21,
-      22,   -23,     5,     5,    36,    -4,    35,   -23,   -23,   -23,
-     -23,   -23,   -23,     5,   -23,     7,     7,     7,     7,     7,
-       7,     7,    37,    38,   -23,   -23,   -23,   -23,   -23,    21,
-      21,    22,    22,   -23,   -23,   -23,     1,     1,    23,   -23,
-       1,   -23
+     -76,     8,     9,   -76,    -5,    18,   -76,     3,   -76,   -76,
+       3,    37,   -76,   -76,   -76,   -76,   -76,   -76,   -76,   -10,
+     -11,    15,   -14,    38,    34,    35,    33,   -76,   -76,    27,
+      29,   -76,     3,     3,    53,     0,    49,   -76,   -76,   -76,
+     -76,   -76,   -76,     3,   -76,    12,     3,    12,    12,    12,
+      12,    12,    12,    12,    12,    12,    12,    12,    12,    12,
+      12,    12,    50,    51,   -76,   -76,   -76,   -76,   -76,    15,
+      39,    33,    38,    38,    27,    27,    27,    27,   -14,    34,
+      35,    29,    29,   -76,   -76,   -76,     9,     9,    12,    74,
+     -76,   -76,     9,   -76
   };
 
   const signed char
   parser::yydefact_[] =
   {
-       3,     0,     2,     1,     0,     0,    45,     0,    10,     3,
-       0,    43,    44,     4,     5,     6,     7,     8,     9,     0,
-      21,    22,    23,    24,    25,    26,    27,    28,    17,    18,
-      36,    39,     0,     0,     0,     0,     0,    34,    35,    31,
-      32,    33,    30,     0,    11,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,    16,    12,    46,    29,    43,    19,
-      20,    38,    37,    40,    41,    42,     0,     0,    13,    15,
-       0,    14
+       3,     0,     2,     1,     0,     0,    55,     0,    10,     3,
+       0,    53,    54,     4,     5,     6,     7,     8,     9,     0,
+      36,    18,    30,    22,    32,    34,    20,    38,    17,    25,
+      46,    49,     0,     0,     0,     0,     0,    44,    45,    41,
+      42,    43,    40,     0,    11,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,    16,    12,    56,    39,    53,    19,
+       0,    21,    23,    24,    28,    29,    26,    27,    31,    33,
+      35,    48,    47,    50,    51,    52,     0,     0,     0,    13,
+      15,    37,     0,    14
   };
 
   const signed char
   parser::yypgoto_[] =
   {
-     -23,   -23,    52,   -21,   -23,   -23,   -23,   -23,   -23,     2,
-     -23,   -23,   -23,   -23,   -23,   -23,   -23,   -23,    24,   -23,
-     -22,     6,     8
+     -76,   -76,    69,   -75,   -76,   -76,   -76,   -76,   -76,    -7,
+     -76,    36,    26,    20,    28,    30,    40,    -6,    41,   -76,
+      11,   -20,     6
   };
 
   const signed char
@@ -1120,48 +1889,55 @@ namespace yy {
   const signed char
   parser::yytable_[] =
   {
-       4,     5,     6,     7,     3,     4,     5,     6,     7,    34,
-      32,     6,    36,     6,    45,    46,     8,     9,    55,    33,
-      10,     8,     9,    59,    60,    10,    70,    11,    12,    10,
-      44,    10,    11,    12,    52,    53,    11,    12,    58,    12,
-      37,    38,    39,    40,    41,    68,    69,    47,    48,    71,
-      49,    50,    51,    61,    62,    42,    54,    63,    64,    65,
-      56,    35,    66,    67,     0,     0,     0,    57
+      34,    48,    49,    36,     4,     5,     6,     7,     3,     6,
+      44,    89,    90,     4,     5,     6,     7,    93,     6,    32,
+       8,     9,    65,    45,    10,    62,    63,    10,    46,     8,
+       9,    11,    12,    10,    11,    12,    10,    81,    82,    70,
+      11,    12,    33,    68,    12,    37,    38,    39,    40,    41,
+      47,    50,    51,    57,    58,    52,    53,    59,    60,    61,
+      42,    74,    75,    76,    77,    83,    84,    85,    72,    73,
+      54,    56,    55,    64,    66,    86,    87,    92,    35,    88,
+      78,    69,    91,    79,    67,     0,    80,    71
   };
 
   const signed char
   parser::yycheck_[] =
   {
-       4,     5,     6,     7,     0,     4,     5,     6,     7,     7,
-      24,     6,    10,     6,    17,    18,    20,    21,    22,    24,
-      24,    20,    21,    45,    46,    24,     3,    31,    32,    24,
-      20,    24,    31,    32,    32,    33,    31,    32,    31,    32,
-       8,     9,    10,    11,    12,    66,    67,    26,    27,    70,
-      28,    29,    30,    47,    48,    23,    20,    49,    50,    51,
-      25,     9,    25,    25,    -1,    -1,    -1,    43
+       7,    15,    16,    10,     4,     5,     6,     7,     0,     6,
+      20,    86,    87,     4,     5,     6,     7,    92,     6,    24,
+      20,    21,    22,    34,    24,    32,    33,    24,    39,    20,
+      21,    31,    32,    24,    31,    32,    24,    57,    58,    46,
+      31,    32,    24,    31,    32,     8,     9,    10,    11,    12,
+      35,    13,    14,    26,    27,    17,    18,    28,    29,    30,
+      23,    50,    51,    52,    53,    59,    60,    61,    48,    49,
+      36,    38,    37,    20,    25,    25,    25,     3,     9,    40,
+      54,    45,    88,    55,    43,    -1,    56,    47
   };
 
   const signed char
   parser::yystos_[] =
   {
-       0,    35,    36,     0,     4,     5,     6,     7,    20,    21,
-      24,    31,    32,    37,    38,    39,    40,    41,    42,    43,
-      44,    45,    46,    47,    48,    49,    50,    51,    52,    54,
-      55,    56,    24,    24,    43,    36,    43,     8,     9,    10,
-      11,    12,    23,    53,    20,    17,    18,    26,    27,    28,
-      29,    30,    43,    43,    20,    22,    25,    52,    31,    54,
-      54,    55,    55,    56,    56,    56,    25,    25,    37,    37,
-       3,    37
+       0,    42,    43,     0,     4,     5,     6,     7,    20,    21,
+      24,    31,    32,    44,    45,    46,    47,    48,    49,    50,
+      51,    52,    53,    54,    55,    56,    57,    58,    59,    61,
+      62,    63,    24,    24,    50,    43,    50,     8,     9,    10,
+      11,    12,    23,    60,    20,    34,    39,    35,    15,    16,
+      13,    14,    17,    18,    36,    37,    38,    26,    27,    28,
+      29,    30,    50,    50,    20,    22,    25,    59,    31,    52,
+      50,    57,    54,    54,    61,    61,    61,    61,    53,    55,
+      56,    62,    62,    63,    63,    63,    25,    25,    40,    44,
+      44,    58,     3,    44
   };
 
   const signed char
   parser::yyr1_[] =
   {
-       0,    34,    35,    36,    36,    37,    37,    37,    37,    37,
-      38,    38,    39,    40,    40,    41,    42,    43,    44,    44,
-      44,    45,    46,    47,    48,    49,    50,    51,    52,    52,
-      53,    53,    53,    53,    53,    53,    54,    54,    54,    55,
-      55,    55,    55,    56,    56,    56,    56
+       0,    41,    42,    43,    43,    44,    44,    44,    44,    44,
+      45,    45,    46,    47,    47,    48,    49,    50,    51,    51,
+      52,    52,    53,    53,    53,    54,    54,    54,    54,    54,
+      55,    55,    56,    56,    57,    57,    58,    58,    59,    59,
+      60,    60,    60,    60,    60,    60,    61,    61,    61,    62,
+      62,    62,    62,    63,    63,    63,    63
   };
 
   const signed char
@@ -1169,7 +1945,8 @@ namespace yy {
   {
        0,     2,     1,     0,     2,     1,     1,     1,     1,     1,
        1,     2,     3,     5,     7,     5,     3,     1,     1,     3,
-       3,     1,     1,     1,     1,     1,     1,     1,     1,     3,
+       1,     3,     1,     3,     3,     1,     3,     3,     3,     3,
+       1,     3,     1,     3,     1,     3,     1,     5,     1,     3,
        1,     1,     1,     1,     1,     1,     1,     3,     3,     1,
        3,     3,     3,     1,     1,     1,     3
   };
@@ -1178,14 +1955,15 @@ namespace yy {
 
 
 #if YYDEBUG
-  const unsigned char
+  const short
   parser::yyrline_[] =
   {
-       0,    80,    80,    84,    85,    89,    90,    91,    92,    93,
-      97,    98,   102,   106,   107,   111,   115,   121,   126,   127,
-     128,   132,   136,   140,   144,   148,   152,   156,   160,   161,
-     165,   166,   167,   168,   169,   170,   175,   176,   177,   181,
-     182,   183,   184,   189,   190,   191,   192
+       0,    95,    95,    99,   100,   108,   109,   110,   111,   112,
+     116,   117,   125,   134,   141,   151,   160,   168,   172,   173,
+     183,   184,   194,   195,   202,   212,   213,   220,   227,   234,
+     244,   245,   255,   256,   266,   267,   277,   278,   294,   295,
+     305,   306,   307,   308,   309,   310,   314,   315,   322,   332,
+     333,   340,   347,   357,   358,   359,   360
   };
 
   void
@@ -1217,9 +1995,9 @@ namespace yy {
 
 
 } // yy
-#line 1221 "parser.tab.cc"
+#line 1999 "parser.tab.cc"
 
-#line 195 "parser.yy"
+#line 363 "parser.yy"
 
 
 void
