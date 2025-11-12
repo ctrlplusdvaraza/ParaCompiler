@@ -1,86 +1,76 @@
-%require "3.2"
-%language "c++"
+%skeleton "lalr1.cc" // -*- C++ -*-
+%require "3.8.1"
+%header "parser.hh"
 
-%define api.value.type variant
+%define api.token.raw
+
+
 %define api.token.constructor
+%define api.value.type variant
+%define parse.assert
 
-
-%token <std::string> TEXT;
-%token <int> NUMBER;
-
-%nterm <std::vector<std::string>> list;
-%nterm <std::string> item;
-
-%code
-{
-  auto
-  operator<< (std::ostream& o, const std::vector<std::string>& ss)
-    -> std::ostream&
-  {
-    o << '{';
-    const char *sep = "";
-
-for (const auto& s: ss)
-      {
-        o << sep << s;
-        sep = ", ";
-      }
-    return o << '}';
-  }
+%code requires {
+  # include <string>
+  class driver;
 }
 
-%code
-{
-  namespace yy
-  {
-    // Return the next token.
-    auto yylex () -> parser::symbol_type
-    {
-      static int count = 0;
-      switch (int stage = count++)
-        {
-        case 0:
-          return parser::make_TEXT ("I have three numbers for you.");
-        case 1: case 2: case 3:
-          return parser::make_NUMBER (stage);
-        case 4:
-          return parser::make_TEXT ("And that's all!");
-        default:
-          return parser::make_YYEOF ();
-        }
-    }
-  }
+// The parsing context.
+%param { driver& drv }
+
+%locations
+
+%define parse.trace
+%define parse.error detailed
+%define parse.lac full
+
+%code {
+# include "driver.hh"
 }
 
-%%
-result:
-    list  { std::cout << $1 << '\n'; }
-  ;
-
-item:
-  TEXT
-| NUMBER  { $$ = std::to_string ($1); }
+%define api.token.prefix {TOK_}
+%token
+  ASSIGN  ":="
+  MINUS   "-"
+  PLUS    "+"
+  STAR    "*"
+  SLASH   "/"
+  LPAREN  "("
+  RPAREN  ")"
 ;
 
-list:
-    %empty     { /* Generates an empty string list */ }
-  | list item  { $$ = $1; $$.push_back ($2); }
-  ;
+%token <std::string> IDENTIFIER "identifier"
+%token <int> NUMBER "number"
+%nterm <int> exp
+
+%printer { yyo << $$; } <*>;
 
 
 %%
-namespace yy
+%start unit;
+unit: assignments exp  { drv.result = $2; };
+
+assignments:
+  %empty                 {}
+| assignments assignment {};
+
+assignment:
+  "identifier" ":=" exp { drv.variables[$1] = $3; };
+
+%left "+" "-";
+%left "*" "/";
+exp:
+  "number"
+| "identifier"  { $$ = drv.variables[$1]; }
+| exp "+" exp   { $$ = $1 + $3; }
+| exp "-" exp   { $$ = $1 - $3; }
+| exp "*" exp   { $$ = $1 * $3; }
+| exp "/" exp   { $$ = $1 / $3; }
+| "(" exp ")"   { $$ = $2; }
+%%
+
+void
+yy::parser::error (const location_type& l, const std::string& m)
 {
-  // Report an error to the user.
-  auto parser::error (const std::string& msg) -> void
-  {
-    std::cerr << msg << '\n';
-  }
+  std::cerr << l << ": " << m << '\n';
 }
 
-int main ()
-{
-  yy::parser parse;
-  return parse ();
-}
- 
