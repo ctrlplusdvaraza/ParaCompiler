@@ -1,3 +1,4 @@
+/* --------------------- FLEX DEFINITIONS SECTION --------------------- */
 %option header-file="scanner.hh"
 %option noyywrap
 %option nounput noinput batch debug
@@ -11,8 +12,6 @@
 # include "driver.hh"
 # include "parser.hh"
 %}
-
-
 
 %{
   // A number symbol corresponding to the value in S.
@@ -30,7 +29,7 @@ blank [ \t\r]
   # define YY_USER_ACTION  loc.columns (yyleng);
 %}
 
-
+/* --------------------- LEXICAL RULES SECTION --------------------- */
 %%
 
 %{
@@ -40,43 +39,60 @@ blank [ \t\r]
   loc.step ();
 %}
 
-{blank}+   loc.step ();
-\n+        loc.lines (yyleng); loc.step ();
+"else"                { return yy::parser::make_ELSE(loc); }
+"if"                  { return yy::parser::make_IF(loc); }
+"while"               { return yy::parser::make_WHILE(loc); }
+"?"                   { return yy::parser::make_STDIN_GET_NUM(loc); }
+"print"               { return yy::parser::make_PRINT(loc); }
 
-"-"        return yy::parser::make_MINUS  (loc);
-"+"        return yy::parser::make_PLUS   (loc);
-"*"        return yy::parser::make_STAR   (loc);
-"/"        return yy::parser::make_SLASH  (loc);
-"("        return yy::parser::make_LPAREN (loc);
-")"        return yy::parser::make_RPAREN (loc);
-":="       return yy::parser::make_ASSIGN (loc);
+[a-zA-Z][a-zA-Z0-9]*  { return yy::parser::make_IDENTIFIER(yytext, loc); }
+[0-9]+                { return yy::parser::make_CONSTANT(std::stoi(yytext), loc); }
 
+"+="                  { return yy::parser::make_ADD_ASSIGN(loc); }
+"-="                  { return yy::parser::make_SUB_ASSIGN(loc); }
+"*="                  { return yy::parser::make_MUL_ASSIGN(loc); }
+"/="                  { return yy::parser::make_DIV_ASSIGN(loc); }
+"%="                  { return yy::parser::make_MOD_ASSIGN(loc); }
 
-{int}      return make_NUMBER (yytext, loc);
-{id}       return yy::parser::make_IDENTIFIER (yytext, loc);
+"<="                  { return yy::parser::make_LE_OP(loc); }
+">="                  { return yy::parser::make_GE_OP(loc); }
+"=="                  { return yy::parser::make_EQ_OP(loc); }
+"!="                  { return yy::parser::make_NE_OP(loc); }
 
-.          {
-             throw yy::parser::syntax_error
-               (loc, "invalid character: " + std::string(yytext));
-}
+"<"                   { return yy::parser::make_LESS(loc); }
+">"                   { return yy::parser::make_GREATER(loc); }
+","                   { return yy::parser::make_COMMA(loc); }
+";"                   { return yy::parser::make_SEMICOLON(loc); }
 
+("{"|"<%")            { return yy::parser::make_LBRACE(loc); }
+("}"|"%>")            { return yy::parser::make_RBRACE(loc); }
 
-<<EOF>>    return yy::parser::make_YYEOF (loc);
+"="                   { return yy::parser::make_ASSIGN(loc); }
+"("                   { return yy::parser::make_LPAREN(loc); }
+")"                   { return yy::parser::make_RPAREN(loc); }
+
+"-"                   { return yy::parser::make_MINUS(loc); }
+"+"                   { return yy::parser::make_PLUS(loc); }
+"*"                   { return yy::parser::make_STAR(loc); }
+"/"                   { return yy::parser::make_SLASH(loc); }
+"%"                   { return yy::parser::make_PERCENT(loc); }
+
+[ \t\v\f]             { loc.step(); }
+\n+                   { loc.lines(yyleng); loc.step(); }
+
+.                     {
+                        throw yy::parser::syntax_error(
+                            loc, "Unknown character: " + std::string(yytext)
+                        );
+                      }
+
+<<EOF>>               { return yy::parser::make_YYEOF(loc); }
+
 %%
 
+/* --------------------- USER CODE SECTION --------------------- */
 
-yy::parser::symbol_type
-make_NUMBER (const std::string &s, const yy::parser::location_type& loc)
-{
-  errno = 0;
-  long n = strtol (s.c_str(), NULL, 10);
-  if (! (INT_MIN <= n && n <= INT_MAX && errno != ERANGE))
-    throw yy::parser::syntax_error (loc, "integer is out of range: " + s);
-  return yy::parser::make_NUMBER ((int) n, loc);
-}
-
-void
-driver::scan_begin ()
+void driver::scan_begin ()
 {
   yy_flex_debug = trace_scanning;
   if (file.empty () || file == "-")
@@ -88,9 +104,7 @@ driver::scan_begin ()
     }
 }
 
-
-void
-driver::scan_end ()
+void driver::scan_end ()
 {
   fclose (yyin);
 }

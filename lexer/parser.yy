@@ -2,8 +2,6 @@
 %require "3.8.1"
 %header "parser.hh"
 
-%define api.token.raw
-
 
 %define api.token.constructor
 %define api.value.type variant
@@ -28,44 +26,56 @@
 }
 
 %define api.token.prefix {TOK_}
+
 %token
-  ASSIGN  ":="
-  MINUS   "-"
-  PLUS    "+"
-  STAR    "*"
-  SLASH   "/"
-  LPAREN  "("
-  RPAREN  ")"
+  ELSE         "else"
+  IF           "if"
+  WHILE        "while"
+  STDIN_GET_NUM "?"
+  PRINT        "print"
+
+
+  ADD_ASSIGN   "+="
+  SUB_ASSIGN   "-="
+  MUL_ASSIGN   "*="
+  DIV_ASSIGN   "/="
+  MOD_ASSIGN   "%="
+
+  LE_OP        "<="
+  GE_OP        ">="
+  EQ_OP        "=="
+  NE_OP        "!="
+
+  LESS         "<"
+  GREATER      ">"
+  COMMA        ","
+  SEMICOLON    ";"
+  LBRACE       "{"
+  RBRACE       "}"
+  ASSIGN       "="
+  LPAREN       "("
+  RPAREN       ")"
+
+  MINUS        "-"
+  PLUS         "+"
+  STAR         "*"
+  SLASH        "/"
+  PERCENT      "%"
 ;
 
-%token <std::string> IDENTIFIER "identifier"
-%token <int> NUMBER "number"
-%nterm <int> exp
+%token <std::string> IDENTIFIER
+%token <int>         CONSTANT
+%token <std::string> STRING_LITERAL
+
 
 %printer { yyo << $$; } <*>;
 
 
 %%
 %start unit;
-unit: assignments exp  { drv.result = $2; };
+unit: 
+    %empty
 
-assignments:
-  %empty                 {}
-| assignments assignment {};
-
-assignment:
-  "identifier" ":=" exp { drv.variables[$1] = $3; };
-
-%left "+" "-";
-%left "*" "/";
-exp:
-  "number"
-| "identifier"  { $$ = drv.variables[$1]; }
-| exp "+" exp   { $$ = $1 + $3; }
-| exp "-" exp   { $$ = $1 - $3; }
-| exp "*" exp   { $$ = $1 * $3; }
-| exp "/" exp   { $$ = $1 / $3; }
-| "(" exp ")"   { $$ = $2; }
 %%
 
 void

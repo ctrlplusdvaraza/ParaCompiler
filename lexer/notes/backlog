@@ -1,0 +1,5 @@
+scanner.l
+
+
+1) add comments (/**/, //)
+2) add string literals

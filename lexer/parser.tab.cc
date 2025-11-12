@@ -42,7 +42,7 @@
 
 
 // Unqualified %code blocks.
-#line 26 "parser.yy"
+#line 24 "parser.yy"
 
 # include "driver.hh"
 
@@ -207,12 +207,12 @@ namespace yy {
   {
     switch (that.kind ())
     {
-      case symbol_kind::S_NUMBER: // "number"
-      case symbol_kind::S_exp: // exp
+      case symbol_kind::S_CONSTANT: // CONSTANT
         value.YY_MOVE_OR_COPY< int > (YY_MOVE (that.value));
         break;
 
-      case symbol_kind::S_IDENTIFIER: // "identifier"
+      case symbol_kind::S_IDENTIFIER: // IDENTIFIER
+      case symbol_kind::S_STRING_LITERAL: // STRING_LITERAL
         value.YY_MOVE_OR_COPY< std::string > (YY_MOVE (that.value));
         break;
 
@@ -231,12 +231,12 @@ namespace yy {
   {
     switch (that.kind ())
     {
-      case symbol_kind::S_NUMBER: // "number"
-      case symbol_kind::S_exp: // exp
+      case symbol_kind::S_CONSTANT: // CONSTANT
         value.move< int > (YY_MOVE (that.value));
         break;
 
-      case symbol_kind::S_IDENTIFIER: // "identifier"
+      case symbol_kind::S_IDENTIFIER: // IDENTIFIER
+      case symbol_kind::S_STRING_LITERAL: // STRING_LITERAL
         value.move< std::string > (YY_MOVE (that.value));
         break;
 
@@ -255,12 +255,12 @@ namespace yy {
     state = that.state;
     switch (that.kind ())
     {
-      case symbol_kind::S_NUMBER: // "number"
-      case symbol_kind::S_exp: // exp
+      case symbol_kind::S_CONSTANT: // CONSTANT
         value.copy< int > (that.value);
         break;
 
-      case symbol_kind::S_IDENTIFIER: // "identifier"
+      case symbol_kind::S_IDENTIFIER: // IDENTIFIER
+      case symbol_kind::S_STRING_LITERAL: // STRING_LITERAL
         value.copy< std::string > (that.value);
         break;
 
@@ -278,12 +278,12 @@ namespace yy {
     state = that.state;
     switch (that.kind ())
     {
-      case symbol_kind::S_NUMBER: // "number"
-      case symbol_kind::S_exp: // exp
+      case symbol_kind::S_CONSTANT: // CONSTANT
         value.move< int > (that.value);
         break;
 
-      case symbol_kind::S_IDENTIFIER: // "identifier"
+      case symbol_kind::S_IDENTIFIER: // IDENTIFIER
+      case symbol_kind::S_STRING_LITERAL: // STRING_LITERAL
         value.move< std::string > (that.value);
         break;
 
@@ -323,21 +323,21 @@ namespace yy {
             << yysym.location << ": ";
         switch (yykind)
     {
-      case symbol_kind::S_IDENTIFIER: // "identifier"
-#line 45 "parser.yy"
+      case symbol_kind::S_IDENTIFIER: // IDENTIFIER
+#line 71 "parser.yy"
                  { yyo << yysym.value.template as < std::string > (); }
 #line 330 "parser.tab.cc"
         break;
 
-      case symbol_kind::S_NUMBER: // "number"
-#line 45 "parser.yy"
+      case symbol_kind::S_CONSTANT: // CONSTANT
+#line 71 "parser.yy"
                  { yyo << yysym.value.template as < int > (); }
 #line 336 "parser.tab.cc"
         break;
 
-      case symbol_kind::S_exp: // exp
-#line 45 "parser.yy"
-                 { yyo << yysym.value.template as < int > (); }
+      case symbol_kind::S_STRING_LITERAL: // STRING_LITERAL
+#line 71 "parser.yy"
+                 { yyo << yysym.value.template as < std::string > (); }
 #line 342 "parser.tab.cc"
         break;
 
@@ -578,12 +578,12 @@ namespace yy {
          when using variants.  */
       switch (yyr1_[yyn])
     {
-      case symbol_kind::S_NUMBER: // "number"
-      case symbol_kind::S_exp: // exp
+      case symbol_kind::S_CONSTANT: // CONSTANT
         yylhs.value.emplace< int > ();
         break;
 
-      case symbol_kind::S_IDENTIFIER: // "identifier"
+      case symbol_kind::S_IDENTIFIER: // IDENTIFIER
+      case symbol_kind::S_STRING_LITERAL: // STRING_LITERAL
         yylhs.value.emplace< std::string > ();
         break;
 
@@ -607,74 +607,8 @@ namespace yy {
         {
           switch (yyn)
             {
-  case 2: // unit: assignments exp
-#line 50 "parser.yy"
-                       { drv.result = yystack_[0].value.as < int > (); }
-#line 614 "parser.tab.cc"
-    break;
 
-  case 3: // assignments: %empty
-#line 53 "parser.yy"
-                         {}
-#line 620 "parser.tab.cc"
-    break;
-
-  case 4: // assignments: assignments assignment
-#line 54 "parser.yy"
-                         {}
-#line 626 "parser.tab.cc"
-    break;
-
-  case 5: // assignment: "identifier" ":=" exp
-#line 57 "parser.yy"
-                        { drv.variables[yystack_[2].value.as < std::string > ()] = yystack_[0].value.as < int > (); }
-#line 632 "parser.tab.cc"
-    break;
-
-  case 6: // exp: "number"
-#line 62 "parser.yy"
-  { yylhs.value.as < int > () = yystack_[0].value.as < int > (); }
-#line 638 "parser.tab.cc"
-    break;
-
-  case 7: // exp: "identifier"
-#line 63 "parser.yy"
-                { yylhs.value.as < int > () = drv.variables[yystack_[0].value.as < std::string > ()]; }
-#line 644 "parser.tab.cc"
-    break;
-
-  case 8: // exp: exp "+" exp
-#line 64 "parser.yy"
-                { yylhs.value.as < int > () = yystack_[2].value.as < int > () + yystack_[0].value.as < int > (); }
-#line 650 "parser.tab.cc"
-    break;
-
-  case 9: // exp: exp "-" exp
-#line 65 "parser.yy"
-                { yylhs.value.as < int > () = yystack_[2].value.as < int > () - yystack_[0].value.as < int > (); }
-#line 656 "parser.tab.cc"
-    break;
-
-  case 10: // exp: exp "*" exp
-#line 66 "parser.yy"
-                { yylhs.value.as < int > () = yystack_[2].value.as < int > () * yystack_[0].value.as < int > (); }
-#line 662 "parser.tab.cc"
-    break;
-
-  case 11: // exp: exp "/" exp
-#line 67 "parser.yy"
-                { yylhs.value.as < int > () = yystack_[2].value.as < int > () / yystack_[0].value.as < int > (); }
-#line 668 "parser.tab.cc"
-    break;
-
-  case 12: // exp: "(" exp ")"
-#line 68 "parser.yy"
-                { yylhs.value.as < int > () = yystack_[1].value.as < int > (); }
-#line 674 "parser.tab.cc"
-    break;
-
-
-#line 678 "parser.tab.cc"
+#line 612 "parser.tab.cc"
 
             default:
               break;
@@ -858,9 +792,10 @@ namespace yy {
   {
     static const char *const yy_sname[] =
     {
-    "end of file", "error", "invalid token", ":=", "-", "+", "*", "/", "(",
-  ")", "identifier", "number", "$accept", "unit", "assignments",
-  "assignment", "exp", YY_NULLPTR
+    "end of file", "error", "invalid token", "else", "if", "while", "?",
+  "print", "+=", "-=", "*=", "/=", "%=", "<=", ">=", "==", "!=", "<", ">",
+  ",", ";", "{", "}", "=", "(", ")", "-", "+", "*", "/", "%", "IDENTIFIER",
+  "CONSTANT", "STRING_LITERAL", "$accept", "unit", YY_NULLPTR
     };
     return yy_sname[yysymbol];
   }
@@ -1129,74 +1064,62 @@ namespace yy {
   }
 
 
-  const signed char parser::yypact_ninf_ = -5;
+  const signed char parser::yypact_ninf_ = -1;
 
   const signed char parser::yytable_ninf_ = -1;
 
   const signed char
   parser::yypact_[] =
   {
-      -5,     5,     9,    -5,    13,    15,    -5,    -5,     8,    -5,
-      -3,    13,    13,    13,    13,    13,    -5,     8,    19,    19,
-      -5,    -5
+      -1,     0,    -1
   };
 
   const signed char
   parser::yydefact_[] =
   {
-       3,     0,     0,     1,     0,     7,     6,     4,     2,     7,
-       0,     0,     0,     0,     0,     0,    12,     5,     9,     8,
-      10,    11
+       2,     0,     1
   };
 
   const signed char
   parser::yypgoto_[] =
   {
-      -5,    -5,    -5,    -5,    -4
+      -1,    -1
   };
 
   const signed char
   parser::yydefgoto_[] =
   {
-       0,     1,     2,     7,     8
+       0,     1
   };
 
   const signed char
   parser::yytable_[] =
   {
-      10,    12,    13,    14,    15,     3,    16,    17,    18,    19,
-      20,    21,    12,    13,    14,    15,     0,     4,    11,     5,
-       6,     4,     0,     9,     6,    14,    15
+       2
   };
 
   const signed char
   parser::yycheck_[] =
   {
-       4,     4,     5,     6,     7,     0,     9,    11,    12,    13,
-      14,    15,     4,     5,     6,     7,    -1,     8,     3,    10,
-      11,     8,    -1,    10,    11,     6,     7
+       0
   };
 
   const signed char
   parser::yystos_[] =
   {
-       0,    13,    14,     0,     8,    10,    11,    15,    16,    10,
-      16,     3,     4,     5,     6,     7,     9,    16,    16,    16,
-      16,    16
+       0,    35,     0
   };
 
   const signed char
   parser::yyr1_[] =
   {
-       0,    12,    13,    14,    14,    15,    16,    16,    16,    16,
-      16,    16,    16
+       0,    34,    35
   };
 
   const signed char
   parser::yyr2_[] =
   {
-       0,     2,     2,     0,     2,     3,     1,     1,     3,     3,
-       3,     3,     3
+       0,     2,     0
   };
 
 
@@ -1206,8 +1129,7 @@ namespace yy {
   const signed char
   parser::yyrline_[] =
   {
-       0,    50,    50,    53,    54,    57,    62,    63,    64,    65,
-      66,    67,    68
+       0,    77,    77
   };
 
   void
@@ -1239,9 +1161,9 @@ namespace yy {
 
 
 } // yy
-#line 1243 "parser.tab.cc"
+#line 1165 "parser.tab.cc"
 
-#line 69 "parser.yy"
+#line 79 "parser.yy"
 
 
 void
