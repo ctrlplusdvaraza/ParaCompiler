@@ -1,6 +1,6 @@
 %skeleton "lalr1.cc" // -*- C++ -*-
 %require "3.8.1"
-%header "parser.hh"
+%header 
 
 
 %define api.token.constructor
@@ -10,7 +10,7 @@
 %code requires {
   #include <string>
   #include <memory>
-  #include "inc/ast.hh"
+  #include "ast.hpp"
 
   class driver;
 }
@@ -25,7 +25,7 @@
 %define parse.lac full
 
 %code {
-# include "driver.hh"
+#include "driver.hpp"
 }
 
 %define api.token.prefix {TOK_}

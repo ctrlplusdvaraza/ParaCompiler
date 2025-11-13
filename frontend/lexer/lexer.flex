@@ -9,8 +9,8 @@
 # include <cstdlib>
 # include <cstring> // strerror
 # include <string>
-# include "driver.hh"
-# include "parser.hh"
+# include "driver.hpp"
+# include "parser.hpp"
 %}
 
 id    [a-zA-Z][a-zA-Z_0-9]*

@@ -1,12 +1,12 @@
 #include <iostream>
-#include "driver.hh"
+#include "driver.hpp"
 
 
 #include <iostream>
 #include <memory>
 #include <string>
 #include <vector>
-#include "inc/ast.hh"
+#include "ast.hpp"
 
 void print_indent(int level) {
     for (int i = 0; i < level; ++i) std::cout << "  ";

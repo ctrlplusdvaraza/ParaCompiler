@@ -1,9 +1,9 @@
 #ifndef DRIVER_HH
-# define DRIVER_HH
-# include <string>
-# include <map>
-# include "parser.hh"
-#include "inc/ast.hh"
+#define DRIVER_HH
+#include <string>
+#include <map>
+#include "parser.hpp"
+#include "ast.hpp"
 
 
 // Give Flex the prototype of yylex we want ...
@@ -39,4 +39,8 @@ public:
     // The token's location used by the scanner.
     yy::location location;
 };
+
+
+
+
 #endif // ! DRIVER_HH
