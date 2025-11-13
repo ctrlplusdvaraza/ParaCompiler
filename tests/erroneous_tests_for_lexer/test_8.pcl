@@ -1,0 +1,6 @@
+// non-existent tokens
+
+fst = 0;
+iif (fst > 0) {
+    ++fst;
+}

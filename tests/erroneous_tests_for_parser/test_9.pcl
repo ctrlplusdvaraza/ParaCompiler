@@ -1,0 +1,6 @@
+// forget }
+
+fst = 0;
+if (fst > 1) {
+    print fst;
+

@@ -1,0 +1,3 @@
+// non-existent tokens
+
+fst = snd @ fst;
