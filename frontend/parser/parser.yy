@@ -12,11 +12,11 @@
   #include <memory>
   #include "ast.hpp"
 
-  class driver;
+  class Driver;
 }
 
 // The parsing context.
-%param { driver& drv }
+%param { Driver& driver }
 
 %locations
 
@@ -34,30 +34,29 @@
   ELSE         "else"
   IF           "if"
   WHILE        "while"
-  STDIN_GET_NUM "?"
+  INPUT        "?"
   PRINT        "print"
-
 
   ADD_ASSIGN   "+="
   SUB_ASSIGN   "-="
   MUL_ASSIGN   "*="
   DIV_ASSIGN   "/="
   MOD_ASSIGN   "%="
-
-  LE_OP        "<="
-  GE_OP        ">="
-  EQ_OP        "=="
-  NE_OP        "!="
-
-  LESS         "<"
-  GREATER      ">"
-  COMMA        ","
-  SEMICOLON    ";"
-  LBRACE       "{"
-  RBRACE       "}"
   ASSIGN       "="
-  LPAREN       "("
-  RPAREN       ")"
+  
+  LE_CMP       "<="
+  GE_CMP       ">="
+  EQ_CMP       "=="
+  NE_CMP       "!="
+  L_CMP        "<"
+  G_CMP        ">"
+  
+  SEMICOLON    ";"
+  
+  L_CURLY_BR   "{"
+  R_CURLY_BR   "}"
+  L_ROUND_BR   "("
+  R_ROUND_BR   ")"
 
   MINUS        "-"
   PLUS         "+"
@@ -70,17 +69,17 @@
 %token <int>         CONSTANT
 %token <std::string> STRING_LITERAL
 
-%nterm <std::shared_ptr<TranslationUnit>> translation_unit stmt_list
-%nterm <std::shared_ptr<Statement>> stmt expr_stmt compound_stmt if_stmt while_stmt print_stmt
-%nterm <std::shared_ptr<Expression>> expression additive_expression multiplicative_expression primary_expression assignment_expression
-%nterm <std::shared_ptr<Expression>> conditional_expression
-%nterm <std::shared_ptr<Expression>> logical_or_expression
-%nterm <std::shared_ptr<Expression>> logical_and_expression
-%nterm <std::shared_ptr<Expression>> inclusive_or_expression
-%nterm <std::shared_ptr<Expression>> exclusive_or_expression
-%nterm <std::shared_ptr<Expression>> and_expression
-%nterm <std::shared_ptr<Expression>> equality_expression
-%nterm <std::shared_ptr<Expression>> relational_expression
+%nterm <std::unique_ptr<TranslationUnit>> translation_unit stmt_list
+%nterm <std::unique_ptr<Statement>> stmt expr_stmt compound_stmt if_stmt while_stmt print_stmt
+%nterm <std::unique_ptr<Expression>> expression additive_expression multiplicative_expression primary_expression assignment_expression
+%nterm <std::unique_ptr<Expression>> conditional_expression
+%nterm <std::unique_ptr<Expression>> logical_or_expression
+%nterm <std::unique_ptr<Expression>> logical_and_expression
+%nterm <std::unique_ptr<Expression>> inclusive_or_expression
+%nterm <std::unique_ptr<Expression>> exclusive_or_expression
+%nterm <std::unique_ptr<Expression>> and_expression
+%nterm <std::unique_ptr<Expression>> equality_expression
+%nterm <std::unqiue_ptr<Expression>> relational_expression
 %nterm <std::string> assignment_operator
 
 %printer { yyo << $$; } <*>;
@@ -89,44 +88,42 @@
 %%
 %start translation_unit;
 
-/* ------------------ grammar rules ------------------ */
-
 translation_unit
-    : stmt_list { drv.result = $1; }
+    : stmt_list { drv.ast_root = std::move($1); }
     ;
 
 stmt_list
-    : %empty { $$ = std::make_shared<TranslationUnit>(); }
+    : %empty { $$ = std::make_unique<TranslationUnit>(); }
     | stmt_list stmt {
-        auto tu = std::dynamic_pointer_cast<TranslationUnit>($1);
-        tu->stmts.push_back(std::dynamic_pointer_cast<Statement>($2));
-        $$ = tu;
+        auto tu = std::move($1);
+        tu->stmts.push_back(std::move($2));
+        $$ = std::move(tu);
     }
     ;
 
 stmt
-    : expr_stmt     { $$ = $1; }
-    | compound_stmt { $$ = $1; }
-    | if_stmt       { $$ = $1; }
-    | while_stmt    { $$ = $1; }
-    | print_stmt    { $$ = $1; }
+    : expr_stmt     { $$ = std::move($1); }
+    | compound_stmt { $$ = std::move($1); }
+    | if_stmt       { $$ = std::move($1); }
+    | while_stmt    { $$ = std::move($1); }
+    | print_stmt    { $$ = std::move($1); }
     ;
 
 expr_stmt
-    : SEMICOLON { $$ = std::make_shared<ExprStmt>(); }
-    | expression SEMICOLON { 
-        auto s = std::make_shared<ExprStmt>();
-        s->expr = std::dynamic_pointer_cast<Expression>($1);
-        $$ = s;
+    : SEMICOLON { $$ = std::make_unique<ExprStmt>(); }
+    | expression SEMICOLON {
+        auto s = std::make_unique<ExprStmt>();
+        s->expr = std::move($1);
+        $$ = std::move(s);
     }
     ;
 
 compound_stmt
-    : LBRACE stmt_list RBRACE { 
-        auto s = std::make_shared<CompoundStmt>();
-        auto tu = std::dynamic_pointer_cast<TranslationUnit>($2);
-        s->stmts = tu->stmts;
-        $$ = s;
+    : LBRACE stmt_list RBRACE {
+        auto s = std::make_unique<CompoundStmt>();
+        auto tu = std::move($2);
+        s->stmts = std::move(tu->stmts);
+        $$ = std::move(s);
     }
     ;
 
@@ -149,18 +146,22 @@ if_stmt
 
 while_stmt
     : WHILE LPAREN expression RPAREN stmt {
-        auto s = std::make_shared<WhileStmt>();
-        s->cond = std::dynamic_pointer_cast<Expression>($3);
-        s->body = std::dynamic_pointer_cast<Statement>($5);
-        $$ = s;
+        auto main_node = std::make_unique<compiler::AstNode>(
+            std::make_unique<compiler::WhileToken>()
+        );
+        main_node->children.push_back(std::move($3)); 
+        main_node->chidren.push_back(std::move($5));
+        $$ = std::move(main_node);
     }
     ;
 
 print_stmt
     : PRINT expression SEMICOLON {
-        auto s = std::make_shared<PrintStmt>();
-        s->expr = std::dynamic_pointer_cast<Expression>($2);
-        $$ = s;
+        auto main_node = std::make_shared<compiler::AstNode>(
+            std::make_unique<compiler::PrintToken>()
+        );
+        main_node.push_back(std::move($2));
+        $$ = std::move(main_node);
     }
     ;
 
@@ -356,7 +357,7 @@ multiplicative_expression
 primary_expression
     : IDENTIFIER { $$ = std::make_shared<Identifier>($1); }
     | CONSTANT   { $$ = std::make_shared<Constant>($1); }
-    | STDIN_GET_NUM { $$ = std::make_shared<StdInGetNum>(); }
+    | INPUT { $$ = std::make_shared<StdInGetNum>(); }
     | LPAREN expression RPAREN { $$ = $2; }
     ;
 

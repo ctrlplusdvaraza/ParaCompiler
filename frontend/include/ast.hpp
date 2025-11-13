@@ -3,6 +3,26 @@
 #include <string>
 #include <vector>
 
+#include "tokens/abstract_token.hpp"
+#include "tokens/tokens.hpp"
+
+namespace compiler {
+
+struct AstNode;
+
+using AstNodePtr = std::unique_ptr<AstNode>;
+using AbstractTokenPtr = std::unique_ptr<AbstractToken>;
+
+struct AstNode {
+    explicit AstNode(AbstractTokenPtr t) : token(std::move(t)) {}
+
+    AbstractTokenPtr token;
+    std::vector<AstNodePtr> children; 
+};
+
+} // compiler
+
+#if 0
 struct ASTNode {
     virtual ~ASTNode() = default;
 };
@@ -56,4 +76,4 @@ struct Constant : Expression {
 };
 
 struct StdInGetNum : Expression {};
-
+#endif 
