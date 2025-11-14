@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(LEXER_CODEGEN_DIR "${CMAKE_BINARY_DIR}/codegen/lexer")
 set(PARSER_CODEGEN_DIR "${CMAKE_BINARY_DIR}/codegen/parser")
+
 set(FLEX_SRC "${CMAKE_CURRENT_SOURCE_DIR}/lexer/lexer.flex")
 set(BISON_SRC "${CMAKE_CURRENT_SOURCE_DIR}/parser/parser.yy")
 set(SRC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/source")
@@ -26,7 +27,9 @@ add_link_options(
 )
 
 include_directories(
-                    ${CMAKE_SOURCE_DIR}/include
+		    ${CMAKE_CURRENT_SOURCE_DIR}/include
+		    ${CMAKE_CURRENT_SOURCE_DIR}/include/tokens
+		    ${CMAKE_CURRENT_SOURCE_DIR}/include/tokens/operators
                     ${LEXER_CODEGEN_DIR}
                     ${PARSER_CODEGEN_DIR})
 
