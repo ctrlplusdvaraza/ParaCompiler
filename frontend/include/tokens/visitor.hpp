@@ -65,40 +65,40 @@ class TypeCheckVisitor : public AbstractToken::Visitor
 
   public:
     // clang-format off
-    void visit(const WhileToken& token)            override { check_type<WhileToken>(); }
-    void visit(const IfToken& token)               override { check_type<IfToken>(); }
-    void visit(const PrintToken& token)            override { check_type<PrintToken>(); }
-    void visit(const InputToken& token)            override { check_type<InputToken>(); }
+    void visit(const WhileToken&)            override { check_type<WhileToken>(); }
+    void visit(const IfToken&)               override { check_type<IfToken>(); }
+    void visit(const PrintToken&)            override { check_type<PrintToken>(); }
+    void visit(const InputToken&)            override { check_type<InputToken>(); }
 
-    void visit(const IdentifierToken& token)       override { check_type<IdentifierToken>(); }
-    void visit(const LiteralToken& token)          override { check_type<LiteralToken>(); }
+    void visit(const IdentifierToken&)       override { check_type<IdentifierToken>(); }
+    void visit(const LiteralToken&)          override { check_type<LiteralToken>(); }
 
-    void visit(const RoundBracketToken& token)     override { check_type<RoundBracketToken>(); }
-    void visit(const CurlyBracketToken& token)     override { check_type<CurlyBracketToken>(); }
+    void visit(const RoundBracketToken&)     override { check_type<RoundBracketToken>(); }
+    void visit(const CurlyBracketToken&)     override { check_type<CurlyBracketToken>(); }
 
-    void visit(const SemicolonToken& token)        override { check_type<SemicolonToken>(); }
-    void visit(const PlusToken& token)             override { check_type<PlusToken>(); }
-    void visit(const MinusToken& token)            override { check_type<MinusToken>(); }
-    void visit(const PlusPlusToken& token)         override { check_type<PlusPlusToken>(); }
-    void visit(const MinusMinusToken& token)       override { check_type<MinusMinusToken>(); }
+    void visit(const SemicolonToken&)        override { check_type<SemicolonToken>(); }
+    void visit(const PlusToken&)             override { check_type<PlusToken>(); }
+    void visit(const MinusToken&)            override { check_type<MinusToken>(); }
+    void visit(const PlusPlusToken&)         override { check_type<PlusPlusToken>(); }
+    void visit(const MinusMinusToken&)       override { check_type<MinusMinusToken>(); }
 
-    void visit(const AssignmentToken& token)       override { check_type<AssignmentToken>(); }
-    void visit(const AddAssignmentToken& token)    override { check_type<AddAssignmentToken>(); }
-    void visit(const SubAssignmentToken& token)    override { check_type<SubAssignmentToken>(); }
-    void visit(const MulAssignmentToken& token)    override { check_type<MulAssignmentToken>(); }
-    void visit(const DivAssignmentToken& token)    override { check_type<DivAssignmentToken>(); }
-    void visit(const ModAssignmentToken& token)    override { check_type<DivAssignmentToken>(); }
+    void visit(const AssignmentToken&)       override { check_type<AssignmentToken>(); }
+    void visit(const AddAssignmentToken&)    override { check_type<AddAssignmentToken>(); }
+    void visit(const SubAssignmentToken&)    override { check_type<SubAssignmentToken>(); }
+    void visit(const MulAssignmentToken&)    override { check_type<MulAssignmentToken>(); }
+    void visit(const DivAssignmentToken&)    override { check_type<DivAssignmentToken>(); }
+    void visit(const ModAssignmentToken&)    override { check_type<DivAssignmentToken>(); }
 
-    void visit(const PositiveToken& token)         override { check_type<PositiveToken>(); }
-    void visit(const NegativeToken& token)         override { check_type<NegativeToken>(); }
+    void visit(const PositiveToken&)         override { check_type<PositiveToken>(); }
+    void visit(const NegativeToken&)         override { check_type<NegativeToken>(); }
 
-    void visit(const PrefixIncrementToken& token)  override { check_type<PrefixIncrementToken>(); }
-    void visit(const PostfixIncrementToken& token) override { check_type<PostfixIncrementToken>(); }
-    void visit(const PrefixDecrementToken& token)  override { check_type<PrefixDecrementToken>(); }
-    void visit(const PostfixDecrementToken& token) override { check_type<PostfixDecrementToken>(); }
+    void visit(const PrefixIncrementToken&)  override { check_type<PrefixIncrementToken>(); }
+    void visit(const PostfixIncrementToken&) override { check_type<PostfixIncrementToken>(); }
+    void visit(const PrefixDecrementToken&)  override { check_type<PrefixDecrementToken>(); }
+    void visit(const PostfixDecrementToken&) override { check_type<PostfixDecrementToken>(); }
     
-    void visit(const AddToken& token)              override { check_type<AddToken>(); }
-    void visit(const SubToken& token)              override { check_type<SubToken>(); }
+    void visit(const AddToken&)              override { check_type<AddToken>(); }
+    void visit(const SubToken&)              override { check_type<SubToken>(); }
     // clang-format on
 
   private:
