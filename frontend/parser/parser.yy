@@ -28,6 +28,15 @@
 %token <std::string> IDENTIFIER
 %token <int>         LITERAL
 
+%nterm <std::unique_ptr<AstRoot>> translation_unit
+%nterm <std::unique_ptr<AstRoot>> stmt_list
+
+%nterm <std::unique_ptr<compiler::AstNode>> stmt
+%nterm <std::unique_ptr<compiler::AstNode>> expr_stmt
+%nterm <std::unique_ptr<compiler::AstNode>> expression
+%nterm <std::unique_ptr<compiler::AstNode>> assignment_expression
+%nterm <std::unique_ptr<compiler::AstNode>> primary_expression
+
 %%
 %start translation_unit;
 
