@@ -7,6 +7,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(LEXER_CODEGEN_DIR "${CMAKE_BINARY_DIR}/codegen/lexer")
 set(PARSER_CODEGEN_DIR "${CMAKE_BINARY_DIR}/codegen/parser")
 
+make_directory(${LEXER_CODEGEN_DIR})
+make_directory(${PARSER_CODEGEN_DIR})
+
 set(FLEX_SRC "${CMAKE_CURRENT_SOURCE_DIR}/lexer/lexer.flex")
 set(BISON_SRC "${CMAKE_CURRENT_SOURCE_DIR}/parser/parser.yy")
 set(SRC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/source")
