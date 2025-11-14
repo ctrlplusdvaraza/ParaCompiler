@@ -25,8 +25,8 @@ class AbstractToken::Visitor
     virtual void visit(const class DivAssignmentToken& token) = 0;
     virtual void visit(const class ModAssignmentToken& token) = 0;
 
-    virtual void visit(const class PositiveToken& token) = 0;
-    virtual void visit(const class NegativeToken& token) = 0;
+    virtual void visit(const class UnaryPlusToken& token) = 0;
+    virtual void visit(const class UnaryMinusToken& token) = 0;
     virtual void visit(const class PrefixIncrementToken& token) = 0;
     virtual void visit(const class PostfixIncrementToken& token) = 0;
     virtual void visit(const class PrefixDecrementToken& token) = 0;
