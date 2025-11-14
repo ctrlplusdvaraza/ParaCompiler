@@ -9,21 +9,21 @@ namespace compiler
 template <typename Derived>
 class BaseOperatorToken : public BaseToken<Derived>
 {
-  protected:
+  public:
     using BaseToken<Derived>::BaseToken;
 };
 
 template <typename Derived>
 class BaseUnaryOperatorToken : public BaseOperatorToken<Derived>
 {
-  protected:
+  public:
     using BaseOperatorToken<Derived>::BaseOperatorToken;
 };
 
 template <typename Derived>
 class BaseBinaryOperatorToken : public BaseOperatorToken<Derived>
 {
-  protected:
+  public:
     using BaseOperatorToken<Derived>::BaseOperatorToken;
 };
 
