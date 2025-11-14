@@ -14,7 +14,7 @@
 %}
 
 identifier [a-zA-Z][a-zA-Z_0-9]*
-int_number [1-9][0-9]*
+number     [1-9][0-9]*
 
 blank      [ \t\r]+
 new_line   [\n]+
@@ -26,16 +26,48 @@ new_line   [\n]+
 %}
 
 {identifier} { return yy::parser::make_IDENTIFIER(yytext, location); }
-{int_number} { return yy::parser::make_LITERAL(yytext, location); }
+{number}     { return yy::parser::make_LITERAL(yytext, location); }
 
-"="          { return yy::parser::make_ASSIGN(location); }
-";"          { return yy::parser::make_SEMICOLON(location); }
+";"          { return yy::parser::make_SEMICOLON(yytext, location); }
+"("          { return yy::parser::make_L_ROUND_BR(yytext, location); }
+")"          { return yy::parser::make_R_ROUND_BR(yytext, location); }
+"{"          { return yy::parser::make_L_CURLY_BR(yytext, location); }
+"}"          { return yy::parser::make_R_CURLY_BR(yytext, location); }
 
+"while"      { return yy::parser::make_WHILE(yytext, location); }
+"if"         { return yy::parser::make_IF(yytext, location); }
+"print"      { return yy::parser::make_PRINT(yytext, location); }
+"?"          { return yy::parser::make_INPUT(yytext, location); }
 
-{blank}    { location.step(); }
-{new_line} { location.lines(yyleng); location.step(); }
-.          { throw yy::parser::syntax_error(location, "Unknown character: " + std::string(yytext)); }
-<<EOF>>    { return yy::parser::make_YYEOF(location); }
+"="          { return yy::parser::make_ASSIGN(yytext, location); }
+"+="         { return yy::parser::make_ADD_ASSIGN(yytext, location); }
+"-="         { return yy::parser::make_SUB_ASSIGN(yytext, location); }
+"*="         { return yy::parser::make_MUL_ASSIGN(yytext, location); }
+"/="         { return yy::parser::make_DIV_ASSIGN(yytext, location); }
+"%="         { return yy::parser::make_MOD_ASSIGN(yytext, location); }
+
+"+"          { return yy::parser::make_PLUS(yytext, location); }
+"-"          { return yy::parser::make_MINUS(yytext, location); }
+"*"          { return yy::parser::make_STAR(yytext, location); }
+"/"          { return yy::parser::make_SLASH(yytext, location); }
+"%"          { return yy::parser::make_PERCENT(yytext, location); }
+"++"         { return yy::parser::make_PLUSPLUS(yytext, location); }
+"--"         { return yy::parser::make_MINUSMINUS(yytext, location); }
+
+"=="         { return yy::parser::make_EQUAL(yytext, location); }
+"!="         { return yy::parser::make_NOT_EQUAL(yytext, location); }
+"<"          { return yy::parser::make_LESS(yytext, location); }
+"<="         { return yy::parser::make_LESS_EQUAL(yytext, location); }
+">"          { return yy::parser::make_GREATER(yytext, location); }
+">="         { return yy::parser::make_GREATER_EQUAL(yytext, location); }
+
+{blank}      { location.step(); }
+
+{new_line}   { location.lines(yyleng); location.step(); }
+
+.            { throw yy::parser::syntax_error(location, "Unknown character: " + std::string(yytext)); }
+
+<<EOF>>      { return yy::parser::make_YYEOF(location); }
 
 %% /*----------------------------------------- Code section ------------------------------------------*/
 
@@ -43,7 +75,7 @@ int Driver::input_file_initialize(const std::string& file_path)
 {
     if(file_path.empty())
     {
-        std::cerr << "No file provided"<< std::endl;
+        std::cerr << "No file provided" << std::endl;
         return 1;
     }
 
