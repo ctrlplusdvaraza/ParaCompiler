@@ -1,8 +1,4 @@
-cmake_minimum_required(VERSION 3.20)
 project(frontend LANGUAGES CXX)
-
-set(CMAKE_CXX_STANDARD 23)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(LEXER_CODEGEN_DIR "${CMAKE_BINARY_DIR}/codegen/lexer")
 set(PARSER_CODEGEN_DIR "${CMAKE_BINARY_DIR}/codegen/parser")
@@ -30,9 +26,9 @@ add_link_options(
 )
 
 include_directories(
-		    ${CMAKE_CURRENT_SOURCE_DIR}/include
-		    ${CMAKE_CURRENT_SOURCE_DIR}/include/tokens
-		    ${CMAKE_CURRENT_SOURCE_DIR}/include/tokens/operators
+		    ${CMAKE_SOURCE_DIR}/include
+		    ${CMAKE_CURRENT_SOURCE_DIR}
+		    ${CMAKE_BINARY_DIR}/protobuf
                     ${LEXER_CODEGEN_DIR}
                     ${PARSER_CODEGEN_DIR})
 
@@ -51,5 +47,7 @@ set(SRC_FILES
 )
 
 add_executable(${PROJECT_NAME} ${SRC_FILES})
+
+target_link_libraries(${PROJECT_NAME} PUBLIC ast_serialization)
 
 # target_link_libraries(compiler fl)

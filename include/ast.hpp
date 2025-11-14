@@ -3,8 +3,8 @@
 #include <string>
 #include <vector>
 
-#include "tokens/abstract_token.hpp"
-#include "tokens/tokens.hpp"
+#include "abstract_token.hpp"
+#include "tokens.hpp"
 
 namespace compiler
 {
