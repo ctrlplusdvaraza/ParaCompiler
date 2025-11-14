@@ -1,4 +1,4 @@
-%skeleton "lalr1.cc" // -*- C++ -*-
+%skeleton "lalr1.cc"
 %require "3.8.1"
 %header 
 
@@ -21,22 +21,25 @@
 
 %param { Driver& driver }
 
-%token
-    ASSIGN       "="
-    ADD_ASSIGN   "+="
-    SUB_ASSIGN   "-="
-    MUL_ASSIGN   "*="
-    DIV_ASSIGN   "/="
-    MOD_ASSIGN   "%="
+%token <std::string> SEMICOLON    ";"
 
-    PLUS         "+"
-    MINUS        "-"
-    STAR         "*"
-    SLASH        "/"
-    PERCENT      "%"
+%token <std::string> L_ROUND_BR   "("
+%token <std::string> R_ROUND_BR   ")"
 
-    SEMICOLON    ";"
-;
+%token <std::string> ASSIGN       "="
+%token <std::string> ADD_ASSIGN   "+="
+%token <std::string> SUB_ASSIGN   "-="
+%token <std::string> MUL_ASSIGN   "*="
+%token <std::string> DIV_ASSIGN   "/="
+%token <std::string> MOD_ASSIGN   "%="
+
+%token <std::string> PLUSPLUS     "++"
+%token <std::string> MINUSMINUS   "--"
+%token <std::string> PLUS         "+"
+%token <std::string> MINUS        "-"
+%token <std::string> STAR         "*"
+%token <std::string> SLASH        "/"
+%token <std::string> PERCENT      "%"
 
 %token <std::string> IDENTIFIER LITERAL
 
@@ -44,12 +47,14 @@
 %nterm <AstRootPtr> statement_list
 
 %nterm <AstNodePtr> statement
-%nterm <AstNodePtr> expr_stmt
+%nterm <AstNodePtr> expression_stmt
 %nterm <AstNodePtr> expression
 %nterm <AstNodePtr> assignment_expression
 %nterm <AstNodePtr> primary_expression primary_assignment
-%nterm <AstNodePtr> additive_expr multiplicative_expr 
-$nterm <AstNodePtr> PLUS_OR_MINUS MUL_OR_DIV_OR_PERCENT
+%nterm <AstNodePtr> additive_expression multiplicative_expression 
+%nterm <AstNodePtr> PLUS_OR_MINUS MUL_OR_DIV_OR_PERCENT
+%nterm <AstNodePtr> unary_expression prefix_expression postfix_expression
+%nterm <AstNodePtr> UNARY_OP PREFIX_OP POSTFIX_OP
 
 %%
 %start translation_unit;
@@ -62,17 +67,17 @@ statement_list
     : %empty { $$ = std::make_unique<compiler::AstRoot>(); }
     | statement_list statement
         {
-            compiler::AstRootPtr main_node = std::move($1);
-            main_node->children.push_back(std::move($2));
-            $$ = std::move(main_node);
+            auto node = std::move($1);
+            node->children.push_back(std::move($2));
+            $$ = std::move(node);
         }
     ;
 
 statement
-    : expr_stmt { $$ = std::move($1); }
+    : expression_stmt { $$ = std::move($1); }
     ;
 
-expr_stmt
+expression_stmt
     : expression SEMICOLON {
         $$ = std::move($1);
     }
@@ -83,10 +88,9 @@ expression
     ;
 
 assignment_expression
-    : primary_expressioni { $$ = std::move($1); }
+    : additive_expression { $$ = std::move($1); }
     | IDENTIFIER primary_assignment assignment_expression {
         auto ident = std::make_unique<AstNode>(std::make_unique<IdentifierToken>($1));
-
         $2->children.push_back(std::move(ident));
         $2->children.push_back(std::move($3));
         $$ = std::move($2);
@@ -94,50 +98,90 @@ assignment_expression
     ;
 
 primary_assignment
-    : ASSIGN     { $$ = std::make_unique<AstNode>(std::make_unique<AssignmentToken>());    }
-    | ADD_ASSIGN { $$ = std::make_unique<AstNode>(std::make_unique<AddAssignmentToken>()); }
-    | SUB_ASSIGN { $$ = std::make_unique<AstNode>(std::make_unique<SubAssignmentToken>()); }
-    | MUL_ASSIGN { $$ = std::make_unique<AstNode>(std::make_unique<MulAssignmentToken>()); }
-    | DIV_ASSIGN { $$ = std::make_unique<AstNode>(std::make_unique<DivAssignmentToken>()); }
-    | MOD_ASSIGN { $$ = std::make_unique<AstNode>(std::make_unique<ModAssignmentToken>()); }
+    : ASSIGN     { $$ = std::make_unique<AstNode>(std::make_unique<AssignmentToken>($1));    }
+    | ADD_ASSIGN { $$ = std::make_unique<AstNode>(std::make_unique<AddAssignmentToken>($1)); }
+    | SUB_ASSIGN { $$ = std::make_unique<AstNode>(std::make_unique<SubAssignmentToken>($1)); }
+    | MUL_ASSIGN { $$ = std::make_unique<AstNode>(std::make_unique<MulAssignmentToken>($1)); }
+    | DIV_ASSIGN { $$ = std::make_unique<AstNode>(std::make_unique<DivAssignmentToken>($1)); }
+    | MOD_ASSIGN { $$ = std::make_unique<AstNode>(std::make_unique<ModAssignmentToken>($1)); }
     ;
 
-additive_expr
-    : multiplicative_expr { $$ = std::move($1); }
-    | additive_expr PLUS_OR_MINUS multiplicative_expr {
+additive_expression
+    : multiplicative_expression { $$ = std::move($1); }
+    | additive_expression PLUS_OR_MINUS multiplicative_expression {
         $2->children.push_back(std::move($1));
         $2->children.push_back(std::move($3));
         $$ = std::move($2);
     }
     ;
 
-multiplicative_expr
-    : primary_expression { $$ = std::move($1); }
-    | multiplicative_expr MUL_OR_DIV_OR_PERCENT primary_expression {
-        $2->children.push_back(std::move($1));
-        $2->children.push_back(std::move($3));
-        $$ = std::move($2);
-    }
-    ;
-        
 PLUS_OR_MINUS
-    : PLUS  { $$ = std::make_unique<AstNode>(std::make_unique<AddOperator>());   }
-    | MINUS { $$ = std::make_unique<AstNode>(std::make_unique<MinusOperator>()); }
+    : PLUS  { $$ = std::make_unique<AstNode>(std::make_unique<AddToken>($1));   }
+    | MINUS { $$ = std::make_unique<AstNode>(std::make_unique<SubToken>($1)); }
+    ;
+
+multiplicative_expression
+    : unary_expression { $$ = std::move($1); }
+    | multiplicative_expression MUL_OR_DIV_OR_PERCENT unary_expression {
+        $2->children.push_back(std::move($1));
+        $2->children.push_back(std::move($3));
+        $$ = std::move($2);
+    }
     ;
 
 MUL_OR_DIV_OR_PERCENT
-    : MUL     { $$ = std::make_unique<AstNode>(std::make_unique<MulOperator>());     }
-    | DIV     { $$ = std::make_unique<AstNode>(std::make_unique<DivOperator>());     }
-    | PERCENT { $$ = std::make_unique<AstNode>(std::make_unique<PercentOperator>()); }
+    : STAR    { $$ = std::make_unique<AstNode>(std::make_unique<MulToken>($1));     }
+    | SLASH   { $$ = std::make_unique<AstNode>(std::make_unique<DivToken>($1));     }
+    | PERCENT { $$ = std::make_unique<AstNode>(std::make_unique<ModToken>($1)); }
+    ;
+
+unary_expression
+    : prefix_expression { $$ = std::move($1); }
+    | UNARY_OP unary_expression {
+        $1->children.push_back(std::move($2));
+        $$ = std::move($1);
+    }
+    ;
+
+UNARY_OP
+    : PLUS  { $$ = std::make_unique<AstNode>(std::make_unique<UnaryPlusToken>($1));  }
+    | MINUS { $$ = std::make_unique<AstNode>(std::make_unique<UnaryMinusToken>($1)); }
+    ;
+
+prefix_expression
+    : postfix_expression { $$ = std::move($1); }
+    | PREFIX_OP prefix_expression {
+        $1->children.push_back(std::move($2));
+        $$ = std::move($1);
+    }
+    ;
+
+PREFIX_OP
+    : PLUSPLUS   { $$ = std::make_unique<AstNode>(std::make_unique<PrefixIncrementToken>($1)); }
+    | MINUSMINUS { $$ = std::make_unique<AstNode>(std::make_unique<PrefixDecrementToken>($1)); }
+    ;
+
+postfix_expression
+    : primary_expression { $$ = std::move($1); }
+    | postfix_expression POSTFIX_OP {
+        $2->children.push_back(std::move($1));
+        $$ = std::move($2);
+    }
+    ;
+
+POSTFIX_OP
+    : PLUSPLUS   { $$ = std::make_unique<AstNode>(std::make_unique<PostfixIncrementToken>($1)); }
+    | MINUSMINUS { $$ = std::make_unique<AstNode>(std::make_unique<PostfixDecrementToken>($1)); }
     ;
 
 primary_expression
     : IDENTIFIER { $$ = std::make_unique<AstNode>(std::make_unique<IdentifierToken>($1)); }
     | LITERAL    { $$ = std::make_unique<AstNode>(std::make_unique<LiteralToken>($1));    }
+    | L_ROUND_BR expression R_ROUND_BR { $$ = std::move($2); }
     ;
 %%
 
 void yy::parser::error (const location_type& l, const std::string& m)
 {
     std::cerr << l << ": " << m << '\n';
- }
+}
