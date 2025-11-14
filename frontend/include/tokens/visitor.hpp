@@ -10,19 +10,6 @@ namespace compiler
 class AbstractToken::Visitor
 {
   public:
-    virtual void visit(const class SemicolonToken& token) = 0;
-
-    virtual void visit(const class PlusToken& token) = 0;
-    virtual void visit(const class MinusToken& token) = 0;
-    virtual void visit(const class StarToken& token) = 0;
-    virtual void visit(const class SlashToken& token) = 0;
-    virtual void visit(const class PercentToken& token) = 0;
-    virtual void visit(const class PlusPlusToken& token) = 0;
-    virtual void visit(const class MinusMinusToken& token) = 0;
-
-    virtual void visit(const class RoundBracketToken& token) = 0;
-    virtual void visit(const class CurlyBracketToken& token) = 0;
-
     virtual void visit(const class IdentifierToken& token) = 0;
     virtual void visit(const class LiteralToken& token) = 0;
 
@@ -77,19 +64,6 @@ class TypeCheckVisitor : public AbstractToken::Visitor
 
   public:
     // clang-format off
-    void visit(const SemicolonToken& token)        override { check_type<SemicolonToken>(); }
-
-    void visit(const PlusToken& token)             override { check_type<PlusToken>(); }
-    void visit(const MinusToken& token)            override { check_type<MinusToken>(); }
-    void visit(const StarToken& token)             override { check_type<StarToken>(); }
-    void visit(const SlashToken& token)            override { check_type<SlashToken>(); }
-    void visit(const PercentToken& token)          override { check_type<PercentToken>(); }
-    void visit(const PlusPlusToken& token)         override { check_type<PlusPlusToken>(); }
-    void visit(const MinusMinusToken& token)       override { check_type<MinusMinusToken>(); }
-
-    void visit(const RoundBracketToken& token)     override { check_type<RoundBracketToken>(); }
-    void visit(const CurlyBracketToken& token)     override { check_type<CurlyBracketToken>(); }
-
     void visit(const IdentifierToken& token)       override { check_type<IdentifierToken>(); }
     void visit(const LiteralToken& token)          override { check_type<LiteralToken>(); }
 
