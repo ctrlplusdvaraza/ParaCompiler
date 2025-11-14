@@ -1,16 +1,18 @@
-#include "assignment_tokens.hpp"
-#include "ast.hpp"
-#include "driver.hpp"
-#include "tokens.hpp"
 #include <iostream>
 #include <memory>
 #include <string>
 #include <vector>
 
+#include "tokens.hpp"
+#include "ast.hpp"
+#include "driver.hpp"
 
-void traverse_ast(const compiler::AstNodePtr& node)
+namespace compiler
 {
-    if (node->token.get()->is_token_of_type<compiler::AssignmentToken>())
+
+void traverse_ast(const AstNodePtr& node)
+{
+    if (node->token.get()->is_token_of_type<AssignmentToken>())
     {
         std::cout << node->children[0]->token->get_string_token() << node->token->get_string_token()
                   << node->children[1]->token->get_string_token() << std::endl;
@@ -22,7 +24,7 @@ void traverse_ast(const compiler::AstNodePtr& node)
     }
 }
 
-void traverse_ast_root(const compiler::AstRootPtr& root)
+void traverse_ast_root(const AstRootPtr& root)
 {
     for (const auto& child : root->children)
     {
@@ -30,22 +32,23 @@ void traverse_ast_root(const compiler::AstRootPtr& root)
     }
 }
 
+} // namespace compiler
+
 int main(int argc, char* argv[])
 {
-    int res = 0;
-    Driver driver;
-    for (int i = 1; i < argc; ++i)
+    if(argc != 2) 
     {
-        if (!driver.parse(argv[i]))
-        {
-            auto root = driver.get_ast_root();
-            traverse_ast_root(root);
-        }
-        else
-        {
-            res = 1;
-        }
+        return 1;
     }
 
-    return res;
+    Driver driver;
+
+    int parsing_result = driver.parse_file(argv[argc - 1]);
+    if(!parsing_result)
+    {
+        auto root = driver.get_ast_root();
+        traverse_ast_root(root);
+    }
+
+    return parsing_result;
 }

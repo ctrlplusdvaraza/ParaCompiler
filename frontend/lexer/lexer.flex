@@ -1,28 +1,28 @@
-/* --------------------- FLEX DEFINITIONS SECTION --------------------- */
-%option header-file="scanner.hh"
+/*------------------------------------- Flex definitions section -------------------------------------*/
+
+%option header-file="lexer.hpp"
 %option noyywrap
 %option nounput noinput batch debug
 
 %{
-#include <string>
+    #include <string>
 
-#include "driver.hpp"
-#include "parser.hpp"
+    #include "driver.hpp"
+    #include "parser.hpp"
+
+    #define YY_USER_ACTION location.columns(yyleng);
 %}
 
 identifier [a-zA-Z][a-zA-Z_0-9]*
 int_number [1-9][0-9]*
-blank      [ \t\r]
+
+blank      [ \t\r]+
+new_line   [\n]+
+
+%% /*------------------------------------- Lexical rules section -------------------------------------*/
 
 %{
-  # define YY_USER_ACTION location.columns(yyleng);
-%}
-
-%% /* --------------------- LEXICAL RULES SECTION --------------------- */
-
-%{
-  yy::location& location = driver.get_location();
-  location.step();
+    yy::location location;
 %}
 
 {identifier} { return yy::parser::make_IDENTIFIER(yytext, location); }
@@ -31,35 +31,34 @@ blank      [ \t\r]
 "="          { return yy::parser::make_ASSIGN(location); }
 ";"          { return yy::parser::make_SEMICOLON(location); }
 
-[ \t\v\f]             { location.step(); }
-\n+                   { location.lines(yyleng); location.step(); }
 
-.                     {
-                        throw yy::parser::syntax_error(
-                            location, "Unknown character: " + std::string(yytext)
-                        );
-                      }
+{blank}    { location.step(); }
+{new_line} { location.lines(yyleng); location.step(); }
+.          { throw yy::parser::syntax_error(location, "Unknown character: " + std::string(yytext)); }
+<<EOF>>    { return yy::parser::make_YYEOF(location); }
 
-<<EOF>>               { return yy::parser::make_YYEOF(location); }
+%% /*----------------------------------------- Code section ------------------------------------------*/
 
-%%
-
-/* --------------------- USER CODE SECTION --------------------- */
-
-void Driver::scan_begin()
+int Driver::input_file_initialize(const std::string& file_path)
 {
-    if(file_.empty() || file_ == "-")
+    if(file_path.empty())
     {
-        yyin = stdin;
+        std::cerr << "No file provided"<< std::endl;
+        return 1;
     }
-    else if(!(yyin = fopen(file_.c_str(), "r")))
+
+    yyin = fopen(file_path.c_str(), "r");
+
+    if(yyin == NULL)
     {
-        std::cerr << "Cannot open " << file_ << ": " << strerror(errno) << '\n';
-        exit(EXIT_FAILURE);
+        std::cerr << "Cannot open " << file_path << ": " << strerror(errno) << std::endl;
+        return 1;
     }
+
+    return 0;
 }
 
-void Driver::scan_end()
+void Driver::input_file_close()
 {
-    fclose (yyin);
+    fclose(yyin);
 }

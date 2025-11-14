@@ -12,33 +12,30 @@ YY_DECL;
 class Driver
 {
   public:
-    Driver() = default;
-
     compiler::AstRootPtr ast_root;
+    yy::location location;
+
+  public:
+    Driver() = default;
 
     compiler::AstRootPtr get_ast_root() { return std::move(ast_root); }
 
-    const std::string& get_file() const { return file_; }
-    yy::location& get_location() { return location_; }
-
-    int parse(const std::string& file_path)
+    int parse_file(const std::string& file_path)
     {
-        file_ = file_path;
-        location_.initialize(&get_file());
+        if(input_file_initialize(file_path) != 0)
+        {
+            return 1;
+        }
 
-        scan_begin();
         yy::parser parser(*this);
+        int parsing_result = parser();
 
-        int res = parser();
-
-        scan_end();
-        return res;
+        input_file_close();
+        
+        return parsing_result;
     }
 
-    void scan_begin();
-    void scan_end();
-
-  private:
-    std::string file_;
-    yy::location location_;
+    int input_file_initialize(const std::string& file_path);
+    void input_file_close();
 };
+
