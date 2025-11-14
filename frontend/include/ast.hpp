@@ -20,6 +20,10 @@ struct AstNode {
     std::vector<AstNodePtr> children; 
 };
 
+struct AstRoot {
+    std::vector<AstNodePtr> children;
+};
+
 } // compiler
 
 #if 0
