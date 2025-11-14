@@ -2,9 +2,13 @@
 %require "3.8.1"
 %header 
 
+%define api.token.constructor
+%define api.value.type variant
+
 %code requires {
   #include <string>
   #include <memory>
+
   #include "ast.hpp"
 
   class Driver;
@@ -26,34 +30,35 @@
 ;
 
 %token <std::string> IDENTIFIER
-%token <int>         LITERAL
+%token <std::string> LITERAL
 
-%nterm <std::unique_ptr<AstRoot>> translation_unit
-%nterm <std::unique_ptr<AstRoot>> stmt_list
+%nterm <compiler::AstRootPtr> translation_unit
+%nterm <compiler::AstRootPtr> statement_list
 
-%nterm <std::unique_ptr<compiler::AstNode>> stmt
-%nterm <std::unique_ptr<compiler::AstNode>> expr_stmt
-%nterm <std::unique_ptr<compiler::AstNode>> expression
-%nterm <std::unique_ptr<compiler::AstNode>> assignment_expression
-%nterm <std::unique_ptr<compiler::AstNode>> primary_expression
+%nterm <compiler::AstNodePtr> statement
+%nterm <compiler::AstNodePtr> expr_stmt
+%nterm <compiler::AstNodePtr> expression
+%nterm <compiler::AstNodePtr> assignment_expression
+%nterm <compiler::AstNodePtr> primary_expression
 
 %%
 %start translation_unit;
 
 translation_unit
-    : stmt_list { driver.ast_root = std::move($1); }
+    : statement_list { driver.ast_root = std::move($1); }
     ;
 
-stmt_list
-    : %empty { $$ = std::make_unique<AstRoot>(); }
-    | stmt_list stmt {
-        auto main_node = std::move($1);
-        main_node->children.push_back(std::move($2));
-        $$ = std::move(main_node);
-    }
+statement_list
+    : %empty { $$ = std::make_unique<compiler::AstRoot>(); }
+    | statement_list statement
+        {
+            compiler::AstRootPtr main_node = std::move($1);
+            main_node->children.push_back(std::move($2));
+            $$ = std::move(main_node);
+        }
     ;
 
-stmt
+statement
     : expr_stmt { $$ = std::move($1); }
     ;
 
@@ -69,8 +74,8 @@ expression
 
 assignment_expression
     : primary_expression ASSIGN primary_expression {
-        auto main_node = std::make_unique<compiler::AstNode>(
-            std::make_unique<compiler::AssignmentToken>()
+        compiler::AstNodePtr main_node = std::make_unique<compiler::AstNode>(
+            std::make_unique<compiler::AssignmentToken>("=")
         );
         main_node->children.push_back(std::move($1));
         main_node->children.push_back(std::move($3));
@@ -79,11 +84,16 @@ assignment_expression
     ;
 
 primary_expression
-    : IDENTIFIER { $$ = std::make_unique<compiler::AstNode>(
-                    std::make_unique<compiler::IdentifierToken>($1)); }
-    | LITERAL { $$ = std::make_unique<compiler::AstNode>(
-                    std::make_unique<compiler::LiteralToken>($1)); }
+    : IDENTIFIER 
+        { $$ = std::make_unique<compiler::AstNode>(std::make_unique<compiler::IdentifierToken>($1)); }
+
+    | LITERAL 
+        { $$ = std::make_unique<compiler::AstNode>(std::make_unique<compiler::LiteralToken>($1)); }
     ;
 
 %%
 
+void yy::parser::error (const location_type& l, const std::string& m)
+{
+    std::cerr << l << ": " << m << '\n';
+}

@@ -50,7 +50,8 @@ template <typename Derived>
 class BaseToken : public AbstractToken
 {
   public:
-    using AbstractToken::AbstractToken;
+    BaseToken(std::string token) : AbstractToken(token) {}
+    // using AbstractToken::AbstractToken;
 
   public:
     virtual void accept(Visitor& visitor) override { visitor.visit(static_cast<Derived&>(*this)); }
