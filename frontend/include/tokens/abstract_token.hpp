@@ -11,6 +11,12 @@ class AbstractToken
   public:
     explicit AbstractToken(std::string token) : token_(token) {}
 
+    AbstractToken(const AbstractToken& other) = delete;
+    AbstractToken(AbstractToken&& other) = delete;
+
+    AbstractToken& operator=(const AbstractToken& other) = delete;
+    AbstractToken& operator=(AbstractToken&& other) = delete;
+
     virtual ~AbstractToken() = default;
 
   public:
