@@ -3,14 +3,11 @@
 %option noyywrap
 %option nounput noinput batch debug
 
-%{ /* -*- C++ -*- */
-# include <cerrno>
-# include <climits>
-# include <cstdlib>
-# include <cstring> // strerror
-# include <string>
-# include "driver.hpp"
-# include "parser.hpp"
+%{
+#include <string>
+
+#include "driver.hpp"
+#include "parser.hpp"
 %}
 
 id    [a-zA-Z][a-zA-Z_0-9]*
@@ -22,8 +19,7 @@ blank [ \t\r]
   # define YY_USER_ACTION  loc.columns (yyleng);
 %}
 
-/* --------------------- LEXICAL RULES SECTION --------------------- */
-%%
+%% /* --------------------- LEXICAL RULES SECTION --------------------- */
 
 %{
   // A handy shortcut to the location held by the driver.
@@ -32,43 +28,10 @@ blank [ \t\r]
   loc.step();
 %}
 
-"else"                { return yy::parser::make_ELSE(loc); }
-"if"                  { return yy::parser::make_IF(loc); }
-"while"               { return yy::parser::make_WHILE(loc); }
-"?"                   { return yy::parser::make_STDIN_GET_NUM(loc); }
-"print"               { return yy::parser::make_PRINT(loc); }
+identifier { return yy::parser::make_IDENTIFIER(yytext, location); }
+int_number { return yy::parser::make_CONSTANT(std::stoi(yytext), location); }
 
-[a-zA-Z][a-zA-Z0-9]*  { return yy::parser::make_IDENTIFIER(yytext, loc); }
-[0-9]+                { return yy::parser::make_CONSTANT(std::stoi(yytext), loc); }
-
-"+="                  { return yy::parser::make_ADD_ASSIGN(loc); }
-"-="                  { return yy::parser::make_SUB_ASSIGN(loc); }
-"*="                  { return yy::parser::make_MUL_ASSIGN(loc); }
-"/="                  { return yy::parser::make_DIV_ASSIGN(loc); }
-"%="                  { return yy::parser::make_MOD_ASSIGN(loc); }
-
-"<="                  { return yy::parser::make_LE_OP(loc); }
-">="                  { return yy::parser::make_GE_OP(loc); }
-"=="                  { return yy::parser::make_EQ_OP(loc); }
-"!="                  { return yy::parser::make_NE_OP(loc); }
-
-"<"                   { return yy::parser::make_LESS(loc); }
-">"                   { return yy::parser::make_GREATER(loc); }
-","                   { return yy::parser::make_COMMA(loc); }
-";"                   { return yy::parser::make_SEMICOLON(loc); }
-
-("{"|"<%")            { return yy::parser::make_LBRACE(loc); }
-("}"|"%>")            { return yy::parser::make_RBRACE(loc); }
-
-"="                   { return yy::parser::make_ASSIGN(loc); }
-"("                   { return yy::parser::make_LPAREN(loc); }
-")"                   { return yy::parser::make_RPAREN(loc); }
-
-"-"                   { return yy::parser::make_MINUS(loc); }
-"+"                   { return yy::parser::make_PLUS(loc); }
-"*"                   { return yy::parser::make_STAR(loc); }
-"/"                   { return yy::parser::make_SLASH(loc); }
-"%"                   { return yy::parser::make_PERCENT(loc); }
+"="        { return yy::parser::make_ASSIGN(location); }
 
 [ \t\v\f]             { loc.step(); }
 \n+                   { loc.lines(yyleng); loc.step(); }
@@ -87,13 +50,16 @@ blank [ \t\r]
 
 void driver::scan_begin ()
 {
-  yy_flex_debug = trace_scanning;
-  if (file.empty () || file == "-")
-    yyin = stdin;
-  else if (!(yyin = fopen (file.c_str (), "r")))
+    yy_flex_debug = is_trace_lexing();
+
+    if(file.empty() || file == "-")
     {
-      std::cerr << "cannot open " << file << ": " << strerror (errno) << '\n';
-      exit (EXIT_FAILURE);
+        yyin = stdin;
+    }
+    else if(!(yyin = fopen(file.c_str(), "r")))
+    {
+        std::cerr << "Cannot open " << file << ": " << strerror(errno) << '\n';
+        exit(EXIT_FAILURE);
     }
 }
 

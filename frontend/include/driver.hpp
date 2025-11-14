@@ -17,27 +17,44 @@ YY_DECL;
 class driver
 {
 public:
-    driver();
+    Driver() : debug_parsing_(false), debug_lexing_(false) {}
 
-    std::shared_ptr<ASTNode> result; // (or AST* root) — parse result / root of AST.
-    // Run the parser on file F.  Return 0 on success.
-    int parse (const std::string& f);
-    
-    // The name of the file being parsed.
-    std::string file;
-    
-    // Whether to generate parser debug traces.
-    bool trace_parsing;
+    AstRootPtr ast_root;
+
+    AstRootPtr get_ast_root() { return std::move(ast_root); }
+
+    const std::string& get_file() const { return file_; }
+    yy::location& get_location() { return location_; }
+    bool is_debug_lexing() const { return debug_lexing_; }
+    bool is_debug_parsing() const { return debug_lexing_; }
+
+    void set_trace_lexing(bool value = true) { debug_lexing_ = value; }
+    void set_trace_parsing(bool value = true) { debug_lexing_ = value; }
+
+    int parse(const std::string& file_path)
+    {
+        file_ = file_path;
+        location_.initialize(&get_file());
+ 
+        scan_begin();
+        yy::parser parser(*this);
+
+        parser.set_debug_level(is_debug_parsing());
+        int res = parser();
+
+        scan_end();
+        return res;
+    }
 
     // Handling the scanner.
     void scan_begin();
     void scan_end();
-    
-    // Whether to generate scanner debug traces.
-    bool trace_scanning;
-    
-    // The token's location used by the scanner.
-    yy::location location;
+
+  private:
+    std::string file_;
+    yy::location location_;
+    bool debug_lexing_;
+    bool debug_parsing_;
 };
 
 
