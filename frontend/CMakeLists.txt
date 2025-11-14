@@ -1,8 +1,4 @@
-cmake_minimum_required(VERSION 3.20)
 project(frontend LANGUAGES CXX)
-
-set(CMAKE_CXX_STANDARD 23)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(LEXER_CODEGEN_DIR "${CMAKE_BINARY_DIR}/codegen/lexer")
 set(PARSER_CODEGEN_DIR "${CMAKE_BINARY_DIR}/codegen/parser")
