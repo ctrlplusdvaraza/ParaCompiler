@@ -31,13 +31,6 @@ new_line   [\n]+
 ";"          { return yy::parser::make_SEMICOLON(yytext, location); }
 "("          { return yy::parser::make_L_ROUND_BR(yytext, location); }
 ")"          { return yy::parser::make_R_ROUND_BR(yytext, location); }
-"{"          { return yy::parser::make_L_CURLY_BR(yytext, location); }
-"}"          { return yy::parser::make_R_CURLY_BR(yytext, location); }
-
-"while"      { return yy::parser::make_WHILE(yytext, location); }
-"if"         { return yy::parser::make_IF(yytext, location); }
-"print"      { return yy::parser::make_PRINT(yytext, location); }
-"?"          { return yy::parser::make_INPUT(yytext, location); }
 
 "="          { return yy::parser::make_ASSIGN(yytext, location); }
 "+="         { return yy::parser::make_ADD_ASSIGN(yytext, location); }
@@ -53,13 +46,6 @@ new_line   [\n]+
 "%"          { return yy::parser::make_PERCENT(yytext, location); }
 "++"         { return yy::parser::make_PLUSPLUS(yytext, location); }
 "--"         { return yy::parser::make_MINUSMINUS(yytext, location); }
-
-"=="         { return yy::parser::make_EQUAL(yytext, location); }
-"!="         { return yy::parser::make_NOT_EQUAL(yytext, location); }
-"<"          { return yy::parser::make_LESS(yytext, location); }
-"<="         { return yy::parser::make_LESS_EQUAL(yytext, location); }
-">"          { return yy::parser::make_GREATER(yytext, location); }
-">="         { return yy::parser::make_GREATER_EQUAL(yytext, location); }
 
 {blank}      { location.step(); }
 

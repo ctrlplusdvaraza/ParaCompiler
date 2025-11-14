@@ -47,7 +47,6 @@ ADD_FLEX_BISON_DEPENDENCY(LEXER PARSER)
 set(SRC_FILES
     ${FLEX_LEXER_OUTPUTS}
     ${BISON_PARSER_OUTPUTS}
-    ${SRC_DIR}/driver.cpp
     main.cpp
 )
 

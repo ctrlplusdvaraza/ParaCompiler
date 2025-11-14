@@ -5,15 +5,14 @@
 #include "ast.hpp"
 #include "parser.hpp"
 
-#define YY_DECL yy::parser::symbol_type yylex(Driver& driver)
+#define YY_DECL yy::parser::symbol_type yylex(Driver&)
+yy::parser::symbol_type yylex(Driver& driver);
 
-YY_DECL;
 
 class Driver
 {
   public:
     compiler::AstRootPtr ast_root;
-    yy::location location;
 
   public:
     Driver() = default;
