@@ -6,6 +6,12 @@ find_package(absl CONFIG REQUIRED)
 add_library(ast_serialization
     ${CMAKE_CURRENT_SOURCE_DIR}/ast.proto
     ${CMAKE_CURRENT_SOURCE_DIR}/tokens.proto
+    ${CMAKE_CURRENT_SOURCE_DIR}/serialization.cpp
+)
+
+include_directories(ast_serialization
+${CMAKE_SOURCE_DIR}/include
+${CMAKE_CURRENT_BINARY_DIR}/.
 )
 
 protobuf_generate(
@@ -13,5 +19,4 @@ protobuf_generate(
 )
 
 target_link_libraries(ast_serialization PUBLIC protobuf::libprotobuf absl::check absl::log)
-target_include_directories(ast_serialization PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 

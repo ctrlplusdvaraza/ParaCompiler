@@ -2,7 +2,7 @@ edition = "2024";
 
 import "tokens.proto";
 
-package compiler;
+package ast_protobuf;
 
 message SerializedAstNode
 {

@@ -3,9 +3,12 @@
 #include <string>
 #include <vector>
 
+#include "ast.pb.h"
 #include "tokens.hpp"
 #include "ast.hpp"
 #include "driver.hpp"
+
+#include "serialization.hpp"
 
 namespace compiler
 {
@@ -47,6 +50,11 @@ int main(int argc, char* argv[])
     if(!parsing_result)
     {
         auto root = driver.get_ast_root();
+
+	ast_protobuf::SerializedAstRoot serialized = serialize_ast(root);
+	
+	write_ast_to_file(serialized, "amogus_real.ast");
+
         traverse_ast_root(root);
     }
 

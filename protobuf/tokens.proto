@@ -1,6 +1,6 @@
 edition = "2024";
 
-package compiler;
+package ast_protobuf;
 
 message WhileToken 
 {

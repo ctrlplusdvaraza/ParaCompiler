@@ -1,7 +1,6 @@
 #pragma once
 
 #include "abstract_token.hpp"
-
 #include "keyword_tokens.hpp"
 #include "operand_tokens.hpp"
 
