@@ -1,61 +1,10 @@
 #pragma once
 
-#include "abstract_token.hpp"
+#include "base_operator_tokens.hpp"
 #include "visitor.hpp"
 
 namespace compiler
 {
-
-/*----------------------------------------------------------------------------------------------------*/
-
-template <typename Derived>
-class BaseOperatorToken : public BaseToken<Derived>
-{
-  protected:
-    using BaseToken<Derived>::BaseToken;
-};
-
-/*----------------------------------------------------------------------------------------------------*/
-
-class PlusToken final : public BaseOperatorToken<PlusToken>
-{
-  public:
-    using BaseOperatorToken::BaseOperatorToken;
-};
-
-class MinusToken final : public BaseOperatorToken<MinusToken>
-{
-  public:
-    using BaseOperatorToken::BaseOperatorToken;
-};
-
-class IncrementToken final : public BaseOperatorToken<IncrementToken>
-{
-  public:
-    using BaseOperatorToken::BaseOperatorToken;
-};
-
-class DecrementToken final : public BaseOperatorToken<DecrementToken>
-{
-  public:
-    using BaseOperatorToken::BaseOperatorToken;
-};
-
-/*----------------------------------------------------------------------------------------------------*/
-
-template <typename Derived>
-class BaseUnaryOperatorToken : public BaseOperatorToken<Derived>
-{
-  protected:
-    using BaseOperatorToken<Derived>::BaseOperatorToken;
-};
-
-template <typename Derived>
-class BaseBinaryOperatorToken : public BaseOperatorToken<Derived>
-{
-  protected:
-    using BaseOperatorToken<Derived>::BaseOperatorToken;
-};
 
 /*----------------------------------------------------------------------------------------------------*/
 
