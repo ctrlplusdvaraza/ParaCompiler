@@ -9,7 +9,7 @@ namespace compiler
 class AbstractToken
 {
   public:
-    AbstractToken(std::string token) : token_(token) {}
+    explicit AbstractToken(std::string token) : token_(token) {}
 
     AbstractToken(const AbstractToken& other) = delete;
     AbstractToken(AbstractToken&& other) = delete;

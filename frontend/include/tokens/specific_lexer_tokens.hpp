@@ -24,6 +24,24 @@ class MinusToken final : public BaseOperatorToken<MinusToken>
     using BaseOperatorToken::BaseOperatorToken;
 };
 
+class StarToken final : public BaseOperatorToken<StarToken>
+{
+  public:
+    using BaseOperatorToken::BaseOperatorToken;
+};
+
+class SlashToken final : public BaseOperatorToken<SlashToken>
+{
+  public:
+    using BaseOperatorToken::BaseOperatorToken;
+};
+
+class PercentToken final : public BaseOperatorToken<PercentToken>
+{
+  public:
+    using BaseOperatorToken::BaseOperatorToken;
+};
+
 class PlusPlusToken final : public BaseOperatorToken<PlusPlusToken>
 {
   public:
