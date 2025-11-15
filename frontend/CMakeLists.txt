@@ -8,12 +8,9 @@ make_directory(${PARSER_CODEGEN_DIR})
 
 set(FLEX_SRC "${CMAKE_CURRENT_SOURCE_DIR}/lexer/lexer.flex")
 set(BISON_SRC "${CMAKE_CURRENT_SOURCE_DIR}/parser/parser.yy")
-set(SRC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/source")
 
 find_package(FLEX REQUIRED)
 find_package(BISON REQUIRED)
-
-option(SANITIZE "Enable compiler sanitizers" OFF)
 
 add_compile_options(
     -Wall
