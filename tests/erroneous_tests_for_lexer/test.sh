@@ -13,12 +13,13 @@ BOLD="\033[1m"
 RESET="\033[0m"
 
 program=$1
-folder="./erroneous_tests_for_parser"
+script_dir="$(cd "$(dirname "$0")" && pwd)"
+folder="${script_dir#$PWD/}"
 
 printf "${GREEN}Start tests in${RESET} $folder\n"
 n_all=0
 n_falled=0
-for file in "$folder"/*; do
+for file in "$folder"/*.pcl; do
   if [ -f "$file" ]; then
     "$program" "$file" > /dev/null 2>&1
     status=$?
@@ -38,5 +39,3 @@ if [ $n_falled -eq 0 ]; then
 else 
     printf "${RED}$n_falled/$n_all tests in${RESET} $folder ${RED}falled${RESET}\n"
 fi
-
-
