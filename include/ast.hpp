@@ -4,6 +4,8 @@
 
 #include "translation_unit_node.hpp"
 
+#include "scope_node.hpp"
+
 #include "keyword_nodes.hpp"
 #include "operand_nodes.hpp"
 
@@ -12,5 +14,7 @@
 #include "assignment_nodes.hpp"
 #include "base_operator_nodes.hpp"
 #include "comparsion_nodes.hpp"
+
+#include "logical_nodes.hpp"
 
 #include "visitor.hpp"

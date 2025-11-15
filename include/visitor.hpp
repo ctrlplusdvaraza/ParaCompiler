@@ -12,6 +12,8 @@ class AbstractAstNode::Visitor
   public:
     virtual void visit(const class TranslationUnitNode& token) = 0;
 
+    virtual void visit(const class ScopeNode& token) = 0;
+
     virtual void visit(const class IdentifierNode& token) = 0;
     virtual void visit(const class LiteralNode& token) = 0;
 
@@ -46,6 +48,10 @@ class AbstractAstNode::Visitor
     virtual void visit(const class LessEqualNode& token) = 0;
     virtual void visit(const class GreaterNode& token) = 0;
     virtual void visit(const class GreaterEqualNode& token) = 0;
+
+    virtual void visit(const class NotNode& token) = 0;
+    virtual void visit(const class AndNode& token) = 0;
+    virtual void visit(const class OrNode& token) = 0;
 };
 
 template <typename Derived>
@@ -68,10 +74,12 @@ class TypeCheckVisitor : public AbstractAstNode::Visitor
     // clang-format off
     void visit(const TranslationUnitNode&)  override { check_type<TranslationUnitNode>(); }
 
+    void visit(const ScopeNode&)            override { check_type<ScopeNode>(); }
+
     void visit(const IdentifierNode&)       override { check_type<IdentifierNode>(); }
     void visit(const LiteralNode&)          override { check_type<LiteralNode>(); }
 
-    void visit(const WhileNode&)            override { check_type<IdentifierNode>(); }
+    void visit(const WhileNode&)            override { check_type<WhileNode>(); }
     void visit(const IfNode&)               override { check_type<IfNode>(); }
     void visit(const PrintNode&)            override { check_type<PrintNode>(); }
     void visit(const InputNode&)            override { check_type<InputNode>(); }
@@ -102,6 +110,10 @@ class TypeCheckVisitor : public AbstractAstNode::Visitor
     void visit(const LessEqualNode&)        override { check_type<LessEqualNode>(); }
     void visit(const GreaterNode&)          override { check_type<GreaterNode>(); }
     void visit(const GreaterEqualNode&)     override { check_type<GreaterEqualNode>(); }
+
+    void visit(const NotNode&)              override { check_type<NotNode>(); }
+    void visit(const AndNode&)              override { check_type<AndNode>(); }
+    void visit(const OrNode&)               override { check_type<OrNode>(); }
     // clang-format on
 
     bool is_type() const { return result_; }
