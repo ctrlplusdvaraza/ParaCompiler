@@ -8,6 +8,7 @@ namespace compiler
 class TranslationUnitNode final : public BaseNode<TranslationUnitNode>
 {
   public:
+    TranslationUnitNode() = default;
     using BaseNode<TranslationUnitNode>::BaseNode;
 
     void set_file_name(std::string file_name)
@@ -15,5 +16,8 @@ class TranslationUnitNode final : public BaseNode<TranslationUnitNode>
         lexeme_ = file_name;
     }
 };
+
+using AstRoot = TranslationUnitNode;
+using AstRootPtr = std::unique_ptr<AstRoot>;
 
 } // namespace compiler

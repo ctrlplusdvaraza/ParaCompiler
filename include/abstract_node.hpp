@@ -9,13 +9,14 @@ namespace compiler
 
 class AbstractAstNode;
 
+using AstNode = AbstractAstNode;
 using AstNodePtr = std::unique_ptr<AbstractAstNode>;
 
 class AbstractAstNode
 {
   public:
     std::vector<AstNodePtr> children;
-    
+
   public:
     explicit AbstractAstNode(std::string lexeme) : lexeme_(lexeme) {}
 
@@ -32,10 +33,10 @@ class AbstractAstNode
 
   public:
     class Visitor;
-    virtual void accept(Visitor& visitor) = 0;
+    virtual void accept(Visitor& visitor) const = 0;
 
     template <typename T>
-    bool is_node_type();
+    bool is_node_type() const;
 
   protected:
     std::string lexeme_;

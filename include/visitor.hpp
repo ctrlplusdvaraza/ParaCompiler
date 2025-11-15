@@ -55,7 +55,7 @@ class BaseNode : public AbstractAstNode
     using AbstractAstNode::AbstractAstNode;
 
   public:
-    virtual void accept(Visitor& visitor) override
+    virtual void accept(Visitor& visitor) const override
     {
         visitor.visit(static_cast<const Derived&>(*this));
     }
@@ -118,8 +118,7 @@ class TypeCheckVisitor : public AbstractAstNode::Visitor
 };
 
 template <typename T>
-// const  ??
-bool AbstractAstNode::is_node_type()
+bool AbstractAstNode::is_node_type() const
 {
     TypeCheckVisitor<T> visitor;
     accept(visitor);

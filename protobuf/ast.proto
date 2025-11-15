@@ -42,4 +42,8 @@ message SerializedAstNode
     }
 }
 
-message SerializedAstRoot { repeated SerializedAstNode children = 1; }
+message SerializedAstRoot
+{
+    string lexeme = 1;
+    repeated SerializedAstNode children = 2;
+}
