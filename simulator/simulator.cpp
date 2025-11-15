@@ -22,9 +22,9 @@ class SimulatorState
 
 void traverse_ast(const SimulatorState& state, const AstNodePtr& node)
 {
-    std::cout << node->token.get()->get_string_token() << std::endl;
+    std::cout << node->get_string_lexeme() << std::endl;
 
-    if (node->token.get()->is_token_of_type<InputToken>())
+    if (node->is_node_type<InputNode>())
     {
 
     }

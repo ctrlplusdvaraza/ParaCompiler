@@ -8,7 +8,6 @@ namespace compiler
 class TranslationUnitNode final : public BaseNode<TranslationUnitNode>
 {
   public:
-    TranslationUnitNode() = default;
     using BaseNode<TranslationUnitNode>::BaseNode;
 
     void set_file_name(std::string file_name)

@@ -18,6 +18,7 @@ class AbstractAstNode
     std::vector<AstNodePtr> children;
 
   public:
+    explicit AbstractAstNode() = default;
     explicit AbstractAstNode(std::string lexeme) : lexeme_(lexeme) {}
 
     AbstractAstNode(const AbstractAstNode& other) = delete;

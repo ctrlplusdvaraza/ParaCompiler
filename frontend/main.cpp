@@ -14,7 +14,7 @@ namespace compiler
 
 void traverse_ast(const AstNodePtr& node)
 {
-    if (node->token.get()->is_node_type<AssignmentNode>())
+    if (node->is_node_type<AssignmentNode>())
     {
         std::cout << node->children[0]->get_string_lexeme() << node->get_string_lexeme()
                   << node->children[1]->get_string_lexeme() << std::endl;
