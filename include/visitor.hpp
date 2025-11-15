@@ -2,102 +2,106 @@
 
 #include <type_traits>
 
-#include "abstract_token.hpp"
+#include "abstract_node.hpp"
 
 namespace compiler
 {
 
-class AbstractToken::Visitor
+class AbstractAstNode::Visitor
 {
   public:
-    virtual void visit(const class IdentifierToken& token) = 0;
-    virtual void visit(const class LiteralToken& token) = 0;
+    virtual void visit(const class TranslationUnitNode& token) = 0;
 
-    virtual void visit(const class WhileToken& token) = 0;
-    virtual void visit(const class IfToken& token) = 0;
-    virtual void visit(const class PrintToken& token) = 0;
-    virtual void visit(const class InputToken& token) = 0;
+    virtual void visit(const class IdentifierNode& token) = 0;
+    virtual void visit(const class LiteralNode& token) = 0;
 
-    virtual void visit(const class AssignmentToken& token) = 0;
-    virtual void visit(const class AddAssignmentToken& token) = 0;
-    virtual void visit(const class SubAssignmentToken& token) = 0;
-    virtual void visit(const class MulAssignmentToken& token) = 0;
-    virtual void visit(const class DivAssignmentToken& token) = 0;
-    virtual void visit(const class ModAssignmentToken& token) = 0;
+    virtual void visit(const class WhileNode& token) = 0;
+    virtual void visit(const class IfNode& token) = 0;
+    virtual void visit(const class PrintNode& token) = 0;
+    virtual void visit(const class InputNode& token) = 0;
 
-    virtual void visit(const class UnaryPlusToken& token) = 0;
-    virtual void visit(const class UnaryMinusToken& token) = 0;
-    virtual void visit(const class PrefixIncrementToken& token) = 0;
-    virtual void visit(const class PostfixIncrementToken& token) = 0;
-    virtual void visit(const class PrefixDecrementToken& token) = 0;
-    virtual void visit(const class PostfixDecrementToken& token) = 0;
+    virtual void visit(const class AssignmentNode& token) = 0;
+    virtual void visit(const class AddAssignmentNode& token) = 0;
+    virtual void visit(const class SubAssignmentNode& token) = 0;
+    virtual void visit(const class MulAssignmentNode& token) = 0;
+    virtual void visit(const class DivAssignmentNode& token) = 0;
+    virtual void visit(const class ModAssignmentNode& token) = 0;
 
-    virtual void visit(const class AddToken& token) = 0;
-    virtual void visit(const class SubToken& token) = 0;
-    virtual void visit(const class MulToken& token) = 0;
-    virtual void visit(const class DivToken& token) = 0;
-    virtual void visit(const class ModToken& token) = 0;
+    virtual void visit(const class UnaryPlusNode& token) = 0;
+    virtual void visit(const class UnaryMinusNode& token) = 0;
+    virtual void visit(const class PrefixIncrementNode& token) = 0;
+    virtual void visit(const class PostfixIncrementNode& token) = 0;
+    virtual void visit(const class PrefixDecrementNode& token) = 0;
+    virtual void visit(const class PostfixDecrementNode& token) = 0;
 
-    virtual void visit(const class EqualToken& token) = 0;
-    virtual void visit(const class NotEqualToken& token) = 0;
-    virtual void visit(const class LessToken& token) = 0;
-    virtual void visit(const class LessEqualToken& token) = 0;
-    virtual void visit(const class GreaterToken& token) = 0;
-    virtual void visit(const class GreaterEqualToken& token) = 0;
+    virtual void visit(const class AddNode& token) = 0;
+    virtual void visit(const class SubNode& token) = 0;
+    virtual void visit(const class MulNode& token) = 0;
+    virtual void visit(const class DivNode& token) = 0;
+    virtual void visit(const class ModNode& token) = 0;
+
+    virtual void visit(const class EqualNode& token) = 0;
+    virtual void visit(const class NotEqualNode& token) = 0;
+    virtual void visit(const class LessNode& token) = 0;
+    virtual void visit(const class LessEqualNode& token) = 0;
+    virtual void visit(const class GreaterNode& token) = 0;
+    virtual void visit(const class GreaterEqualNode& token) = 0;
 };
 
 template <typename Derived>
-class BaseToken : public AbstractToken
+class BaseNode : public AbstractAstNode
 {
   public:
-    using AbstractToken::AbstractToken;
+    using AbstractAstNode::AbstractAstNode;
 
   public:
-    virtual void accept(Visitor& visitor) override
+    virtual void accept(Visitor& visitor) const override
     {
         visitor.visit(static_cast<const Derived&>(*this));
     }
 };
 
 template <typename T>
-class TypeCheckVisitor : public AbstractToken::Visitor
+class TypeCheckVisitor : public AbstractAstNode::Visitor
 {
   public:
     // clang-format off
-    void visit(const IdentifierToken&)       override { check_type<IdentifierToken>(); }
-    void visit(const LiteralToken&)          override { check_type<LiteralToken>(); }
+    void visit(const TranslationUnitNode&)  override { check_type<TranslationUnitNode>(); }
 
-    void visit(const WhileToken&)            override { check_type<IdentifierToken>(); }
-    void visit(const IfToken&)               override { check_type<IfToken>(); }
-    void visit(const PrintToken&)            override { check_type<PrintToken>(); }
-    void visit(const InputToken&)            override { check_type<InputToken>(); }
+    void visit(const IdentifierNode&)       override { check_type<IdentifierNode>(); }
+    void visit(const LiteralNode&)          override { check_type<LiteralNode>(); }
 
-    void visit(const AssignmentToken&)       override { check_type<AssignmentToken>(); }
-    void visit(const AddAssignmentToken&)    override { check_type<AddAssignmentToken>(); }
-    void visit(const SubAssignmentToken&)    override { check_type<SubAssignmentToken>(); }
-    void visit(const MulAssignmentToken&)    override { check_type<MulAssignmentToken>(); }
-    void visit(const DivAssignmentToken&)    override { check_type<DivAssignmentToken>(); }
-    void visit(const ModAssignmentToken&)    override { check_type<ModAssignmentToken>(); }
+    void visit(const WhileNode&)            override { check_type<IdentifierNode>(); }
+    void visit(const IfNode&)               override { check_type<IfNode>(); }
+    void visit(const PrintNode&)            override { check_type<PrintNode>(); }
+    void visit(const InputNode&)            override { check_type<InputNode>(); }
 
-    void visit(const UnaryPlusToken&)        override { check_type<UnaryPlusToken>(); }
-    void visit(const UnaryMinusToken&)       override { check_type<UnaryMinusToken>(); }
-    void visit(const PrefixIncrementToken&)  override { check_type<PrefixIncrementToken>(); }
-    void visit(const PostfixIncrementToken&) override { check_type<PostfixIncrementToken>(); }
-    void visit(const PrefixDecrementToken&)  override { check_type<PrefixDecrementToken>(); }
-    void visit(const PostfixDecrementToken&) override { check_type<PostfixDecrementToken>(); }
+    void visit(const AssignmentNode&)       override { check_type<AssignmentNode>(); }
+    void visit(const AddAssignmentNode&)    override { check_type<AddAssignmentNode>(); }
+    void visit(const SubAssignmentNode&)    override { check_type<SubAssignmentNode>(); }
+    void visit(const MulAssignmentNode&)    override { check_type<MulAssignmentNode>(); }
+    void visit(const DivAssignmentNode&)    override { check_type<DivAssignmentNode>(); }
+    void visit(const ModAssignmentNode&)    override { check_type<ModAssignmentNode>(); }
 
-    void visit(const AddToken&)              override { check_type<AddToken>(); }
-    void visit(const SubToken&)              override { check_type<SubToken>(); }
-    void visit(const MulToken&)              override { check_type<MulToken>(); }
-    void visit(const DivToken&)              override { check_type<DivToken>(); }
-    void visit(const ModToken&)              override { check_type<ModToken>(); }
+    void visit(const UnaryPlusNode&)        override { check_type<UnaryPlusNode>(); }
+    void visit(const UnaryMinusNode&)       override { check_type<UnaryMinusNode>(); }
+    void visit(const PrefixIncrementNode&)  override { check_type<PrefixIncrementNode>(); }
+    void visit(const PostfixIncrementNode&) override { check_type<PostfixIncrementNode>(); }
+    void visit(const PrefixDecrementNode&)  override { check_type<PrefixDecrementNode>(); }
+    void visit(const PostfixDecrementNode&) override { check_type<PostfixDecrementNode>(); }
 
-    void visit(const EqualToken&)            override { check_type<EqualToken>(); }
-    void visit(const NotEqualToken&)         override { check_type<NotEqualToken>(); }
-    void visit(const LessToken&)             override { check_type<LessToken>(); }
-    void visit(const LessEqualToken&)        override { check_type<LessEqualToken>(); }
-    void visit(const GreaterToken&)          override { check_type<GreaterToken>(); }
-    void visit(const GreaterEqualToken&)     override { check_type<GreaterEqualToken>(); }
+    void visit(const AddNode&)              override { check_type<AddNode>(); }
+    void visit(const SubNode&)              override { check_type<SubNode>(); }
+    void visit(const MulNode&)              override { check_type<MulNode>(); }
+    void visit(const DivNode&)              override { check_type<DivNode>(); }
+    void visit(const ModNode&)              override { check_type<ModNode>(); }
+
+    void visit(const EqualNode&)            override { check_type<EqualNode>(); }
+    void visit(const NotEqualNode&)         override { check_type<NotEqualNode>(); }
+    void visit(const LessNode&)             override { check_type<LessNode>(); }
+    void visit(const LessEqualNode&)        override { check_type<LessEqualNode>(); }
+    void visit(const GreaterNode&)          override { check_type<GreaterNode>(); }
+    void visit(const GreaterEqualNode&)     override { check_type<GreaterEqualNode>(); }
     // clang-format on
 
     bool is_type() const { return result_; }
@@ -109,13 +113,12 @@ class TypeCheckVisitor : public AbstractToken::Visitor
         result_ = std::is_same_v<T, U>;
     }
 
-
   private:
     bool result_ = false;
 };
 
 template <typename T>
-bool AbstractToken::is_token_of_type()
+bool AbstractAstNode::is_node_type() const
 {
     TypeCheckVisitor<T> visitor;
     accept(visitor);

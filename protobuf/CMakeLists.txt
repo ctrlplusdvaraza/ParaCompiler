@@ -5,7 +5,7 @@ find_package(absl CONFIG REQUIRED)
 
 add_library(ast_serialization
     ${CMAKE_CURRENT_SOURCE_DIR}/ast.proto
-    ${CMAKE_CURRENT_SOURCE_DIR}/tokens.proto
+    ${CMAKE_CURRENT_SOURCE_DIR}/nodes.proto
     ${CMAKE_CURRENT_SOURCE_DIR}/serialization.cpp
 )
 

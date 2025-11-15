@@ -4,7 +4,6 @@
 #include <vector>
 
 #include "ast.pb.h"
-#include "tokens.hpp"
 #include "ast.hpp"
 #include "driver.hpp"
 
@@ -15,10 +14,10 @@ namespace compiler
 
 void traverse_ast(const AstNodePtr& node)
 {
-    if (node->token.get()->is_token_of_type<AssignmentToken>())
+    if (node->is_node_type<AssignmentNode>())
     {
-        std::cout << node->children[0]->token->get_string_token() << node->token->get_string_token()
-                  << node->children[1]->token->get_string_token() << std::endl;
+        std::cout << node->children[0]->get_string_lexeme() << node->get_string_lexeme()
+                  << node->children[1]->get_string_lexeme() << std::endl;
     }
 
     for (const auto& cur : node->children)

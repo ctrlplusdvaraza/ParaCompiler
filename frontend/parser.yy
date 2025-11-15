@@ -64,10 +64,10 @@ translation_unit
     ;
 
 statement_list
-    : %empty { $$ = std::make_unique<compiler::AstRoot>(); }
+    : %empty { $$ = std::make_unique<AstRoot>(); }
     | statement_list statement
         {
-            auto node = std::move($1);
+            AstRootPtr node = std::move($1);
             node->children.push_back(std::move($2));
             $$ = std::move(node);
         }
@@ -90,20 +90,20 @@ expression
 assignment_expression
     : additive_expression { $$ = std::move($1); }
     | IDENTIFIER primary_assignment assignment_expression {
-        auto ident = std::make_unique<AstNode>(std::make_unique<IdentifierToken>($1));
-        $2->children.push_back(std::move(ident));
+        AstNodePtr identifier = std::make_unique<IdentifierNode>($1);
+        $2->children.push_back(std::move(identifier));
         $2->children.push_back(std::move($3));
         $$ = std::move($2);
     }
     ;
 
 primary_assignment
-    : ASSIGN     { $$ = std::make_unique<AstNode>(std::make_unique<AssignmentToken>($1));    }
-    | ADD_ASSIGN { $$ = std::make_unique<AstNode>(std::make_unique<AddAssignmentToken>($1)); }
-    | SUB_ASSIGN { $$ = std::make_unique<AstNode>(std::make_unique<SubAssignmentToken>($1)); }
-    | MUL_ASSIGN { $$ = std::make_unique<AstNode>(std::make_unique<MulAssignmentToken>($1)); }
-    | DIV_ASSIGN { $$ = std::make_unique<AstNode>(std::make_unique<DivAssignmentToken>($1)); }
-    | MOD_ASSIGN { $$ = std::make_unique<AstNode>(std::make_unique<ModAssignmentToken>($1)); }
+    : ASSIGN     { $$ = std::make_unique<AssignmentNode>($1);    }
+    | ADD_ASSIGN { $$ = std::make_unique<AddAssignmentNode>($1); }
+    | SUB_ASSIGN { $$ = std::make_unique<SubAssignmentNode>($1); }
+    | MUL_ASSIGN { $$ = std::make_unique<MulAssignmentNode>($1); }
+    | DIV_ASSIGN { $$ = std::make_unique<DivAssignmentNode>($1); }
+    | MOD_ASSIGN { $$ = std::make_unique<ModAssignmentNode>($1); }
     ;
 
 additive_expression
@@ -116,8 +116,8 @@ additive_expression
     ;
 
 PLUS_OR_MINUS
-    : PLUS  { $$ = std::make_unique<AstNode>(std::make_unique<AddToken>($1));   }
-    | MINUS { $$ = std::make_unique<AstNode>(std::make_unique<SubToken>($1)); }
+    : PLUS  { $$ = std::make_unique<AddNode>($1);   }
+    | MINUS { $$ = std::make_unique<SubNode>($1); }
     ;
 
 multiplicative_expression
@@ -130,9 +130,9 @@ multiplicative_expression
     ;
 
 MUL_OR_DIV_OR_PERCENT
-    : STAR    { $$ = std::make_unique<AstNode>(std::make_unique<MulToken>($1));     }
-    | SLASH   { $$ = std::make_unique<AstNode>(std::make_unique<DivToken>($1));     }
-    | PERCENT { $$ = std::make_unique<AstNode>(std::make_unique<ModToken>($1)); }
+    : STAR    { $$ = std::make_unique<MulNode>($1);     }
+    | SLASH   { $$ = std::make_unique<DivNode>($1);     }
+    | PERCENT { $$ = std::make_unique<ModNode>($1); }
     ;
 
 unary_expression
@@ -144,8 +144,8 @@ unary_expression
     ;
 
 UNARY_OP
-    : PLUS  { $$ = std::make_unique<AstNode>(std::make_unique<UnaryPlusToken>($1));  }
-    | MINUS { $$ = std::make_unique<AstNode>(std::make_unique<UnaryMinusToken>($1)); }
+    : PLUS  { $$ = std::make_unique<UnaryPlusNode>($1);  }
+    | MINUS { $$ = std::make_unique<UnaryMinusNode>($1); }
     ;
 
 prefix_expression
@@ -157,8 +157,8 @@ prefix_expression
     ;
 
 PREFIX_OP
-    : PLUSPLUS   { $$ = std::make_unique<AstNode>(std::make_unique<PrefixIncrementToken>($1)); }
-    | MINUSMINUS { $$ = std::make_unique<AstNode>(std::make_unique<PrefixDecrementToken>($1)); }
+    : PLUSPLUS   { $$ = std::make_unique<PrefixIncrementNode>($1); }
+    | MINUSMINUS { $$ = std::make_unique<PrefixDecrementNode>($1); }
     ;
 
 postfix_expression
@@ -170,18 +170,18 @@ postfix_expression
     ;
 
 POSTFIX_OP
-    : PLUSPLUS   { $$ = std::make_unique<AstNode>(std::make_unique<PostfixIncrementToken>($1)); }
-    | MINUSMINUS { $$ = std::make_unique<AstNode>(std::make_unique<PostfixDecrementToken>($1)); }
+    : PLUSPLUS   { $$ = std::make_unique<PostfixIncrementNode>($1); }
+    | MINUSMINUS { $$ = std::make_unique<PostfixDecrementNode>($1); }
     ;
 
 primary_expression
-    : IDENTIFIER { $$ = std::make_unique<AstNode>(std::make_unique<IdentifierToken>($1)); }
-    | LITERAL    { $$ = std::make_unique<AstNode>(std::make_unique<LiteralToken>($1));    }
+    : IDENTIFIER { $$ = std::make_unique<IdentifierNode>($1); }
+    | LITERAL    { $$ = std::make_unique<LiteralNode>($1);    }
     | L_ROUND_BR expression R_ROUND_BR { $$ = std::move($2); }
     ;
 %%
 
-void yy::parser::error (const location_type& l, const std::string& m)
+void yy::parser::error(const location_type& location, const std::string& m)
 {
-    std::cerr << l << ": " << m << '\n';
+    std::cerr << location << ": " << m << std::endl;
 }

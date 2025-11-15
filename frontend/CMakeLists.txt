@@ -30,7 +30,7 @@ include_directories(
                     ${PARSER_CODEGEN_DIR})
 
 FLEX_TARGET(LEXER ${FLEX_SRC} ${LEXER_CODEGEN_DIR}/lexer.cpp
-            DEFINES_FILE ${LEXER_CODEGEN_DIR}/scanner.hpp)
+            DEFINES_FILE ${LEXER_CODEGEN_DIR}/lexer.hpp)
 
 BISON_TARGET(PARSER ${BISON_SRC} ${PARSER_CODEGEN_DIR}/parser.cpp
              DEFINES_FILE ${PARSER_CODEGEN_DIR}/parser.hpp)
