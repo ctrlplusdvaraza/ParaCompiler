@@ -57,26 +57,4 @@ new_line   [\n]+
 
 %% /*----------------------------------------- Code section ------------------------------------------*/
 
-int Driver::input_file_initialize(const std::string& file_path)
-{
-    if(file_path.empty())
-    {
-        std::cerr << "No file provided" << std::endl;
-        return 1;
-    }
-
-    yyin = fopen(file_path.c_str(), "r");
-
-    if(yyin == NULL)
-    {
-        std::cerr << "Cannot open " << file_path << ": " << strerror(errno) << std::endl;
-        return 1;
-    }
-
-    return 0;
-}
-
-void Driver::input_file_close()
-{
-    fclose(yyin);
-}
+/* to be continued (maybe:)) */

@@ -1,13 +1,15 @@
 #pragma once
 
+#include <cstring>
 #include <string>
 
 #include "ast.hpp"
 #include "parser.hpp"
 
 #define YY_DECL yy::parser::symbol_type yylex(Driver&)
-yy::parser::symbol_type yylex(Driver& driver);
 
+yy::parser::symbol_type yylex(Driver& driver);
+extern FILE* yyin;
 
 class Driver
 {
@@ -21,7 +23,7 @@ class Driver
 
     int parse_file(const std::string& file_path)
     {
-        if(input_file_initialize(file_path) != 0)
+        if (input_file_initialize(file_path) != 0)
         {
             return 1;
         }
@@ -30,11 +32,32 @@ class Driver
         int parsing_result = parser();
 
         input_file_close();
-        
+
         return parsing_result;
     }
 
-    int input_file_initialize(const std::string& file_path);
-    void input_file_close();
-};
+  private:
+    int input_file_initialize(const std::string& file_path)
+    {
+        if (file_path.empty())
+        {
+            std::cerr << "No file provided" << std::endl;
+            return 1;
+        }
 
+        yyin = fopen(file_path.c_str(), "r");
+
+        if (yyin == NULL)
+        {
+            std::cerr << "Cannot open " << file_path << ": " << strerror(errno) << std::endl;
+            return 1;
+        }
+
+        return 0;
+    }
+
+    void input_file_close()
+    {
+        fclose(yyin);
+    }
+};
