@@ -1,7 +1,6 @@
 #include "ast.hpp"
 #include "ast.pb.h"
-#include "keyword_tokens.hpp"
-#include "tokens.pb.h"
+#include "nodes.pb.h"
 #include <fstream>
 #include <memory>
 #include <stdexcept>
@@ -9,309 +8,309 @@
 namespace compiler
 {
 
-static void fill_token_oneof(const AbstractToken& token, ast_protobuf::SerializedAstNode& msg)
+static void fill_node_oneof(const AbstractAstNode& node, ast_protobuf::SerializedAstNode& msg)
 {
-    AbstractToken& tok = const_cast<AbstractToken&>(token);
+    AbstractAstNode& tok = const_cast<AbstractAstNode&>(node);
 
-    if (tok.is_token_of_type<WhileToken>())
+    if (tok.is_node_type<WhileNode>())
     {
-        auto* out = msg.mutable_while_token();
-        out->set_token(tok.get_string_token());
+        auto* out = msg.mutable_while_node();
+        out->set_token(tok.get_string_lexeme());
     }
-    if (tok.is_token_of_type<IfToken>())
+    if (tok.is_node_type<IfNode>())
     {
-        auto* out = msg.mutable_if_token();
-        out->set_token(tok.get_string_token());
+        auto* out = msg.mutable_if_node();
+        out->set_token(tok.get_string_lexeme());
     }
-    if (tok.is_token_of_type<PrintToken>())
+    if (tok.is_node_type<PrintNode>())
     {
-        auto* out = msg.mutable_print_token();
-        out->set_token(tok.get_string_token());
+        auto* out = msg.mutable_print_node();
+        out->set_token(tok.get_string_lexeme());
     }
-    if (tok.is_token_of_type<InputToken>())
+    if (tok.is_node_type<InputNode>())
     {
-        auto* out = msg.mutable_input_token();
-        out->set_token(tok.get_string_token());
+        auto* out = msg.mutable_input_node();
+        out->set_token(tok.get_string_lexeme());
     }
-    if (tok.is_token_of_type<IdentifierToken>())
+    if (tok.is_node_type<IdentifierNode>())
     {
-        auto* out = msg.mutable_identifier_token();
-        out->set_token(tok.get_string_token());
+        auto* out = msg.mutable_identifier_node();
+        out->set_token(tok.get_string_lexeme());
     }
-    if (tok.is_token_of_type<LiteralToken>())
+    if (tok.is_node_type<LiteralNode>())
     {
-        auto* out = msg.mutable_literal_token();
-        out->set_token(tok.get_string_token());
+        auto* out = msg.mutable_literal_node();
+        out->set_token(tok.get_string_lexeme());
     }
-    if (tok.is_token_of_type<AssignmentToken>())
+    if (tok.is_node_type<AssignmentNode>())
     {
-        auto* out = msg.mutable_assignment_token();
-        out->set_token(tok.get_string_token());
+        auto* out = msg.mutable_assignment_node();
+        out->set_token(tok.get_string_lexeme());
     }
-    if (tok.is_token_of_type<AddAssignmentToken>())
+    if (tok.is_node_type<AddAssignmentNode>())
     {
-        auto* out = msg.mutable_add_assignment_token();
-        out->set_token(tok.get_string_token());
+        auto* out = msg.mutable_add_assignment_node();
+        out->set_token(tok.get_string_lexeme());
     }
-    if (tok.is_token_of_type<SubAssignmentToken>())
+    if (tok.is_node_type<SubAssignmentNode>())
     {
-        auto* out = msg.mutable_sub_assignment_token();
-        out->set_token(tok.get_string_token());
+        auto* out = msg.mutable_sub_assignment_node();
+        out->set_token(tok.get_string_lexeme());
     }
-    if (tok.is_token_of_type<MulAssignmentToken>())
+    if (tok.is_node_type<MulAssignmentNode>())
     {
-        auto* out = msg.mutable_mul_assignment_token();
-        out->set_token(tok.get_string_token());
+        auto* out = msg.mutable_mul_assignment_node();
+        out->set_token(tok.get_string_lexeme());
     }
-    if (tok.is_token_of_type<DivAssignmentToken>())
+    if (tok.is_node_type<DivAssignmentNode>())
     {
-        auto* out = msg.mutable_mul_assignment_token();
-        out->set_token(tok.get_string_token());
+        auto* out = msg.mutable_mul_assignment_node();
+        out->set_token(tok.get_string_lexeme());
     }
-    if (tok.is_token_of_type<ModAssignmentToken>())
+    if (tok.is_node_type<ModAssignmentNode>())
     {
-        auto* out = msg.mutable_mod_assignment_token();
-        out->set_token(tok.get_string_token());
+        auto* out = msg.mutable_mod_assignment_node();
+        out->set_token(tok.get_string_lexeme());
     }
-    if (tok.is_token_of_type<AddToken>())
+    if (tok.is_node_type<AddNode>())
     {
-        auto* out = msg.mutable_add_token();
-        out->set_token(tok.get_string_token());
+        auto* out = msg.mutable_add_node();
+        out->set_token(tok.get_string_lexeme());
     }
-    if (tok.is_token_of_type<SubToken>())
+    if (tok.is_node_type<SubNode>())
     {
-        auto* out = msg.mutable_sub_token();
-        out->set_token(tok.get_string_token());
+        auto* out = msg.mutable_sub_node();
+        out->set_token(tok.get_string_lexeme());
     }
-    if (tok.is_token_of_type<MulToken>())
+    if (tok.is_node_type<MulNode>())
     {
-        auto* out = msg.mutable_mul_token();
-        out->set_token(tok.get_string_token());
+        auto* out = msg.mutable_mul_node();
+        out->set_token(tok.get_string_lexeme());
     }
-    if (tok.is_token_of_type<DivToken>())
+    if (tok.is_node_type<DivNode>())
     {
-        auto* out = msg.mutable_div_token();
-        out->set_token(tok.get_string_token());
+        auto* out = msg.mutable_div_node();
+        out->set_token(tok.get_string_lexeme());
     }
-    if (tok.is_token_of_type<ModToken>())
+    if (tok.is_node_type<ModNode>())
     {
-        auto* out = msg.mutable_mod_token();
-        out->set_token(tok.get_string_token());
+        auto* out = msg.mutable_mod_node();
+        out->set_token(tok.get_string_lexeme());
     }
-    if (tok.is_token_of_type<EqualToken>())
+    if (tok.is_node_type<EqualNode>())
     {
-        auto* out = msg.mutable_equal_token();
-        out->set_token(tok.get_string_token());
+        auto* out = msg.mutable_equal_node();
+        out->set_token(tok.get_string_lexeme());
     }
-    if (tok.is_token_of_type<NotEqualToken>())
+    if (tok.is_node_type<NotEqualNode>())
     {
-        auto* out = msg.mutable_not_equal_token();
-        out->set_token(tok.get_string_token());
+        auto* out = msg.mutable_not_equal_node();
+        out->set_token(tok.get_string_lexeme());
     }
-    if (tok.is_token_of_type<LessToken>())
+    if (tok.is_node_type<LessNode>())
     {
-        auto* out = msg.mutable_less_token();
-        out->set_token(tok.get_string_token());
+        auto* out = msg.mutable_less_node();
+        out->set_token(tok.get_string_lexeme());
     }
-    if (tok.is_token_of_type<LessEqualToken>())
+    if (tok.is_node_type<LessEqualNode>())
     {
-        auto* out = msg.mutable_less_equal_token();
-        out->set_token(tok.get_string_token());
+        auto* out = msg.mutable_less_equal_node();
+        out->set_token(tok.get_string_lexeme());
     }
-    if (tok.is_token_of_type<GreaterToken>())
+    if (tok.is_node_type<GreaterNode>())
     {
-        auto* out = msg.mutable_greater_token();
-        out->set_token(tok.get_string_token());
+        auto* out = msg.mutable_greater_node();
+        out->set_token(tok.get_string_lexeme());
     }
-    if (tok.is_token_of_type<GreaterEqualToken>())
+    if (tok.is_node_type<GreaterEqualNode>())
     {
-        auto* out = msg.mutable_greater_equal_token();
-        out->set_token(tok.get_string_token());
+        auto* out = msg.mutable_greater_equal_node();
+        out->set_token(tok.get_string_lexeme());
     }
-    if (tok.is_token_of_type<UnaryPlusToken>())
+    if (tok.is_node_type<UnaryPlusNode>())
     {
-        auto* out = msg.mutable_unary_plus_token();
-        out->set_token(tok.get_string_token());
+        auto* out = msg.mutable_unary_plus_node();
+        out->set_token(tok.get_string_lexeme());
     }
-    if (tok.is_token_of_type<UnaryMinusToken>())
+    if (tok.is_node_type<UnaryMinusNode>())
     {
-        auto* out = msg.mutable_unary_minus_token();
-        out->set_token(tok.get_string_token());
+        auto* out = msg.mutable_unary_minus_node();
+        out->set_token(tok.get_string_lexeme());
     }
-    if (tok.is_token_of_type<PrefixIncrementToken>())
+    if (tok.is_node_type<PrefixIncrementNode>())
     {
-        auto* out = msg.mutable_prefix_increment_token();
-        out->set_token(tok.get_string_token());
+        auto* out = msg.mutable_prefix_increment_node();
+        out->set_token(tok.get_string_lexeme());
     }
-    if (tok.is_token_of_type<PostfixIncrementToken>())
+    if (tok.is_node_type<PostfixIncrementNode>())
     {
-        auto* out = msg.mutable_postfix_increment_token();
-        out->set_token(tok.get_string_token());
+        auto* out = msg.mutable_postfix_increment_node();
+        out->set_token(tok.get_string_lexeme());
     }
-    if (tok.is_token_of_type<PrefixDecrementToken>())
+    if (tok.is_node_type<PrefixDecrementNode>())
     {
-        auto* out = msg.mutable_prefix_decrement_token();
-        out->set_token(tok.get_string_token());
+        auto* out = msg.mutable_prefix_decrement_node();
+        out->set_token(tok.get_string_lexeme());
     }
-    if (tok.is_token_of_type<PostfixDecrementToken>())
+    if (tok.is_node_type<PostfixDecrementNode>())
     {
-        auto* out = msg.mutable_postfix_decrement_token();
-        out->set_token(tok.get_string_token());
+        auto* out = msg.mutable_postfix_decrement_node();
+        out->set_token(tok.get_string_lexeme());
     }
 }
 
-static AbstractTokenPtr make_token_from_oneof(const ast_protobuf::SerializedAstNode& msg)
+static AstNodePtr make_node_from_oneof(const ast_protobuf::SerializedAstNode& msg)
 {
-    switch (msg.token_case())
+    switch (msg.node_case())
     {
-        case ast_protobuf::SerializedAstNode::kWhileToken:
+        case ast_protobuf::SerializedAstNode::kWhileNode:
             {
-                const auto& token = msg.while_token();
-                return std::make_unique<WhileToken>(std::string(token.token()));
+                const auto& node = msg.while_node();
+                return std::make_unique<WhileNode>(std::string(node.node()));
             }
-        case ast_protobuf::SerializedAstNode::kIfToken:
+        case ast_protobuf::SerializedAstNode::kIfNode:
             {
-                const auto& token = msg.if_token();
-                return std::make_unique<IfToken>(std::string(token.token()));
+                const auto& node = msg.if_node();
+                return std::make_unique<IfNode>(std::string(node.node()));
             }
-        case ast_protobuf::SerializedAstNode::kPrintToken:
+        case ast_protobuf::SerializedAstNode::kPrintNode:
             {
-                const auto& token = msg.print_token();
-                return std::make_unique<PrintToken>(std::string(token.token()));
+                const auto& node = msg.print_node();
+                return std::make_unique<PrintNode>(std::string(node.node()));
             }
-        case ast_protobuf::SerializedAstNode::kInputToken:
+        case ast_protobuf::SerializedAstNode::kInputNode:
             {
-                const auto& token = msg.input_token();
-                return std::make_unique<InputToken>(std::string(token.token()));
+                const auto& node = msg.input_node();
+                return std::make_unique<InputNode>(std::string(node.node()));
             }
-        case ast_protobuf::SerializedAstNode::kIdentifierToken:
+        case ast_protobuf::SerializedAstNode::kIdentifierNode:
             {
-                const auto& token = msg.identifier_token();
-                return std::make_unique<IdentifierToken>(std::string(token.token()));
+                const auto& node = msg.identifier_node();
+                return std::make_unique<IdentifierNode>(std::string(node.node()));
             }
-        case ast_protobuf::SerializedAstNode::kLiteralToken:
+        case ast_protobuf::SerializedAstNode::kLiteralNode:
             {
-                const auto& token = msg.literal_token();
-                return std::make_unique<LiteralToken>(std::string(token.token()));
+                const auto& node = msg.literal_node();
+                return std::make_unique<LiteralNode>(std::string(node.node()));
             }
-        case ast_protobuf::SerializedAstNode::kAssignmentToken:
+        case ast_protobuf::SerializedAstNode::kAssignmentNode:
             {
-                const auto& token = msg.assignment_token();
-                return std::make_unique<AssignmentToken>(std::string(token.token()));
+                const auto& node = msg.assignment_node();
+                return std::make_unique<AssignmentNode>(std::string(node.node()));
             }
-        case ast_protobuf::SerializedAstNode::kAddAssignmentToken:
+        case ast_protobuf::SerializedAstNode::kAddAssignmentNode:
             {
-                const auto& token = msg.add_assignment_token();
-                return std::make_unique<AddAssignmentToken>(std::string(token.token()));
+                const auto& node = msg.add_assignment_node();
+                return std::make_unique<AddAssignmentNode>(std::string(node.node()));
             }
-        case ast_protobuf::SerializedAstNode::kSubAssignmentToken:
+        case ast_protobuf::SerializedAstNode::kSubAssignmentNode:
             {
-                const auto& token = msg.sub_assignment_token();
-                return std::make_unique<SubAssignmentToken>(std::string(token.token()));
+                const auto& node = msg.sub_assignment_node();
+                return std::make_unique<SubAssignmentNode>(std::string(node.node()));
             }
-        case ast_protobuf::SerializedAstNode::kMulAssignmentToken:
+        case ast_protobuf::SerializedAstNode::kMulAssignmentNode:
             {
-                const auto& token = msg.mul_assignment_token();
-                return std::make_unique<MulAssignmentToken>(std::string(token.token()));
+                const auto& node = msg.mul_assignment_node();
+                return std::make_unique<MulAssignmentNode>(std::string(node.node()));
             }
-        case ast_protobuf::SerializedAstNode::kDivAssignmentToken:
+        case ast_protobuf::SerializedAstNode::kDivAssignmentNode:
             {
-                const auto& token = msg.div_assignment_token();
-                return std::make_unique<DivAssignmentToken>(std::string(token.token()));
+                const auto& node = msg.div_assignment_node();
+                return std::make_unique<DivAssignmentNode>(std::string(node.node()));
             }
-        case ast_protobuf::SerializedAstNode::kModAssignmentToken:
+        case ast_protobuf::SerializedAstNode::kModAssignmentNode:
             {
-                const auto& token = msg.mod_assignment_token();
-                return std::make_unique<ModAssignmentToken>(std::string(token.token()));
+                const auto& node = msg.mod_assignment_node();
+                return std::make_unique<ModAssignmentNode>(std::string(node.node()));
             }
-        case ast_protobuf::SerializedAstNode::kAddToken:
+        case ast_protobuf::SerializedAstNode::kAddNode:
             {
-                const auto& token = msg.add_assignment_token();
-                return std::make_unique<AddToken>(std::string(token.token()));
+                const auto& node = msg.add_assignment_node();
+                return std::make_unique<AddNode>(std::string(node.node()));
             }
-        case ast_protobuf::SerializedAstNode::kSubToken:
+        case ast_protobuf::SerializedAstNode::kSubNode:
             {
-                const auto& token = msg.sub_token();
-                return std::make_unique<SubToken>(std::string(token.token()));
+                const auto& node = msg.sub_node();
+                return std::make_unique<SubNode>(std::string(node.node()));
             }
-        case ast_protobuf::SerializedAstNode::kMulToken:
+        case ast_protobuf::SerializedAstNode::kMulNode:
             {
-                const auto& token = msg.mul_token();
-                return std::make_unique<MulToken>(std::string(token.token()));
+                const auto& node = msg.mul_node();
+                return std::make_unique<MulNode>(std::string(node.node()));
             }
-        case ast_protobuf::SerializedAstNode::kDivToken:
+        case ast_protobuf::SerializedAstNode::kDivNode:
             {
-                const auto& token = msg.div_token();
-                return std::make_unique<DivToken>(std::string(token.token()));
+                const auto& node = msg.div_node();
+                return std::make_unique<DivNode>(std::string(node.node()));
             }
-        case ast_protobuf::SerializedAstNode::kModToken:
+        case ast_protobuf::SerializedAstNode::kModNode:
             {
-                const auto& token = msg.mod_token();
-                return std::make_unique<ModToken>(std::string(token.token()));
+                const auto& node = msg.mod_node();
+                return std::make_unique<ModNode>(std::string(node.node()));
             }
-        case ast_protobuf::SerializedAstNode::kEqualToken:
+        case ast_protobuf::SerializedAstNode::kEqualNode:
             {
-                const auto& token = msg.equal_token();
-                return std::make_unique<EqualToken>(std::string(token.token()));
+                const auto& node = msg.equal_node();
+                return std::make_unique<EqualNode>(std::string(node.node()));
             }
-        case ast_protobuf::SerializedAstNode::kNotEqualToken:
+        case ast_protobuf::SerializedAstNode::kNotEqualNode:
             {
-                const auto& token = msg.not_equal_token();
-                return std::make_unique<NotEqualToken>(std::string(token.token()));
+                const auto& node = msg.not_equal_node();
+                return std::make_unique<NotEqualNode>(std::string(node.node()));
             }
-        case ast_protobuf::SerializedAstNode::kLessToken:
+        case ast_protobuf::SerializedAstNode::kLessNode:
             {
-                const auto& token = msg.less_token();
-                return std::make_unique<LessToken>(std::string(token.token()));
+                const auto& node = msg.less_node();
+                return std::make_unique<LessNode>(std::string(node.node()));
             }
-        case ast_protobuf::SerializedAstNode::kLessEqualToken:
+        case ast_protobuf::SerializedAstNode::kLessEqualNode:
             {
-                const auto& token = msg.less_equal_token();
-                return std::make_unique<LessEqualToken>(std::string(token.token()));
+                const auto& node = msg.less_equal_node();
+                return std::make_unique<LessEqualNode>(std::string(node.node()));
             }
-        case ast_protobuf::SerializedAstNode::kGreaterToken:
+        case ast_protobuf::SerializedAstNode::kGreaterNode:
             {
-                const auto& token = msg.greater_token();
-                return std::make_unique<GreaterToken>(std::string(token.token()));
+                const auto& node = msg.greater_node();
+                return std::make_unique<GreaterNode>(std::string(node.node()));
             }
-        case ast_protobuf::SerializedAstNode::kGreaterEqualToken:
+        case ast_protobuf::SerializedAstNode::kGreaterEqualNode:
             {
-                const auto& token = msg.greater_equal_token();
-                return std::make_unique<GreaterEqualToken>(std::string(token.token()));
+                const auto& node = msg.greater_equal_node();
+                return std::make_unique<GreaterEqualNode>(std::string(node.node()));
             }
-        case ast_protobuf::SerializedAstNode::kUnaryPlusToken:
+        case ast_protobuf::SerializedAstNode::kUnaryPlusNode:
             {
-                const auto& token = msg.unary_plus_token();
-                return std::make_unique<UnaryPlusToken>(std::string(token.token()));
+                const auto& node = msg.unary_plus_node();
+                return std::make_unique<UnaryPlusNode>(std::string(node.node()));
             }
-        case ast_protobuf::SerializedAstNode::kUnaryMinusToken:
+        case ast_protobuf::SerializedAstNode::kUnaryMinusNode:
             {
-                const auto& token = msg.unary_minus_token();
-                return std::make_unique<UnaryMinusToken>(std::string(token.token()));
+                const auto& node = msg.unary_minus_node();
+                return std::make_unique<UnaryMinusNode>(std::string(node.node()));
             }
-        case ast_protobuf::SerializedAstNode::kPrefixIncrementToken:
+        case ast_protobuf::SerializedAstNode::kPrefixIncrementNode:
             {
-                const auto& token = msg.prefix_increment_token();
-                return std::make_unique<PrefixIncrementToken>(std::string(token.token()));
+                const auto& node = msg.prefix_increment_node();
+                return std::make_unique<PrefixIncrementNode>(std::string(node.node()));
             }
-        case ast_protobuf::SerializedAstNode::kPostfixIncrementToken:
+        case ast_protobuf::SerializedAstNode::kPostfixIncrementNode:
             {
-                const auto& token = msg.postfix_increment_token();
-                return std::make_unique<PostfixIncrementToken>(std::string(token.token()));
+                const auto& node = msg.postfix_increment_node();
+                return std::make_unique<PostfixIncrementNode>(std::string(node.node()));
             }
-        case ast_protobuf::SerializedAstNode::kPrefixDecrementToken:
+        case ast_protobuf::SerializedAstNode::kPrefixDecrementNode:
             {
-                const auto& token = msg.prefix_decrement_token();
-                return std::make_unique<PrefixDecrementToken>(std::string(token.token()));
+                const auto& node = msg.prefix_decrement_node();
+                return std::make_unique<PrefixDecrementNode>(std::string(node.node()));
             }
-        case ast_protobuf::SerializedAstNode::kPostfixDecrementToken:
+        case ast_protobuf::SerializedAstNode::kPostfixDecrementNode:
             {
-                const auto& token = msg.postfix_decrement_token();
-                return std::make_unique<PostfixDecrementToken>(std::string(token.token()));
+                const auto& node = msg.postfix_decrement_node();
+                return std::make_unique<PostfixDecrementNode>(std::string(node.node()));
             }
 
         default:
-            throw std::runtime_error("SerializedAstNode has no token set");
+            throw std::runtime_error("SerializedAstNode has no node set");
     }
 }
 
@@ -319,9 +318,9 @@ ast_protobuf::SerializedAstNode serialize_node(const AstNode& node)
 {
     ast_protobuf::SerializedAstNode msg;
 
-    if (node.token)
+    if (node.node)
     {
-        fill_token_oneof(*node.token, msg);
+        fill_node_oneof(*node.node, msg);
     }
 
     for (const auto& child : node.children)
@@ -333,7 +332,7 @@ ast_protobuf::SerializedAstNode serialize_node(const AstNode& node)
 
 AstNodePtr deserialize_node(const ast_protobuf::SerializedAstNode& msg)
 {
-    AbstractTokenPtr tok = make_token_from_oneof(msg);
+    AstNodePtr tok = make_node_from_oneof(msg);
 
     auto node = std::make_unique<AstNode>(std::move(tok));
 

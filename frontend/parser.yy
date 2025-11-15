@@ -43,8 +43,8 @@
 
 %token <std::string> IDENTIFIER LITERAL
 
-%nterm <AstRootPtr> translation_unit
-%nterm <AstRootPtr> statement_list
+%nterm <std::unique_ptr<TranslationUnitNode>> translation_unit
+%nterm <std::unique_ptr<TranslationUnitNode>> statement_list
 
 %nterm <AstNodePtr> statement
 %nterm <AstNodePtr> expression_stmt
@@ -64,10 +64,10 @@ translation_unit
     ;
 
 statement_list
-    : %empty { $$ = std::make_unique<compiler::AstRoot>(); }
+    : %empty { $$ = std::make_unique<TranslationUnitNode>(); }
     | statement_list statement
         {
-            auto node = std::move($1);
+            std::unique_ptr<TranslationUnitNode> node = std::move($1);
             node->children.push_back(std::move($2));
             $$ = std::move(node);
         }

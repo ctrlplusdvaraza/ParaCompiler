@@ -2,6 +2,7 @@
 
 #include <cstring>
 #include <string>
+#include <memory>
 
 #include "ast.hpp"
 #include "parser.hpp"
@@ -14,7 +15,7 @@ extern FILE* yyin;
 class Driver
 {
   public:
-    compiler::AstRootPtr ast_root;
+    std::unique_ptr<TranslationUnitNode> ast_root;
 
   public:
     Driver() = default;
