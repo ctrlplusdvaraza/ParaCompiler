@@ -58,6 +58,11 @@ block_comment   "/*"([^*]|"*"[^/])*"*/"
 ">"          { return yy::parser::make_GREATER(yytext, location); }
 ">="         { return yy::parser::make_GREATER_EQUAL(yytext, location); }
 
+"!"          { return yy::parser::make_NOT(yytext, location); }
+"&&"         { return yy::parser::make_AND(yytext, location); }
+"||"         { return yy::parser::make_OR(yytext, location); }
+
+
 {line_comment}   { location.step(); }
 
 {block_comment}  { 
