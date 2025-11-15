@@ -18,11 +18,6 @@ static void fill_token_oneof(const AbstractToken& token, ast_protobuf::Serialize
         auto* out = msg.mutable_while_token();
         out->set_token(tok.get_string_token());
     }
-    if (tok.is_token_of_type<WhileToken>())
-    {
-        auto* out = msg.mutable_while_token();
-        out->set_token(tok.get_string_token());
-    }
     if (tok.is_token_of_type<IfToken>())
     {
         auto* out = msg.mutable_if_token();

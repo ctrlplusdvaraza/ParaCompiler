@@ -580,7 +580,7 @@ extern int yylex (void);
 #undef yyTABLES_NAME
 #endif
 
-#line 59 "/home/senyaa/mipt/ParaCompiler/frontend/lexer/lexer.flex"
+#line 59 "/home/artiom/mipt/cpp_vladimirov/ParaCompiler/frontend/lexer.flex"
 
 
 #line 586 "lexer.hpp"

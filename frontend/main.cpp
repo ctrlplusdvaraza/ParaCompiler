@@ -51,7 +51,7 @@ int main(int argc, char* argv[])
     {
         auto root = driver.get_ast_root();
 
-	ast_protobuf::SerializedAstRoot serialized = serialize_ast(root);
+    ast_protobuf::SerializedAstRoot serialized = serialize_ast(root);
 	
 	write_ast_to_file(serialized, "amogus_real.ast");
 
