@@ -1,6 +1,5 @@
 /*------------------------------------- Flex definitions section -------------------------------------*/
 
-%option header-file="lexer.hpp"
 %option noyywrap
 %option nounput noinput batch debug
 

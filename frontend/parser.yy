@@ -43,18 +43,18 @@
 
 %token <std::string> IDENTIFIER LITERAL
 
-%nterm <std::unique_ptr<TranslationUnitNode>> translation_unit
-%nterm <std::unique_ptr<TranslationUnitNode>> statement_list
+%nterm <AstRootPtr> translation_unit
+%nterm <AstRootPtr> statement_list
 
-%nterm <std::unique_ptr<AbstractAstNode>> statement
-%nterm <std::unique_ptr<AbstractAstNode>> expression_stmt
-%nterm <std::unique_ptr<AbstractAstNode>> expression
-%nterm <std::unique_ptr<AbstractAstNode>> assignment_expression
-%nterm <std::unique_ptr<AbstractAstNode>> primary_expression primary_assignment
-%nterm <std::unique_ptr<AbstractAstNode>> additive_expression multiplicative_expression 
-%nterm <std::unique_ptr<AbstractAstNode>> PLUS_OR_MINUS MUL_OR_DIV_OR_PERCENT
-%nterm <std::unique_ptr<AbstractAstNode>> unary_expression prefix_expression postfix_expression
-%nterm <std::unique_ptr<AbstractAstNode>> UNARY_OP PREFIX_OP POSTFIX_OP
+%nterm <AstNodePtr> statement
+%nterm <AstNodePtr> expression_stmt
+%nterm <AstNodePtr> expression
+%nterm <AstNodePtr> assignment_expression
+%nterm <AstNodePtr> primary_expression primary_assignment
+%nterm <AstNodePtr> additive_expression multiplicative_expression 
+%nterm <AstNodePtr> PLUS_OR_MINUS MUL_OR_DIV_OR_PERCENT
+%nterm <AstNodePtr> unary_expression prefix_expression postfix_expression
+%nterm <AstNodePtr> UNARY_OP PREFIX_OP POSTFIX_OP
 
 %%
 %start translation_unit;
@@ -64,10 +64,10 @@ translation_unit
     ;
 
 statement_list
-    : %empty { $$ = std::make_unique<TranslationUnitNode>(); }
+    : %empty { $$ = std::make_unique<AstRoot>(); }
     | statement_list statement
         {
-            std::unique_ptr<TranslationUnitNode> node = std::move($1);
+            AstRootPtr node = std::move($1);
             node->children.push_back(std::move($2));
             $$ = std::move(node);
         }
@@ -90,7 +90,7 @@ expression
 assignment_expression
     : additive_expression { $$ = std::move($1); }
     | IDENTIFIER primary_assignment assignment_expression {
-        std::unique_ptr<IdentifierNode> identifier = std::make_unique<IdentifierNode>($1);
+        AstNodePtr identifier = std::make_unique<IdentifierNode>($1);
         $2->children.push_back(std::move(identifier));
         $2->children.push_back(std::move($3));
         $$ = std::move($2);
