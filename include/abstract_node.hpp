@@ -14,6 +14,9 @@ using AstNodePtr = std::unique_ptr<AbstractAstNode>;
 class AbstractAstNode
 {
   public:
+    std::vector<AstNodePtr> children;
+    
+  public:
     explicit AbstractAstNode(std::string lexeme) : lexeme_(lexeme) {}
 
     AbstractAstNode(const AbstractAstNode& other) = delete;
@@ -34,9 +37,8 @@ class AbstractAstNode
     template <typename T>
     bool is_node_type();
 
-  private:
+  protected:
     std::string lexeme_;
-    std::vector<AstNodePtr> children;
 };
 
 }; // namespace compiler

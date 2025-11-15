@@ -1,6 +1,9 @@
 #pragma once
 
 #include "abstract_node.hpp"
+
+#include "translation_unit_node.hpp"
+
 #include "keyword_nodes.hpp"
 #include "operand_nodes.hpp"
 
