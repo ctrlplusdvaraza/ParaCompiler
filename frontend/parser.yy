@@ -21,6 +21,12 @@
 
 %param { Driver& driver }
 
+%token <std::string> IF           "if"
+%token <std::string> ELSE         "else"
+%token <std::string> WHILE        "while"
+%token <std::string> PRINT        "print"
+%token <std::string> INPUT        "?"
+
 %token <std::string> SEMICOLON    ";"
 
 %token <std::string> L_ROUND_BR   "("
@@ -60,7 +66,7 @@
 %nterm <AstRootPtr> statement_list
 
 %nterm <AstNodePtr> statement
-%nterm <AstNodePtr> expression_stmt
+%nterm <AstNodePtr> expression_statement
 %nterm <AstNodePtr> expression
 %nterm <AstNodePtr> assignment_expression
 %nterm <AstNodePtr> primary_expression primary_assignment
@@ -70,6 +76,10 @@
 %nterm <AstNodePtr> UNARY_OP PREFIX_OP POSTFIX_OP
 %nterm <AstNodePtr> logical_or_expression logical_and_expression logical_not_expression
 %nterm <AstNodePtr> cmp_expression CMP_OPERATORS
+%nterm <AstNodePtr> compound_statement
+%nterm <AstNodePtr> if_statement
+%nterm <AstNodePtr> while_statement
+%nterm <AstNodePtr> print_statement
 
 %%
 %start translation_unit;
@@ -80,22 +90,66 @@ translation_unit
 
 statement_list
     : %empty { $$ = std::make_unique<AstRoot>(); }
-    | statement_list statement
-        {
-            AstRootPtr node = std::move($1);
-            node->children.push_back(std::move($2));
-            $$ = std::move(node);
-        }
+    | statement_list statement {
+         AstRootPtr node = std::move($1);
+         node->children.push_back(std::move($2));
+         $$ = std::move(node);
+    }
     ;
 
 statement 
-    : expression_stmt { $$ = std::move($1); }
+    : print_statement      { $$ = std::move($1); }
+    | expression_statement { $$ = std::move($1); }
+    | compound_statement   { $$ = std::move($1); }
+    | if_statement         { $$ = std::move($1); }
+    | while_statement      { $$ = std::move($1); }
     ;
 
-expression_stmt
-    : expression SEMICOLON {
-        $$ = std::move($1);
+print_statement
+    : PRINT expression_statement {
+        AstNodePtr node = std::make_unique<PrintNode>($1);
+        node->children.push_back(std::move($2));
+        $$ = std::move(node);
     }
+    ;
+
+if_statement
+    : IF L_ROUND_BR expression R_ROUND_BR statement {
+        AstNodePtr node = std::make_unique<IfNode>($1);
+        node->children.push_back(std::move($3));
+        node->children.push_back(std::move($5));
+        $$ = std::move(node);
+    }
+    | IF L_ROUND_BR expression R_ROUND_BR statement ELSE statement {
+        AstNodePtr node = std::make_unique<IfNode>($1);
+        node->children.push_back(std::move($3));
+        node->children.push_back(std::move($5));
+        node->children.push_back(std::move($7));
+        $$ = std::move(node);
+    }
+    ;
+
+while_statement
+    : WHILE L_ROUND_BR expression R_ROUND_BR statement {
+        AstNodePtr node = std::make_unique<WhileNode>($1);
+        node->children.push_back(std::move($3));
+        node->children.push_back(std::move($5));
+        $$ = std::move(node);
+    }
+    ;
+
+compound_statement
+    : L_CURLY_BR statement_list R_CURLY_BR {
+        AstNodePtr scope = std::make_unique<ScopeNode>($1);
+        for (AstNodePtr& child : $2->children) {
+            scope->children.push_back(std::move(child));
+        }
+        $$ = std::move(scope);
+    }
+    ;
+
+expression_statement
+    : expression SEMICOLON { $$ = std::move($1); }
     ;
 
 expression
@@ -156,6 +210,14 @@ assignment_expression
         $2->children.push_back(std::move(identifier));
         $2->children.push_back(std::move($3));
         $$ = std::move($2);
+    }
+    | IDENTIFIER ASSIGN INPUT {
+      AstNodePtr input_node = std::make_unique<InputNode>($3);
+        AstNodePtr identifier_node = std::make_unique<IdentifierNode>($1);
+        AstNodePtr assign_node = std::make_unique<AssignmentNode>($2);
+        assign_node->children.push_back(std::move(identifier_node));
+        assign_node->children.push_back(std::move(input_node));
+        $$ = std::move(assign_node);
     }
     ;
 

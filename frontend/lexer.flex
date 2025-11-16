@@ -27,13 +27,15 @@ block_comment   "/*"([^*]|"*"[^/])*"*/"
     yy::location location;
 %}
 
-{identifier} { return yy::parser::make_IDENTIFIER(yytext, location); }
 {number}     { return yy::parser::make_LITERAL(yytext, location); }
 
-"if"         { return yy:parser::make_IF(yytext, location); }
-"while"      { return yy:parser::make_WHILE(yytext, location); }
-"print"      { return yy:parser::make_PRINT(yytext, location); }
-"?"          { return yy:parser::make_INPUT(yytext, location); }
+"if"         { return yy::parser::make_IF(yytext, location);    }
+"else"       { return yy::parser::make_ELSE(yytext, location);  }
+"while"      { return yy::parser::make_WHILE(yytext, location); }
+"print"      { return yy::parser::make_PRINT(yytext, location); }
+"?"          { return yy::parser::make_INPUT(yytext, location); }
+
+{identifier} { return yy::parser::make_IDENTIFIER(yytext, location); }
 
 ";"          { return yy::parser::make_SEMICOLON(yytext, location); }
 
