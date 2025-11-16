@@ -51,21 +51,20 @@ block_comment   "/*"([^*]|"*"[^/])*"*/"
 "++"         { return yy::parser::make_PLUSPLUS(yytext, location); }
 "--"         { return yy::parser::make_MINUSMINUS(yytext, location); }
 
-"="          { return yy::parser::make_EQUAL(yytext, location); }
-"!="         { return yy::parser::make_NOT_EQUAL(yytext, location); }
-"<"          { return yy::parser::make_LESS(yytext, location); }
-"<="         { return yy::parser::make_LESS_EQUAL(yytext, location); }
-">"          { return yy::parser::make_GREATER(yytext, location); }
-">="         { return yy::parser::make_GREATER_EQUAL(yytext, location); }
+"=="          { return yy::parser::make_EQ_CMP(yytext, location); }
+"!="         { return yy::parser::make_NE_CMP(yytext, location); }
+"<"          { return yy::parser::make_L_CMP(yytext, location); }
+"<="         { return yy::parser::make_LE_CMP(yytext, location); }
+">"          { return yy::parser::make_G_CMP(yytext, location); }
+">="         { return yy::parser::make_GE_CMP(yytext, location); }
 
-"!"          { return yy::parser::make_NOT(yytext, location); }
-"&&"         { return yy::parser::make_AND(yytext, location); }
-"||"         { return yy::parser::make_OR(yytext, location); }
+"!"          { return yy::parser::make_NOT_LOGICAL(yytext, location); }
+"&&"         { return yy::parser::make_AND_LOGICAL(yytext, location); }
+"||"         { return yy::parser::make_OR_LOGICAL(yytext, location); }
 
+{line_comment} { location.step(); }
 
-{line_comment}   { location.step(); }
-
-{block_comment}  { 
+{block_comment} { 
     for (int i = 0; i < yyleng; ++i) {
         if (yytext[i] == '\n') {
             location.lines(1);
@@ -73,7 +72,6 @@ block_comment   "/*"([^*]|"*"[^/])*"*/"
     }
     location.step(); 
 }
-
 
 {blank}      { location.step(); }
 

@@ -26,6 +26,9 @@
 %token <std::string> L_ROUND_BR   "("
 %token <std::string> R_ROUND_BR   ")"
 
+%token <std::string> L_CURLY_BR   "{"
+%token <std::string> R_CURLY_BR   "}"
+
 %token <std::string> ASSIGN       "="
 %token <std::string> ADD_ASSIGN   "+="
 %token <std::string> SUB_ASSIGN   "-="
@@ -41,6 +44,17 @@
 %token <std::string> SLASH        "/"
 %token <std::string> PERCENT      "%"
 
+%token <std::string> AND_LOGICAL  "&&"
+%token <std::string> OR_LOGICAL   "||"
+%token <std::string> NOT_LOGICAL  "!"
+
+%token <std::string> EQ_CMP       "=="
+%token <std::string> NE_CMP       "!="
+%token <std::string> L_CMP        "<"
+%token <std::string> LE_CMP       "<="
+%token <std::string> G_CMP        ">"
+%token <std::string> GE_CMP       ">="
+
 %token <std::string> IDENTIFIER LITERAL
 
 %nterm <AstRootPtr> translation_unit
@@ -55,6 +69,8 @@
 %nterm <AstNodePtr> PLUS_OR_MINUS MUL_OR_DIV_OR_PERCENT
 %nterm <AstNodePtr> unary_expression prefix_expression postfix_expression
 %nterm <AstNodePtr> UNARY_OP PREFIX_OP POSTFIX_OP
+%nterm <AstNodePtr> logical_or_expression logical_and_expression logical_not_expression
+%nterm <AstNodePtr> cmp_expression CMP_OPERATORS
 
 %%
 %start translation_unit;
@@ -73,7 +89,7 @@ statement_list
         }
     ;
 
-statement
+statement 
     : expression_stmt { $$ = std::move($1); }
     ;
 
@@ -87,8 +103,55 @@ expression
     : assignment_expression { $$ = std::move($1); }
     ;
 
-assignment_expression
+logical_or_expression
+    : logical_and_expression { $$ = std::move($1); }
+    | logical_or_expression OR_LOGICAL logical_and_expression {
+        AstNodePtr or_operator = std::make_unique<OrNode>($2);
+        or_operator->children.push_back(std::move($1));
+        or_operator->children.push_back(std::move($3));
+        $$ = std::move(or_operator);
+    }
+    ;
+
+logical_and_expression
+    : logical_not_expression { $$ = std::move($1); }
+    | logical_and_expression AND_LOGICAL logical_not_expression {
+        AstNodePtr and_operator = std::make_unique<AndNode>($2);
+        and_operator->children.push_back(std::move($1));
+        and_operator->children.push_back(std::move($3));
+        $$ = std::move(and_operator);
+    }
+    ;
+
+logical_not_expression
+    : cmp_expression { $$ = std::move($1); }
+    | NOT_LOGICAL logical_not_expression {
+        AstNodePtr not_operator = std::make_unique<NotNode>($1);
+        not_operator->children.push_back(std::move($2));
+        $$ = std::move(not_operator);
+    }
+    ;
+
+cmp_expression
     : additive_expression { $$ = std::move($1); }
+    | cmp_expression CMP_OPERATORS additive_expression {
+        $2->children.push_back(std::move($1));
+        $2->children.push_back(std::move($3));
+        $$ = std::move($2);
+    }
+    ;
+
+CMP_OPERATORS
+    : EQ_CMP { $$ = std::make_unique<EqualNode>($1);        }
+    | NE_CMP { $$ = std::make_unique<NotEqualNode>($1);     }
+    | L_CMP  { $$ = std::make_unique<LessNode>($1);         }
+    | G_CMP  { $$ = std::make_unique<GreaterNode>($1);      }
+    | LE_CMP { $$ = std::make_unique<LessEqualNode>($1);    }
+    | GE_CMP { $$ = std::make_unique<GreaterEqualNode>($1); }
+    ;
+
+assignment_expression
+    : logical_or_expression { $$ = std::move($1); }
     | IDENTIFIER primary_assignment assignment_expression {
         AstNodePtr identifier = std::make_unique<IdentifierNode>($1);
         $2->children.push_back(std::move(identifier));
