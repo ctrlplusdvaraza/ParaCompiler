@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package ast_protobuf;
+
+message WhileNode { string lexeme = 1; }
+
+message IfNode { string lexeme = 1; }
+
+message PrintNode { string lexeme = 1; }
+
+message InputNode { string lexeme = 1; }
+
+message IdentifierNode { string lexeme = 1; }
+
+message LiteralNode { string lexeme = 1; }
+
+message AssignmentNode { string lexeme = 1; }
+
+message AddAssignmentNode { string lexeme = 1; }
+
+message SubAssignmentNode { string lexeme = 1; }
+
+message MulAssignmentNode { string lexeme = 1; }
+
+message DivAssignmentNode { string lexeme = 1; }
+
+message ModAssignmentNode { string lexeme = 1; }
+
+message AddNode { string lexeme = 1; }
+
+message SubNode { string lexeme = 1; }
+
+message MulNode { string lexeme = 1; }
+
+message DivNode { string lexeme = 1; }
+
+message ModNode { string lexeme = 1; }
+
+message EqualNode { string lexeme = 1; }
+
+message NotEqualNode { string lexeme = 1; }
+
+message LessNode { string lexeme = 1; }
+
+message LessEqualNode { string lexeme = 1; }
+
+message GreaterNode { string lexeme = 1; }
+
+message GreaterEqualNode { string lexeme = 1; }
+
+message UnaryPlusNode { string lexeme = 1; }
+
+message UnaryMinusNode { string lexeme = 1; }
+
+message PrefixIncrementNode { string lexeme = 1; }
+
+message PostfixIncrementNode { string lexeme = 1; }
+
+message PrefixDecrementNode { string lexeme = 1; }
+
+message PostfixDecrementNode { string lexeme = 1; }

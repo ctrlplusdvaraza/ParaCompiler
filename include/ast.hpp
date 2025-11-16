@@ -1,33 +1,20 @@
 #pragma once
-#include <memory>
-#include <string>
-#include <vector>
 
-#include "abstract_token.hpp"
-#include "tokens.hpp"
+#include "abstract_node.hpp"
 
-namespace compiler
-{
+#include "translation_unit_node.hpp"
 
-struct AstNode;
-struct AstRoot;
+#include "scope_node.hpp"
 
-using AstNodePtr = std::unique_ptr<AstNode>;
-using AstRootPtr = std::unique_ptr<AstRoot>;
+#include "keyword_nodes.hpp"
+#include "operand_nodes.hpp"
 
-using AbstractTokenPtr = std::unique_ptr<AbstractToken>;
+#include "unary_arithmetic_nodes.hpp"
+#include "binary_arithmetic_nodes.hpp"
+#include "assignment_nodes.hpp"
+#include "base_operator_nodes.hpp"
+#include "comparsion_nodes.hpp"
 
-struct AstNode
-{
-    explicit AstNode(AbstractTokenPtr token) : token(std::move(token)) {}
+#include "logical_nodes.hpp"
 
-    AbstractTokenPtr token;
-    std::vector<AstNodePtr> children;
-};
-
-struct AstRoot
-{
-    std::vector<AstNodePtr> children;
-};
-
-} // namespace compiler
+#include "visitor.hpp"
