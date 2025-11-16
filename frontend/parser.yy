@@ -25,16 +25,15 @@
 
 %token <std::string> L_ROUND_BR   "("
 %token <std::string> R_ROUND_BR   ")"
-
 %token <std::string> L_CURLY_BR   "{"
 %token <std::string> R_CURLY_BR   "}"
 
-%token <std::string> ASSIGN       "="
 %token <std::string> ADD_ASSIGN   "+="
 %token <std::string> SUB_ASSIGN   "-="
 %token <std::string> MUL_ASSIGN   "*="
 %token <std::string> DIV_ASSIGN   "/="
 %token <std::string> MOD_ASSIGN   "%="
+%token <std::string> ASSIGN       "="
 
 %token <std::string> PLUSPLUS     "++"
 %token <std::string> MINUSMINUS   "--"
@@ -44,16 +43,16 @@
 %token <std::string> SLASH        "/"
 %token <std::string> PERCENT      "%"
 
-%token <std::string> AND_LOGICAL  "&&"
-%token <std::string> OR_LOGICAL   "||"
-%token <std::string> NOT_LOGICAL  "!"
-
 %token <std::string> EQ_CMP       "=="
 %token <std::string> NE_CMP       "!="
-%token <std::string> L_CMP        "<"
 %token <std::string> LE_CMP       "<="
-%token <std::string> G_CMP        ">"
+%token <std::string> L_CMP        "<"
 %token <std::string> GE_CMP       ">="
+%token <std::string> G_CMP        ">"
+
+%token <std::string> NOT_LOGICAL  "!"
+%token <std::string> AND_LOGICAL  "&&"
+%token <std::string> OR_LOGICAL   "||"
 
 %token <std::string> IDENTIFIER LITERAL
 

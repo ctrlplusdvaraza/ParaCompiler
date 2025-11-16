@@ -30,33 +30,39 @@ block_comment   "/*"([^*]|"*"[^/])*"*/"
 {identifier} { return yy::parser::make_IDENTIFIER(yytext, location); }
 {number}     { return yy::parser::make_LITERAL(yytext, location); }
 
+"if"         { return yy:parser::make_IF(yytext, location); }
+"while"      { return yy:parser::make_WHILE(yytext, location); }
+"print"      { return yy:parser::make_PRINT(yytext, location); }
+"?"          { return yy:parser::make_INPUT(yytext, location); }
+
 ";"          { return yy::parser::make_SEMICOLON(yytext, location); }
+
 "("          { return yy::parser::make_L_ROUND_BR(yytext, location); }
 ")"          { return yy::parser::make_R_ROUND_BR(yytext, location); }
 "{"          { return yy::parser::make_L_CURLY_BR(yytext, location); }
 "}"          { return yy::parser::make_R_CURLY_BR(yytext, location); }
 
-"="          { return yy::parser::make_ASSIGN(yytext, location); }
 "+="         { return yy::parser::make_ADD_ASSIGN(yytext, location); }
 "-="         { return yy::parser::make_SUB_ASSIGN(yytext, location); }
 "*="         { return yy::parser::make_MUL_ASSIGN(yytext, location); }
 "/="         { return yy::parser::make_DIV_ASSIGN(yytext, location); }
 "%="         { return yy::parser::make_MOD_ASSIGN(yytext, location); }
+"="          { return yy::parser::make_ASSIGN(yytext, location); }
 
+"++"         { return yy::parser::make_PLUSPLUS(yytext, location); }
+"--"         { return yy::parser::make_MINUSMINUS(yytext, location); }
 "+"          { return yy::parser::make_PLUS(yytext, location); }
 "-"          { return yy::parser::make_MINUS(yytext, location); }
 "*"          { return yy::parser::make_STAR(yytext, location); }
 "/"          { return yy::parser::make_SLASH(yytext, location); }
 "%"          { return yy::parser::make_PERCENT(yytext, location); }
-"++"         { return yy::parser::make_PLUSPLUS(yytext, location); }
-"--"         { return yy::parser::make_MINUSMINUS(yytext, location); }
 
-"=="          { return yy::parser::make_EQ_CMP(yytext, location); }
+"=="         { return yy::parser::make_EQ_CMP(yytext, location); }
 "!="         { return yy::parser::make_NE_CMP(yytext, location); }
-"<"          { return yy::parser::make_L_CMP(yytext, location); }
 "<="         { return yy::parser::make_LE_CMP(yytext, location); }
-">"          { return yy::parser::make_G_CMP(yytext, location); }
+"<"          { return yy::parser::make_L_CMP(yytext, location); }
 ">="         { return yy::parser::make_GE_CMP(yytext, location); }
+">"          { return yy::parser::make_G_CMP(yytext, location); }
 
 "!"          { return yy::parser::make_NOT_LOGICAL(yytext, location); }
 "&&"         { return yy::parser::make_AND_LOGICAL(yytext, location); }
@@ -81,6 +87,4 @@ block_comment   "/*"([^*]|"*"[^/])*"*/"
 
 <<EOF>>      { return yy::parser::make_YYEOF(location); }
 
-%% /*----------------------------------------- Code section ------------------------------------------*/
-
-/* to be continued (maybe:)) */
+%%
