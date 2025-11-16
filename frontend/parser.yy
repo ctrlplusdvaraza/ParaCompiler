@@ -21,17 +21,25 @@
 
 %param { Driver& driver }
 
+%token <std::string> IF           "if"
+%token <std::string> ELSE         "else"
+%token <std::string> WHILE        "while"
+%token <std::string> PRINT        "print"
+%token <std::string> INPUT        "?"
+
 %token <std::string> SEMICOLON    ";"
 
 %token <std::string> L_ROUND_BR   "("
 %token <std::string> R_ROUND_BR   ")"
+%token <std::string> L_CURLY_BR   "{"
+%token <std::string> R_CURLY_BR   "}"
 
-%token <std::string> ASSIGN       "="
 %token <std::string> ADD_ASSIGN   "+="
 %token <std::string> SUB_ASSIGN   "-="
 %token <std::string> MUL_ASSIGN   "*="
 %token <std::string> DIV_ASSIGN   "/="
 %token <std::string> MOD_ASSIGN   "%="
+%token <std::string> ASSIGN       "="
 
 %token <std::string> PLUSPLUS     "++"
 %token <std::string> MINUSMINUS   "--"
@@ -41,13 +49,24 @@
 %token <std::string> SLASH        "/"
 %token <std::string> PERCENT      "%"
 
+%token <std::string> EQ_CMP       "=="
+%token <std::string> NE_CMP       "!="
+%token <std::string> LE_CMP       "<="
+%token <std::string> L_CMP        "<"
+%token <std::string> GE_CMP       ">="
+%token <std::string> G_CMP        ">"
+
+%token <std::string> NOT_LOGICAL  "!"
+%token <std::string> AND_LOGICAL  "&&"
+%token <std::string> OR_LOGICAL   "||"
+
 %token <std::string> IDENTIFIER LITERAL
 
 %nterm <AstRootPtr> translation_unit
 %nterm <AstRootPtr> statement_list
 
 %nterm <AstNodePtr> statement
-%nterm <AstNodePtr> expression_stmt
+%nterm <AstNodePtr> expression_statement
 %nterm <AstNodePtr> expression
 %nterm <AstNodePtr> assignment_expression
 %nterm <AstNodePtr> primary_expression primary_assignment
@@ -55,6 +74,12 @@
 %nterm <AstNodePtr> PLUS_OR_MINUS MUL_OR_DIV_OR_PERCENT
 %nterm <AstNodePtr> unary_expression prefix_expression postfix_expression
 %nterm <AstNodePtr> UNARY_OP PREFIX_OP POSTFIX_OP
+%nterm <AstNodePtr> logical_or_expression logical_and_expression logical_not_expression
+%nterm <AstNodePtr> cmp_expression CMP_OPERATORS
+%nterm <AstNodePtr> compound_statement
+%nterm <AstNodePtr> if_statement
+%nterm <AstNodePtr> while_statement
+%nterm <AstNodePtr> print_statement
 
 %%
 %start translation_unit;
@@ -65,35 +90,134 @@ translation_unit
 
 statement_list
     : %empty { $$ = std::make_unique<AstRoot>(); }
-    | statement_list statement
-        {
-            AstRootPtr node = std::move($1);
-            node->children.push_back(std::move($2));
-            $$ = std::move(node);
-        }
-    ;
-
-statement
-    : expression_stmt { $$ = std::move($1); }
-    ;
-
-expression_stmt
-    : expression SEMICOLON {
-        $$ = std::move($1);
+    | statement_list statement {
+         AstRootPtr node = std::move($1);
+         node->children.push_back(std::move($2));
+         $$ = std::move(node);
     }
+    ;
+
+statement 
+    : print_statement      { $$ = std::move($1); }
+    | expression_statement { $$ = std::move($1); }
+    | compound_statement   { $$ = std::move($1); }
+    | if_statement         { $$ = std::move($1); }
+    | while_statement      { $$ = std::move($1); }
+    ;
+
+print_statement
+    : PRINT expression_statement {
+        AstNodePtr node = std::make_unique<PrintNode>($1);
+        node->children.push_back(std::move($2));
+        $$ = std::move(node);
+    }
+    ;
+
+if_statement
+    : IF L_ROUND_BR expression R_ROUND_BR statement {
+        AstNodePtr node = std::make_unique<IfNode>($1);
+        node->children.push_back(std::move($3));
+        node->children.push_back(std::move($5));
+        $$ = std::move(node);
+    }
+    | IF L_ROUND_BR expression R_ROUND_BR statement ELSE statement {
+        AstNodePtr node = std::make_unique<IfNode>($1);
+        node->children.push_back(std::move($3));
+        node->children.push_back(std::move($5));
+        node->children.push_back(std::move($7));
+        $$ = std::move(node);
+    }
+    ;
+
+while_statement
+    : WHILE L_ROUND_BR expression R_ROUND_BR statement {
+        AstNodePtr node = std::make_unique<WhileNode>($1);
+        node->children.push_back(std::move($3));
+        node->children.push_back(std::move($5));
+        $$ = std::move(node);
+    }
+    ;
+
+compound_statement
+    : L_CURLY_BR statement_list R_CURLY_BR {
+        AstNodePtr scope = std::make_unique<ScopeNode>($1);
+        for (AstNodePtr& child : $2->children) {
+            scope->children.push_back(std::move(child));
+        }
+        $$ = std::move(scope);
+    }
+    ;
+
+expression_statement
+    : expression SEMICOLON { $$ = std::move($1); }
     ;
 
 expression
     : assignment_expression { $$ = std::move($1); }
     ;
 
-assignment_expression
+logical_or_expression
+    : logical_and_expression { $$ = std::move($1); }
+    | logical_or_expression OR_LOGICAL logical_and_expression {
+        AstNodePtr or_operator = std::make_unique<OrNode>($2);
+        or_operator->children.push_back(std::move($1));
+        or_operator->children.push_back(std::move($3));
+        $$ = std::move(or_operator);
+    }
+    ;
+
+logical_and_expression
+    : logical_not_expression { $$ = std::move($1); }
+    | logical_and_expression AND_LOGICAL logical_not_expression {
+        AstNodePtr and_operator = std::make_unique<AndNode>($2);
+        and_operator->children.push_back(std::move($1));
+        and_operator->children.push_back(std::move($3));
+        $$ = std::move(and_operator);
+    }
+    ;
+
+logical_not_expression
+    : cmp_expression { $$ = std::move($1); }
+    | NOT_LOGICAL logical_not_expression {
+        AstNodePtr not_operator = std::make_unique<NotNode>($1);
+        not_operator->children.push_back(std::move($2));
+        $$ = std::move(not_operator);
+    }
+    ;
+
+cmp_expression
     : additive_expression { $$ = std::move($1); }
+    | cmp_expression CMP_OPERATORS additive_expression {
+        $2->children.push_back(std::move($1));
+        $2->children.push_back(std::move($3));
+        $$ = std::move($2);
+    }
+    ;
+
+CMP_OPERATORS
+    : EQ_CMP { $$ = std::make_unique<EqualNode>($1);        }
+    | NE_CMP { $$ = std::make_unique<NotEqualNode>($1);     }
+    | L_CMP  { $$ = std::make_unique<LessNode>($1);         }
+    | G_CMP  { $$ = std::make_unique<GreaterNode>($1);      }
+    | LE_CMP { $$ = std::make_unique<LessEqualNode>($1);    }
+    | GE_CMP { $$ = std::make_unique<GreaterEqualNode>($1); }
+    ;
+
+assignment_expression
+    : logical_or_expression { $$ = std::move($1); }
     | IDENTIFIER primary_assignment assignment_expression {
         AstNodePtr identifier = std::make_unique<IdentifierNode>($1);
         $2->children.push_back(std::move(identifier));
         $2->children.push_back(std::move($3));
         $$ = std::move($2);
+    }
+    | IDENTIFIER ASSIGN INPUT {
+      AstNodePtr input_node = std::make_unique<InputNode>($3);
+        AstNodePtr identifier_node = std::make_unique<IdentifierNode>($1);
+        AstNodePtr assign_node = std::make_unique<AssignmentNode>($2);
+        assign_node->children.push_back(std::move(identifier_node));
+        assign_node->children.push_back(std::move(input_node));
+        $$ = std::move(assign_node);
     }
     ;
 
