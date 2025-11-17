@@ -29,13 +29,13 @@ include_directories(
                     ${LEXER_CODEGEN_DIR}
                     ${PARSER_CODEGEN_DIR})
 
-FLEX_TARGET(LEXER ${FLEX_SRC} ${LEXER_CODEGEN_DIR}/lexer.cpp
+flex_target(LEXER ${FLEX_SRC} ${LEXER_CODEGEN_DIR}/lexer.cpp
             DEFINES_FILE ${LEXER_CODEGEN_DIR}/lexer.hpp)
 
-BISON_TARGET(PARSER ${BISON_SRC} ${PARSER_CODEGEN_DIR}/parser.cpp
+bison_target(PARSER ${BISON_SRC} ${PARSER_CODEGEN_DIR}/parser.cpp
              DEFINES_FILE ${PARSER_CODEGEN_DIR}/parser.hpp)
 
-ADD_FLEX_BISON_DEPENDENCY(LEXER PARSER)
+add_flex_bison_dependency(LEXER PARSER)
 
 set(SRC_FILES
     ${FLEX_LEXER_OUTPUTS}

@@ -226,11 +226,4 @@ class DotGraph {
     }
 };
 
-
-
-
-
-
-
-
-}
+} // namespace graphviz

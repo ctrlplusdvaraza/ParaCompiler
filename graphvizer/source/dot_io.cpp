@@ -6,7 +6,7 @@
 namespace graphviz
 {
 
-std::ostream &operator<< (std::ostream &stream, const GraphRankdir rankdir) {
+std::ostream &operator<<(std::ostream &stream, const GraphRankdir rankdir) {
     switch (rankdir) {
         case (GraphRankdir::RANKDIR_TB): stream << "TB"; break;
         case (GraphRankdir::RANKDIR_BT): stream << "BT"; break;

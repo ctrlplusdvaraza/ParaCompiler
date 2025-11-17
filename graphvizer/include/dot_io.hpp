@@ -12,7 +12,7 @@ struct Color;
 class DotEdge;
 class DotNode;
 
-std::ostream &operator<< (std::ostream &stream, const GraphRankdir rankdir);
+std::ostream &operator<<(std::ostream &stream, const GraphRankdir rankdir);
 std::ostream &operator<<(std::ostream &stream, NodeShape shape);
 std::ostream &operator<<(std::ostream &stream, NodeStyle style);
 std::ostream &operator<<(std::ostream &stream, const Color color);
