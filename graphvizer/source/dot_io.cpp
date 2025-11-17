@@ -184,7 +184,7 @@ std::ostream& operator<<(std::ostream& stream, const DotNode& node)
     stream << "fillcolor=\"#" << node.attributes.fill_color << "\",";
 
     stream << "label=\"{";
-    stream << "\'" << node.label << "\' | {";
+    stream << "\\" << node.label << " | {";
     for (std::size_t childId = 0; childId < node.children_cnt; childId++)
     {
         stream << "<C" << childId << "> (C" << childId << ")";

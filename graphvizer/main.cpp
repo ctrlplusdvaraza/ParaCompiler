@@ -21,10 +21,12 @@ int main(int argc, char** argv)
     try
     {
         ast_protobuf::SerializedAstRoot serialized_ast = compiler::read_ast_from_file(argv[1]);
-        compiler::AstRootPtr                      root = compiler::deserialize_ast(serialized_ast);
+        compiler::AstRootPtr                  ast_root = compiler::deserialize_ast(serialized_ast);
 
         compiler::graphviz::DotGraph dotGraph;
-        dotGraph.create_from_ast_tree(root);
+        std::cout << ast_root->get_string_lexeme() << std::endl;
+
+        dotGraph.create_from_ast_tree(ast_root);
         dotGraph.convert_to_image(argv[2]);
     }
     catch (std::exception& ex)
