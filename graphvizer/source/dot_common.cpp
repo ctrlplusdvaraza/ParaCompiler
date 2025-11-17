@@ -1,20 +1,18 @@
-#include "dot_graph.hpp"
 #include "dot_common.hpp"
+#include "dot_graph.hpp"
 
-namespace graphviz 
+namespace compiler::graphviz
 {
 
-Color generate_random_color() {
-    static std::random_device rd;
-    static std::mt19937 gen(rd());
-    static std::uniform_int_distribution<> dis(0, 255);
+#include <cstdlib>
 
-    return Color
-    {
-        static_cast<uint8_t>(dis(gen)),
-        static_cast<uint8_t>(dis(gen)),
-        static_cast<uint8_t>(dis(gen))
+Color generate_random_color()
+{
+    return Color{
+        static_cast<uint8_t>(rand() % 256),
+        static_cast<uint8_t>(rand() % 256),
+        static_cast<uint8_t>(rand() % 256)
     };
 }
 
-}
+} // namespace compiler::graphviz
