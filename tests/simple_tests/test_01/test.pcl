@@ -1,5 +1,6 @@
-count = ?
+count = ?;
 
 while (count--) {
     print count;
 }
+

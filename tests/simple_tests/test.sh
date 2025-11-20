@@ -1,26 +1,25 @@
 #!/bin/bash
 
-if [ $# -ne 1 ]; then
-  echo "Usage: $0 <compiler_or_interpreter>"
-  exit 1
-fi
+script_dir="$(cd "$(dirname "$0")" && pwd)"
+ROOT_DIR="$(cd "$script_dir/../.." && pwd)"   # корень проекта
+PROGRAM="$ROOT_DIR/start.sh"
 
-PROGRAM="$1"
+if [ ! -f "$PROGRAM" ]; then
+    echo "❌ start.sh не найден в корне проекта: $PROGRAM"
+    exit 1
+fi
 
 GREEN="\033[32m"
 RED="\033[31m"
 CYAN="\033[36m"
-YELLOW="\033[33m"
-BOLD="\033[1m"
 RESET="\033[0m"
 
-script_dir="$(cd "$(dirname "$0")" && pwd)"
 cd "$script_dir" || exit 1
 
 total=0
 failed=0
 
-echo -e "${GREEN}Starting tests in ${RESET}$script_dir"
+echo -e "${GREEN}Starting tests in:${RESET} $script_dir"
 
 for testdir in test_*; do
     [ -d "$testdir" ] || continue
@@ -28,54 +27,48 @@ for testdir in test_*; do
 
     echo -e "${CYAN}Running $testdir ...${RESET}"
 
-    pcl_file="$testdir/test.pcl"
-    if [ ! -f "$pcl_file" ]; then
-        echo -e "${RED}No test.pcl in $testdir${RESET}"
+    pcl="$testdir/test.pcl"
+    if [ ! -f "$pcl" ]; then
+        echo -e "${RED}Missing test.pcl in $testdir${RESET}"
         ((failed++))
         continue
     fi
 
-    # Компиляция / проверка
-    "$PROGRAM" "$pcl_file" >/dev/null 2>&1
-    status=$?
-
-    if [ $status -ne 0 ]; then
-        echo -e "${RED}Compilation failed in $testdir${RESET}"
-        ((failed++))
-        continue
-    fi
-
-    # Запуск тестов stdin_*.txt
     ok=1
+
     for stdin_file in "$testdir"/stdin_*.txt; do
         [ -f "$stdin_file" ] || continue
 
         num=$(echo "$stdin_file" | sed -E 's/.*stdin_([0-9]+)\.txt/\1/')
-        expected_file="$testdir/expected_stdout_${num}.txt"
+        expected="$testdir/expected_stdout_${num}.txt"
 
-        if [ ! -f "$expected_file" ]; then
-            echo -e "${YELLOW}Warning: no expected_stdout_${num}.txt for $stdin_file${RESET}"
+        if [ ! -f "$expected" ]; then
+            echo -e "${RED}Missing expected_stdout_${num}.txt${RESET}"
+            ok=0
             continue
         fi
 
         output="$(mktemp)"
 
-        # Запуск программы
-        "$PROGRAM" "$pcl_file" < "$stdin_file" > "$output" 2>/dev/null
-        run_status=$?
+        "$PROGRAM" "$pcl" < "$stdin_file" > "$output"
+        status=$?
 
-        if ! diff -q "$output" "$expected_file" >/dev/null 2>&1 || [ $run_status -ne 0 ]; then
-            echo -e "${RED}❌ Test failed: $testdir (stdin_${num})${RESET}"
-            echo "Input:"
+        if [ $status -ne 0 ]; then
+            echo -e "${RED}❌ Runtime error in $testdir (test $num)${RESET}"
+            ok=0
+            rm "$output"
+            continue
+        fi
+
+        if ! diff -q "$output" "$expected" >/dev/null; then
+            echo -e "${RED}❌ $testdir test $num failed${RESET}"
+            echo "--- Input:"
             cat "$stdin_file"
-
-            echo "Expected:"
-            cat "$expected_file"
-
-            echo "Got:"
+            echo "--- Expected:"
+            cat "$expected"
+            echo "--- Got:"
             cat "$output"
-
-            echo "---------------------------------------------"
+            echo "------------------------------------"
             ok=0
         fi
 
@@ -93,6 +86,6 @@ done
 if [ $failed -eq 0 ]; then
     echo -e "${GREEN}All $total tests passed.${RESET}"
 else
-    echo -e "${RED}$failed/$total tests failed.${RESET}"
+    echo -e "${RED}$failed / $total tests failed.${RESET}"
 fi
 
