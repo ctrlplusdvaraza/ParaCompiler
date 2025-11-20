@@ -75,12 +75,12 @@ ast_protobuf::SerializedAstRoot read_ast_from_file(const std::string filepath)
     std::ifstream in(filepath, std::ios::binary);
     if (!in)
     {
-        throw std::runtime_error("failed to open file for reading: " + filepath);
+        throw std::runtime_error("Failed to open file for reading: " + filepath);
     }
 
     if (!root.ParseFromIstream(&in))
     {
-        throw std::runtime_error("failed to parse SerializedAstRoot from file: " + filepath);
+        throw std::runtime_error("Failed to parse SerializedAstRoot from file: " + filepath);
     }
 
     return root;
@@ -91,12 +91,12 @@ void write_ast_to_file(const ast_protobuf::SerializedAstRoot& root, const std::s
     std::ofstream out(filepath, std::ios::binary);
     if (!out)
     {
-        throw std::runtime_error("failed to open file for writing: " + filepath);
+        throw std::runtime_error("Failed to open file for writing: " + filepath);
     }
 
     if (!root.SerializeToOstream(&out))
     {
-        throw std::runtime_error("failed to write SerializedAstRoot to file: " + filepath);
+        throw std::runtime_error("Failed to write SerializedAstRoot to file: " + filepath);
     }
 }
 
@@ -107,144 +107,164 @@ static void fill_node_oneof(const AstNode& node, ast_protobuf::SerializedAstNode
         auto* out = msg.mutable_while_node();
         out->set_lexeme(node.get_string_lexeme());
     }
-    if (node.is_node_type<IfNode>())
+    else if (node.is_node_type<IfNode>())
     {
         auto* out = msg.mutable_if_node();
         out->set_lexeme(node.get_string_lexeme());
     }
-    if (node.is_node_type<PrintNode>())
+    else if (node.is_node_type<PrintNode>())
     {
         auto* out = msg.mutable_print_node();
         out->set_lexeme(node.get_string_lexeme());
     }
-    if (node.is_node_type<InputNode>())
+    else if (node.is_node_type<InputNode>())
     {
         auto* out = msg.mutable_input_node();
         out->set_lexeme(node.get_string_lexeme());
     }
-    if (node.is_node_type<IdentifierNode>())
+    else if (node.is_node_type<IdentifierNode>())
     {
         auto* out = msg.mutable_identifier_node();
         out->set_lexeme(node.get_string_lexeme());
     }
-    if (node.is_node_type<LiteralNode>())
+    else if (node.is_node_type<LiteralNode>())
     {
         auto* out = msg.mutable_literal_node();
         out->set_lexeme(node.get_string_lexeme());
     }
-    if (node.is_node_type<AssignmentNode>())
+    else if (node.is_node_type<AssignmentNode>())
     {
         auto* out = msg.mutable_assignment_node();
         out->set_lexeme(node.get_string_lexeme());
     }
-    if (node.is_node_type<AddAssignmentNode>())
+    else if (node.is_node_type<AddAssignmentNode>())
     {
         auto* out = msg.mutable_add_assignment_node();
         out->set_lexeme(node.get_string_lexeme());
     }
-    if (node.is_node_type<SubAssignmentNode>())
+    else if (node.is_node_type<SubAssignmentNode>())
     {
         auto* out = msg.mutable_sub_assignment_node();
         out->set_lexeme(node.get_string_lexeme());
     }
-    if (node.is_node_type<MulAssignmentNode>())
+    else if (node.is_node_type<MulAssignmentNode>())
     {
         auto* out = msg.mutable_mul_assignment_node();
         out->set_lexeme(node.get_string_lexeme());
     }
-    if (node.is_node_type<DivAssignmentNode>())
+    else if (node.is_node_type<DivAssignmentNode>())
     {
         auto* out = msg.mutable_mul_assignment_node();
         out->set_lexeme(node.get_string_lexeme());
     }
-    if (node.is_node_type<ModAssignmentNode>())
+    else if (node.is_node_type<ModAssignmentNode>())
     {
         auto* out = msg.mutable_mod_assignment_node();
         out->set_lexeme(node.get_string_lexeme());
     }
-    if (node.is_node_type<AddNode>())
+    else if (node.is_node_type<AddNode>())
     {
         auto* out = msg.mutable_add_node();
         out->set_lexeme(node.get_string_lexeme());
     }
-    if (node.is_node_type<SubNode>())
+    else if (node.is_node_type<SubNode>())
     {
         auto* out = msg.mutable_sub_node();
         out->set_lexeme(node.get_string_lexeme());
     }
-    if (node.is_node_type<MulNode>())
+    else if (node.is_node_type<MulNode>())
     {
         auto* out = msg.mutable_mul_node();
         out->set_lexeme(node.get_string_lexeme());
     }
-    if (node.is_node_type<DivNode>())
+    else if (node.is_node_type<DivNode>())
     {
         auto* out = msg.mutable_div_node();
         out->set_lexeme(node.get_string_lexeme());
     }
-    if (node.is_node_type<ModNode>())
+    else if (node.is_node_type<ModNode>())
     {
         auto* out = msg.mutable_mod_node();
         out->set_lexeme(node.get_string_lexeme());
     }
-    if (node.is_node_type<EqualNode>())
+    else if (node.is_node_type<EqualNode>())
     {
         auto* out = msg.mutable_equal_node();
         out->set_lexeme(node.get_string_lexeme());
     }
-    if (node.is_node_type<NotEqualNode>())
+    else if (node.is_node_type<NotEqualNode>())
     {
         auto* out = msg.mutable_not_equal_node();
         out->set_lexeme(node.get_string_lexeme());
     }
-    if (node.is_node_type<LessNode>())
+    else if (node.is_node_type<LessNode>())
     {
         auto* out = msg.mutable_less_node();
         out->set_lexeme(node.get_string_lexeme());
     }
-    if (node.is_node_type<LessEqualNode>())
+    else if (node.is_node_type<LessEqualNode>())
     {
         auto* out = msg.mutable_less_equal_node();
         out->set_lexeme(node.get_string_lexeme());
     }
-    if (node.is_node_type<GreaterNode>())
+    else if (node.is_node_type<GreaterNode>())
     {
         auto* out = msg.mutable_greater_node();
         out->set_lexeme(node.get_string_lexeme());
     }
-    if (node.is_node_type<GreaterEqualNode>())
+    else if (node.is_node_type<GreaterEqualNode>())
     {
         auto* out = msg.mutable_greater_equal_node();
         out->set_lexeme(node.get_string_lexeme());
     }
-    if (node.is_node_type<UnaryPlusNode>())
+    else if (node.is_node_type<UnaryPlusNode>())
     {
         auto* out = msg.mutable_unary_plus_node();
         out->set_lexeme(node.get_string_lexeme());
     }
-    if (node.is_node_type<UnaryMinusNode>())
+    else if (node.is_node_type<UnaryMinusNode>())
     {
         auto* out = msg.mutable_unary_minus_node();
         out->set_lexeme(node.get_string_lexeme());
     }
-    if (node.is_node_type<PrefixIncrementNode>())
+    else if (node.is_node_type<PrefixIncrementNode>())
     {
         auto* out = msg.mutable_prefix_increment_node();
         out->set_lexeme(node.get_string_lexeme());
     }
-    if (node.is_node_type<PostfixIncrementNode>())
+    else if (node.is_node_type<PostfixIncrementNode>())
     {
         auto* out = msg.mutable_postfix_increment_node();
         out->set_lexeme(node.get_string_lexeme());
     }
-    if (node.is_node_type<PrefixDecrementNode>())
+    else if (node.is_node_type<PrefixDecrementNode>())
     {
         auto* out = msg.mutable_prefix_decrement_node();
         out->set_lexeme(node.get_string_lexeme());
     }
-    if (node.is_node_type<PostfixDecrementNode>())
+    else if (node.is_node_type<PostfixDecrementNode>())
     {
         auto* out = msg.mutable_postfix_decrement_node();
+        out->set_lexeme(node.get_string_lexeme());
+    }
+    else if (node.is_node_type<ScopeNode>())
+    {
+        auto* out = msg.mutable_scope_node();
+        out->set_lexeme(node.get_string_lexeme());
+    }
+    else if (node.is_node_type<NotNode>())
+    {
+        auto* out = msg.mutable_not_node();
+        out->set_lexeme(node.get_string_lexeme());
+    }
+    else if (node.is_node_type<AndNode>())
+    {
+        auto* out = msg.mutable_and_node();
+        out->set_lexeme(node.get_string_lexeme());
+    }
+    else if (node.is_node_type<OrNode>())
+    {
+        auto* out = msg.mutable_or_node();
         out->set_lexeme(node.get_string_lexeme());
     }
 }
@@ -398,7 +418,26 @@ static AstNodePtr make_node_from_oneof(const ast_protobuf::SerializedAstNode& ms
                 const auto& node = msg.postfix_decrement_node();
                 return std::make_unique<PostfixDecrementNode>(std::string(node.lexeme()));
             }
-
+        case ast_protobuf::SerializedAstNode::kScopeNode:
+            {
+                const auto& node = msg.scope_node();
+                return std::make_unique<ScopeNode>(std::string(node.lexeme()));
+            }
+        case ast_protobuf::SerializedAstNode::kAndNode:
+            {
+                const auto& node = msg.scope_node();
+                return std::make_unique<AndNode>(std::string(node.lexeme()));
+            }
+        case ast_protobuf::SerializedAstNode::kOrNode:
+            {
+                const auto& node = msg.scope_node();
+                return std::make_unique<OrNode>(std::string(node.lexeme()));
+            }
+        case ast_protobuf::SerializedAstNode::kNotNode:
+            {
+                const auto& node = msg.scope_node();
+                return std::make_unique<NotNode>(std::string(node.lexeme()));
+            }
         default:
             throw std::runtime_error("SerializedAstNode has no node set");
     }
