@@ -39,6 +39,10 @@ message SerializedAstNode
         PostfixIncrementNode postfix_increment_node = 36;
         PrefixDecrementNode prefix_decrement_node = 37;
         PostfixDecrementNode postfix_decrement_node = 38;
+        ScopeNode scope_node = 39;
+        AndNode and_node = 40;
+        OrNode or_node = 41;
+        NotNode not_node = 42;
     }
 }
 
