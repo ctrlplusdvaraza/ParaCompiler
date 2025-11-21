@@ -1,5 +1,5 @@
 %skeleton "lalr1.cc"
-%require "3.8.1"
+%require "3.7.4"
 %header 
 
 %define api.token.constructor
