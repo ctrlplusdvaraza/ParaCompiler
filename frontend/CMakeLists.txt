@@ -38,6 +38,7 @@ set(SRC_FILES
     ${FLEX_LEXER_OUTPUTS}
     ${BISON_PARSER_OUTPUTS}
     main.cpp
+    driver.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SRC_FILES})
