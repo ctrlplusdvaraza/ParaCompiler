@@ -29,9 +29,9 @@ int main(int argc, char* argv[])
 
         root->set_file_name(input_filename);
 
-        ast_protobuf::SerializedAstRoot serialized = serialize_ast(root);
+        ast_protobuf::SerializedAstRoot serialized = compiler::serialize_ast(root);
         
-        write_ast_to_file(serialized, output_filepath);
+        compiler::write_ast_to_file(serialized, output_filepath);
     }
 
     return parsing_result;
