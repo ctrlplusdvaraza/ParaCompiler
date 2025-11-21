@@ -5,6 +5,7 @@
 %define api.token.constructor
 %define api.value.type variant
 %locations
+%define parse.error verbose
 
 %code requires {
     #include <string>
