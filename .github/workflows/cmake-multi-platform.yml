@@ -26,17 +26,22 @@ jobs:
       shell: bash
       run: |
         echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
+        if [ "${{ runner.os }}" = "Windows" ]; then
+          echo "vcpkg_root=$VCPKG_INSTALLATION_ROOT" >> "$GITHUB_OUTPUT"
+        else
+          echo "vcpkg_root=$GITHUB_WORKSPACE/vcpkg" >> "$GITHUB_OUTPUT"
+        fi
 
-    - name: Install Dependencies (Ubuntu)
+    - name: Install System Dependencies (Ubuntu)
       if: runner.os == 'Linux'
       run: |
         sudo apt-get update
-        sudo apt-get install -y protobuf-compiler libprotobuf-dev flex bison graphviz libabsl-dev
+        sudo apt-get install -y build-essential curl zip unzip tar pkg-config flex bison graphviz ninja-build
 
     - name: Install Dependencies (macOS)
       if: runner.os == 'macOS'
       run: |
-        brew install protobuf flex bison graphviz abseil
+        brew install flex bison graphviz ninja
         echo "$(brew --prefix bison)/bin" >> $GITHUB_PATH
         echo "$(brew --prefix flex)/bin" >> $GITHUB_PATH
 
@@ -44,8 +49,30 @@ jobs:
       if: runner.os == 'Windows'
       shell: cmd
       run: |
-        choco install winflexbison3 graphviz
-        vcpkg install protobuf abseil --triplet x64-windows
+        choco install winflexbison3 graphviz ninja
+
+    - name: Setup vcpkg (Linux/macOS)
+      if: runner.os != 'Windows'
+      run: |
+        git clone https://github.com/microsoft/vcpkg.git
+        ./vcpkg/bootstrap-vcpkg.sh
+
+    - name: Install Libraries via vcpkg
+      shell: bash
+      run: |
+        VCPKG_ROOT="${{ steps.strings.outputs.vcpkg_root }}"
+        VCPKG_EXE="$VCPKG_ROOT/vcpkg"
+        
+        if [ "${{ runner.os }}" = "Windows" ]; then
+            TRIPLET="x64-windows"
+        elif [ "${{ runner.os }}" = "macOS" ]; then
+            TRIPLET="x64-osx"
+        else
+            TRIPLET="x64-linux"
+        fi
+
+        echo "Installing Protobuf and Abseil via vcpkg for $TRIPLET..."
+        "$VCPKG_EXE" install protobuf abseil --triplet $TRIPLET
 
     - name: Configure CMake
       run: >
@@ -53,9 +80,8 @@ jobs:
         -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
         -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
-        -Dprotobuf_ABSL_PROVIDER=package
         -S ${{ github.workspace }}
-        ${{ runner.os == 'Windows' && '-DCMAKE_TOOLCHAIN_FILE=$VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake' || '' }}
+        -DCMAKE_TOOLCHAIN_FILE=${{ steps.strings.outputs.vcpkg_root }}/scripts/buildsystems/vcpkg.cmake
 
     - name: Build
       run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
