@@ -33,9 +33,6 @@ class Driver
         yy::parser parser(*this);
         int parsing_result = parser();
 
-        std::filesystem::path file_path_obj(file_path);
-        ast_root->set_file_name(file_path_obj.filename().string());
-
         input_file_close();
 
         return parsing_result;
