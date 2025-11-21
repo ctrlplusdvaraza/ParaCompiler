@@ -1,7 +1,7 @@
 /*------------------------------------- Flex definitions section -------------------------------------*/
 
 %option noyywrap
-%option nounput noinput batch 
+%option nounput noinput batch
 
 %{
     #include <string>
