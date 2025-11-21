@@ -7,22 +7,31 @@
 %locations
 %define parse.error verbose
 
+// inserting into parser.hpp
 %code requires {
-    #include <string>
-    #include <memory>
-
     #include "ast.hpp"
-    using namespace compiler; 
-    class Driver;
-}
 
-%code {
     #include "driver.hpp"
 
-    static AstNodePtr wrapInScope(AstNodePtr stmt) {
-        if (stmt->is_node_type<ScopeNode>()) {
+    using namespace compiler; 
+}
+
+// inserting into parser.cpp
+%code {
+    #include "parser.hpp"
+
+    #include "driver.hpp"
+
+    #define YY_DECL yy::parser::symbol_type yylex(Driver& driver)
+    YY_DECL;
+
+    static AstNodePtr WrapInScope(AstNodePtr stmt)
+    {
+        if (stmt->is_node_type<ScopeNode>())
+        {
             return stmt;
         }
+
         AstNodePtr scope = std::make_unique<ScopeNode>("{");
         scope->children.push_back(std::move(stmt));
         return scope;
@@ -127,14 +136,14 @@ if_statement
     : IF L_ROUND_BR expression R_ROUND_BR statement {
         AstNodePtr node = std::make_unique<IfNode>($1);
         node->children.push_back(std::move($3));
-        node->children.push_back(wrapInScope(std::move($5)));
+        node->children.push_back(WrapInScope(std::move($5)));
         $$ = std::move(node);
     }
     | IF L_ROUND_BR expression R_ROUND_BR statement ELSE statement {
         AstNodePtr node = std::make_unique<IfNode>($1);
         node->children.push_back(std::move($3));
-        node->children.push_back(wrapInScope(std::move($5)));
-        node->children.push_back(wrapInScope(std::move($7)));
+        node->children.push_back(WrapInScope(std::move($5)));
+        node->children.push_back(WrapInScope(std::move($7)));
         $$ = std::move(node);
     }
     ;
@@ -143,7 +152,7 @@ while_statement
     : WHILE L_ROUND_BR expression R_ROUND_BR statement {
         AstNodePtr node = std::make_unique<WhileNode>($1);
         node->children.push_back(std::move($3));
-        node->children.push_back(wrapInScope(std::move($5)));
+        node->children.push_back(WrapInScope(std::move($5)));
         $$ = std::move(node);
     }
     ;
@@ -315,7 +324,7 @@ primary_expression
     ;
 %%
 
-void yy::parser::error(const location_type& location, const std::string& m)
+void yy::parser::error(const location_type& location, const std::string& message)
 {
-    std::cerr << location << ": " << m << std::endl;
+    std::cerr << location << ": " << message << std::endl;
 }
