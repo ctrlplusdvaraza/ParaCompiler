@@ -1,0 +1,19 @@
+a = ?;
+b = ?;
+c = ?;
+
+d = a++;
+e = --a;
+f = -b++;
+g = --(--(++(--c)));
+h = (++a)++;
+i = (--b)--;
+j = -(++(--c));
+
+print d;
+print e;
+print f;
+print g;
+print h;
+print i;
+print j;
