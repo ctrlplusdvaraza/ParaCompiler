@@ -9,7 +9,7 @@
 ## Компиляция
 ### Linux / MacOS
 ```sh
-./build.sh [--debug|--release] [--build-dir <dir>]
+./build.sh [--debug | --release] [--build-dir <dir>]
 ```
 
 ### Windows
@@ -20,11 +20,23 @@ cmake --build ./build
 
 ## Запуск
 ### Linux / MacOS
-```sh
-./run.sh <file_name> [--graphviz] [--build-dir <dir>]
+```sh 
+./run.sh <file_name> [--graphviz] [--build-dir <dir>] 
 ```
 
 ### Windows
-``` ./build/frontend/frontend.exe <file_name> ``` - создание ast дерева
-``` ./build/graphviz/graphviz.exe <ast_file> ``` - создание svg представления ast дерева
-``` ./build/simulator/simulator.exe <ast_file> ``` - запуск эмулятора языка
+Создание AST дерева исходного кода
+```
+./build/frontend/frontend.exe <file_name>
+```
+
+Запуск эмулятора языка
+```
+./build/simulator/simulator.exe <ast_file>
+```
+
+Генерация SVG представления AST дерева
+```
+./build/graphviz/graphviz.exe <ast_file>
+```
+
