@@ -183,9 +183,6 @@ SimulatorState::ValueType evaluate_expr(SimulatorState& state, const AstNodePtr&
         throw std::runtime_error("Null node in expression evaluation");
     }
 
-    std::cerr << "evaluate_expr: Processing node type with lexeme: " << node->get_string_lexeme()
-              << std::endl;
-
     if (node->is_node_type<LiteralNode>())
     {
         return std::stoll(node->get_string_lexeme());

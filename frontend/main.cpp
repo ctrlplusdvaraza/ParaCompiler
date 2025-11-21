@@ -1,3 +1,4 @@
+#include <filesystem>
 #include <string>
 
 #include "ast.pb.h"
@@ -11,21 +12,26 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    std::string file_path = argv[argc - 1];
+    std::string input_filepath = argv[argc - 1];
+
+    std::filesystem::path input_filepath_obj(input_filepath);
+    std::filesystem::path output_filepath_obj = input_filepath_obj.replace_extension(".ast");
+
+    std::string input_filename = input_filepath_obj.filename().string();
+    std::string output_filepath = output_filepath_obj.string();
 
     Driver driver;
 
-    int parsing_result = driver.parse_file(file_path);
+    int parsing_result = driver.parse_file(input_filepath);
     if(!parsing_result)
     {
         auto root = driver.get_ast_root();
 
-        std::filesystem::path file_path_obj(file_path);
-        root->set_file_name(file_path_obj.filename().string());
+        root->set_file_name(input_filename);
 
         ast_protobuf::SerializedAstRoot serialized = serialize_ast(root);
         
-        write_ast_to_file(serialized, "amogus_real.ast");
+        write_ast_to_file(serialized, output_filepath);
     }
 
     return parsing_result;
