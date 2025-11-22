@@ -183,9 +183,6 @@ SimulatorState::ValueType evaluate_expr(SimulatorState& state, const AstNodePtr&
         throw std::runtime_error("Null node in expression evaluation");
     }
 
-    std::cerr << "evaluate_expr: Processing node type with lexeme: " << node->get_string_lexeme()
-              << std::endl;
-
     if (node->is_node_type<LiteralNode>())
     {
         return std::stoll(node->get_string_lexeme());
@@ -269,6 +266,25 @@ SimulatorState::ValueType evaluate_expr(SimulatorState& state, const AstNodePtr&
                    : 0;
     }
 
+    if (node->is_node_type<NotNode>())
+    {
+        return !evaluate_expr(state, node->children[0]);
+    }
+
+    if (node->is_node_type<AndNode>())
+    {
+        return evaluate_expr(state, node->children[0]) && evaluate_expr(state, node->children[1])
+                   ? 1
+                   : 0;
+    }
+
+    if (node->is_node_type<OrNode>())
+    {
+        return evaluate_expr(state, node->children[0]) || evaluate_expr(state, node->children[1])
+                   ? 1
+                   : 0;
+    }
+
     if (node->is_node_type<UnaryPlusNode>())
     {
         return evaluate_expr(state, node->children[0]);
@@ -310,7 +326,7 @@ SimulatorState::ValueType evaluate_expr(SimulatorState& state, const AstNodePtr&
 
         if (std::cin.fail())
         {
-                throw std::runtime_error("Invalid input");
+            throw std::runtime_error("Invalid input");
         }
 
         return value;

@@ -253,6 +253,21 @@ static void fill_node_oneof(const AstNode& node, ast_protobuf::SerializedAstNode
         auto* out = msg.mutable_scope_node();
         out->set_lexeme(node.get_string_lexeme());
     }
+    else if (node.is_node_type<NotNode>())
+    {
+        auto* out = msg.mutable_not_node();
+        out->set_lexeme(node.get_string_lexeme());
+    }
+    else if (node.is_node_type<AndNode>())
+    {
+        auto* out = msg.mutable_and_node();
+        out->set_lexeme(node.get_string_lexeme());
+    }
+    else if (node.is_node_type<OrNode>())
+    {
+        auto* out = msg.mutable_or_node();
+        out->set_lexeme(node.get_string_lexeme());
+    }
 }
 
 static AstNodePtr make_node_from_oneof(const ast_protobuf::SerializedAstNode& msg)
@@ -409,7 +424,21 @@ static AstNodePtr make_node_from_oneof(const ast_protobuf::SerializedAstNode& ms
                 const auto& node = msg.scope_node();
                 return std::make_unique<ScopeNode>(std::string(node.lexeme()));
             }
-
+        case ast_protobuf::SerializedAstNode::kAndNode:
+            {
+                const auto& node = msg.scope_node();
+                return std::make_unique<AndNode>(std::string(node.lexeme()));
+            }
+        case ast_protobuf::SerializedAstNode::kOrNode:
+            {
+                const auto& node = msg.scope_node();
+                return std::make_unique<OrNode>(std::string(node.lexeme()));
+            }
+        case ast_protobuf::SerializedAstNode::kNotNode:
+            {
+                const auto& node = msg.scope_node();
+                return std::make_unique<NotNode>(std::string(node.lexeme()));
+            }
         default:
             throw std::runtime_error("SerializedAstNode has no node set");
     }

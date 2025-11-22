@@ -1,0 +1,7 @@
+a = ?;
+b = ?;
+c = ?;
+d = ?;
+
+res = ((a + b) / c * d) % a + b--;
+print res * a - b * (c - d);

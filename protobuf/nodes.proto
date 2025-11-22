@@ -61,3 +61,9 @@ message PrefixDecrementNode { string lexeme = 1; }
 message PostfixDecrementNode { string lexeme = 1; }
 
 message ScopeNode { string lexeme = 1; }
+
+message AndNode { string lexeme = 1; }
+
+message OrNode { string lexeme = 1; }
+
+message NotNode { string lexeme = 1; }

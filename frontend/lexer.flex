@@ -1,13 +1,16 @@
 /*------------------------------------- Flex definitions section -------------------------------------*/
 
 %option noyywrap
-%option nounput noinput batch debug
+%option nounput noinput
 
 %{
     #include <string>
 
     #include "driver.hpp"
     #include "parser.hpp"
+
+    #define YY_DECL yy::parser::symbol_type yylex(Driver& driver)
+    YY_DECL;
 
     #define YY_USER_ACTION location.columns(yyleng);
 %}
@@ -24,7 +27,7 @@ block_comment   "/*"([^*]|"*"[^/])*"*/"
 %% /*------------------------------------- Lexical rules section -------------------------------------*/
 
 %{
-    yy::location location;
+    yy::location& location = driver.location;
 %}
 
 {number}     { return yy::parser::make_LITERAL(yytext, location); }
@@ -85,7 +88,7 @@ block_comment   "/*"([^*]|"*"[^/])*"*/"
 
 {new_line}    { location.lines(yyleng); location.step(); }
 
-.             { throw yy::parser::syntax_error(location, "Unknown character: " + std::string(yytext)); }
+.            { throw yy::parser::syntax_error(location, "unknown character: " + std::string(yytext)); }
 
 <<EOF>>       { return yy::parser::make_YYEOF(location); }
 

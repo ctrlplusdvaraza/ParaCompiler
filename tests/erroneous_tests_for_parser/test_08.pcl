@@ -1,0 +1,6 @@
+// forget {
+
+fst = 1;
+if (fst < 1) 
+    prinst fst;
+}

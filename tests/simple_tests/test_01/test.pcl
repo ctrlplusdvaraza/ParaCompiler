@@ -1,0 +1,6 @@
+count = ?;
+
+while (count--) {
+    print count;
+}
+
