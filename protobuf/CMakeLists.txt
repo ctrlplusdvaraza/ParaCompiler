@@ -18,5 +18,5 @@ protobuf_generate(
     TARGET ast_serialization
 )
 
-target_link_libraries(ast_serialization PUBLIC protobuf::libprotobuf absl::check absl::log)
+target_link_libraries(ast_serialization PUBLIC protobuf::libprotobuf)
 
