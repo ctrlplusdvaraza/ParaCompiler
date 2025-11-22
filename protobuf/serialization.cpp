@@ -426,17 +426,17 @@ static AstNodePtr make_node_from_oneof(const ast_protobuf::SerializedAstNode& ms
             }
         case ast_protobuf::SerializedAstNode::kAndNode:
             {
-                const auto& node = msg.scope_node();
+                const auto& node = msg.and_node();
                 return std::make_unique<AndNode>(std::string(node.lexeme()));
             }
         case ast_protobuf::SerializedAstNode::kOrNode:
             {
-                const auto& node = msg.scope_node();
+                const auto& node = msg.or_node();
                 return std::make_unique<OrNode>(std::string(node.lexeme()));
             }
         case ast_protobuf::SerializedAstNode::kNotNode:
             {
-                const auto& node = msg.scope_node();
+                const auto& node = msg.not_node();
                 return std::make_unique<NotNode>(std::string(node.lexeme()));
             }
         default:

@@ -145,8 +145,10 @@ class DotGraph
 
     void convert_to_image(const char* image_path)
     {
+        std::string temp_dot_file = "temp.dot";
+
         {
-            std::ofstream dot_file("temp.dot", std::ios::binary);
+            std::ofstream dot_file(temp_dot_file, std::ios::binary);
             if (!dot_file)
             {
                 std::cerr << "failed to create dot_file ifstream\n";
@@ -165,10 +167,12 @@ class DotGraph
         }
 
         std::string image_gen_command =
-            "dot -Tsvg temp.dot -o " + std::string(image_path);
+            "dot -Tsvg " + temp_dot_file +  " -o " + std::string(image_path);
         int rc = std::system(image_gen_command.c_str());
         if (rc != 0)
             throw std::runtime_error("dot image generation failed");
+
+        std::remove(temp_dot_file.c_str()); 
     }
 
   private:
