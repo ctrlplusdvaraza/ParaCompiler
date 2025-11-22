@@ -15,11 +15,11 @@
     #define YY_USER_ACTION location.columns(yyleng);
 %}
 
-identifier [a-zA-Z][a-zA-Z_0-9]*
-number     [0-9]+
+identifier  [a-zA-Z][a-zA-Z_0-9]*
+number      [0-9]+
 
-blank      [ \t\r]+
-new_line   [\n]+
+whitespaces [ \t\r]+
+new_line    [\n]+
 
 line_comment    "//".*
 block_comment   "/*"([^*]|"*"[^/])*"*/"
@@ -84,12 +84,12 @@ block_comment   "/*"([^*]|"*"[^/])*"*/"
     location.step(); 
 }
 
-{blank}      { location.step(); }
+{whitespaces} { location.step(); }
 
-{new_line}   { location.lines(yyleng); location.step(); }
+{new_line}    { location.lines(yyleng); location.step(); }
 
 .            { throw yy::parser::syntax_error(location, "unknown character: " + std::string(yytext)); }
 
-<<EOF>>      { return yy::parser::make_YYEOF(location); }
+<<EOF>>       { return yy::parser::make_YYEOF(location); }
 
 %%
