@@ -1,0 +1,6 @@
+// 
+
+fst = 1;
+if (fst >> 1) {
+    print fst;
+}

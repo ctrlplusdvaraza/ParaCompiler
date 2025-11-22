@@ -1,0 +1,7 @@
+// non-existent tokens
+
+fst = 10;
+whille (fst > 0) {
+    print fst;
+    --fst;
+}

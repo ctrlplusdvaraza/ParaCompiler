@@ -1,0 +1,6 @@
+// forget )
+
+fst = 1;
+while (fst < 1 {
+    print fst;
+}

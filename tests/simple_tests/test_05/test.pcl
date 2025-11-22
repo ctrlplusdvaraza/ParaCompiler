@@ -1,0 +1,10 @@
+x = ?;
+y = ?;
+
+x = (x + y) * (x - y);
+y = x + y * x - y;
+z = (x + x * (3 + y * (y + + + - - x))) - (-(+(-(+7))));
+
+print x;
+print y;
+print z;

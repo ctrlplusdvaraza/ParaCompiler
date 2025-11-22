@@ -1,0 +1,13 @@
+x = ?;
+y = ?;
+z = ?;
+
+x = ++y + z++ - --x + y-- + ++z;
+y = y++ + ++y - z-- + --z + x++;
+z = - - + + - - (x++ + --y - z);
+q = + - + - + - x + - - - y - + + + z;
+
+print x;
+print y;
+print z;
+print q;
