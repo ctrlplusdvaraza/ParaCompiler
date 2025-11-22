@@ -1,0 +1,7 @@
+a = 7;
+while (a && 0)
+{
+    print 2;
+}
+
+print 1;

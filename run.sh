@@ -1,6 +1,6 @@
 #!/bin/sh
 
-USAGE="Usage: $0 <file_name> [--graphvizer] [--build-dir <dir>]"
+USAGE="Usage: $0 <file_name> [--graphviz]"
 
 BUILD_DIR="build"
 GRAPHVIZ_RUN=0
@@ -20,15 +20,6 @@ while [ $# -gt 0 ]; do
     case "$1" in
         --graphviz)
             GRAPHVIZ_RUN=1
-            ;;
-
-        --build-dir)
-            shift
-            if [ $# -eq 0 ]; then
-                echo "$USAGE"
-                exit 1
-            fi
-            BUILD_DIR="$1"
             ;;
 
         *)
