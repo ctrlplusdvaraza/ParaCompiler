@@ -15,7 +15,7 @@
 #include "dot_common.hpp"
 #include "dot_io.hpp"
 
-namespace compiler::graphviz
+namespace compiler::graphvizer
 {
 
 class DotNode;
@@ -106,15 +106,14 @@ struct DotEdgeAttributes
 struct DotNode
 {
     DotNodeAttributes attributes;
-    std::size_t children_cnt;
-    std::string label;
+    std::string type_label;
+    std::string lexeme_label;
     uintptr_t identifier;
 };
 
 struct DotEdge
 {
     uintptr_t start_node_id;
-    std::size_t start_child_id;
     uintptr_t end_node_id;
 
     DotEdgeAttributes attributes_;
@@ -183,26 +182,25 @@ class DotGraph
             node_color_table[ast_node_type_name] = generate_random_color();
 
         DotNode dot_node{};
-        dot_node.attributes.shape = attributes_.default_node_shape;
-        dot_node.attributes.color = attributes_.default_node_color;
+        dot_node.attributes.shape      = attributes_.default_node_shape;
+        dot_node.attributes.color      = attributes_.default_node_color;
         dot_node.attributes.fill_color = node_color_table[ast_node_type_name];
-        dot_node.attributes.style = attributes_.default_node_style;
+        dot_node.attributes.style      = attributes_.default_node_style;
 
-        dot_node.children_cnt = ast_node->children.size();
-        dot_node.label = ast_node->get_string_lexeme();
-        dot_node.identifier = reinterpret_cast<uintptr_t>(ast_node);
+        
+        dot_node.lexeme_label = ast_node->get_string_lexeme();
+        dot_node.type_label   = strip_namespace(demangle(ast_node_type_name));
+        dot_node.identifier   = reinterpret_cast<uintptr_t>(ast_node);
 
         return dot_node;
     }
 
-    DotEdge create_dot_edge(const compiler::AstNode* start_node, const std::size_t start_child_id,
-                            const compiler::AstNode* end_node)
+    DotEdge create_dot_edge(const compiler::AstNode* start_node, const compiler::AstNode* end_node)
     {
         DotEdge edge{};
         edge.attributes_.color = attributes_.default_edge_color;
         edge.attributes_.penwidth = attributes_.default_edge_pen_width;
         edge.start_node_id = reinterpret_cast<uintptr_t>(start_node);
-        edge.start_child_id = start_child_id;
         edge.end_node_id = reinterpret_cast<uintptr_t>(end_node);
 
         return edge;
@@ -215,14 +213,16 @@ class DotGraph
 
         nodes_.push_back(create_dot_node(root, node_color_table));
 
-        for (std::size_t child_id = 0; child_id < root->children.size(); child_id++)
+        for (const auto& child : root->children)
         {
-            const auto& child = root->children[child_id];
-            edges_.push_back(create_dot_edge(root, child_id, child.get()));
+            edges_.push_back(create_dot_edge(root, child.get()));
+        }
 
+        for (const auto& child : root->children)
+        {
             create_from_ast_tree_recursive(child.get(), node_color_table);
         }
     }
 };
 
-} // namespace compiler::graphviz
+} // namespace compiler::graphvizer

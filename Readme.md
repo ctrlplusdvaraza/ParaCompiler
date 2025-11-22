@@ -47,7 +47,7 @@ cmake --build .
 
 Генерация SVG представления AST дерева:
 ```sh
-./build/graphvizer/graphvizer <ast_file>
+./build/graphvizer/graphvizer <ast_file> <img_file>
 ```
 
 Тестирование:

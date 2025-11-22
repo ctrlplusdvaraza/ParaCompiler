@@ -2,7 +2,7 @@
 #include "dot_io.hpp"
 #include <iostream>
 
-namespace compiler::graphviz
+namespace compiler::graphvizer
 {
 
 enum class GraphRankdir;
@@ -19,4 +19,4 @@ std::ostream& operator<<(std::ostream& stream, const Color color);
 std::ostream& operator<<(std::ostream& stream, const DotEdge& edge);
 std::ostream& operator<<(std::ostream& stream, const DotNode& node);
 
-} // namespace compiler::graphviz
+} // namespace compiler::graphvizer
