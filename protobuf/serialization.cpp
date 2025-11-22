@@ -32,6 +32,7 @@ ast_protobuf::SerializedAstRoot serialize_ast(const AstRootPtr& root)
         return serialized_root;
     }
 
+    serialized_root.set_lexeme(root->get_string_lexeme());
     serialized_root.mutable_children()->Reserve(root->children.size());
 
     for (const auto& child : root->children)
@@ -154,7 +155,7 @@ static void fill_node_oneof(const AstNode& node, ast_protobuf::SerializedAstNode
     }
     else if (node.is_node_type<DivAssignmentNode>())
     {
-        auto* out = msg.mutable_mul_assignment_node();
+        auto* out = msg.mutable_div_assignment_node();
         out->set_lexeme(node.get_string_lexeme());
     }
     else if (node.is_node_type<ModAssignmentNode>())
@@ -335,7 +336,7 @@ static AstNodePtr make_node_from_oneof(const ast_protobuf::SerializedAstNode& ms
             }
         case ast_protobuf::SerializedAstNode::kAddNode:
             {
-                const auto& node = msg.add_assignment_node();
+                const auto& node = msg.add_node();
                 return std::make_unique<AddNode>(std::string(node.lexeme()));
             }
         case ast_protobuf::SerializedAstNode::kSubNode:
@@ -425,17 +426,17 @@ static AstNodePtr make_node_from_oneof(const ast_protobuf::SerializedAstNode& ms
             }
         case ast_protobuf::SerializedAstNode::kAndNode:
             {
-                const auto& node = msg.scope_node();
+                const auto& node = msg.and_node();
                 return std::make_unique<AndNode>(std::string(node.lexeme()));
             }
         case ast_protobuf::SerializedAstNode::kOrNode:
             {
-                const auto& node = msg.scope_node();
+                const auto& node = msg.or_node();
                 return std::make_unique<OrNode>(std::string(node.lexeme()));
             }
         case ast_protobuf::SerializedAstNode::kNotNode:
             {
-                const auto& node = msg.scope_node();
+                const auto& node = msg.not_node();
                 return std::make_unique<NotNode>(std::string(node.lexeme()));
             }
         default:

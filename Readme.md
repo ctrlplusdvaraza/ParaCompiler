@@ -1,42 +1,56 @@
 # Компилятор для языка ParaCL
 
+Компилятор и эмулятор языка программирования ParaCL с поддержкой AST визуализации.
+
 ## Зависимости
-- Flex (версия 2.6 и выше)
-- Bison (версия 3.8 и выше)
-- Protobuf (версия синтаксиса proto 3)
-    - Abseil (версия 20250814.1-1 и выше)
+- Flex (версия 2.6 и выше) — генератор лексических анализаторов.
+- Bison (версия 3.8 и выше) — генератор парсеров.
+- Protobuf (syntax = "proto3") — сериализация данных.
+  - Abseil (версия 20250814.1-1 и выше) — библиотека поддержки Protobuf.
+- Graphviz Dot (версия 12.1.0 и выше) — генератор графических представлений.
 
-## Компиляция
-### Linux / MacOS
+## Компиляция (Linux)
+
+### Вариант 1 - используя скрипт:
 ```sh
-./build.sh [--debug | --release] [--build-dir <dir>]
+./build.sh [--debug | --release]
 ```
 
-### Windows
-```
-cmake -DCMAKE_BUILD_TYPE=[Release | Debug] -DSANITIZE=[TRUE | FALSE] .
-cmake --build ./build
+### Вариант 2 - вручную:
+
+```sh
+mkdir -p ./build
+cd ./build
+
+cmake ..
+cmake --build .
 ```
 
-## Запуск
-### Linux / MacOS
+## Запуск (Linux)
+
+### Вариант 1 - используя скрипт:
 ```sh 
-./run.sh <file_name> [--graphviz] [--build-dir <dir>] 
+./run.sh <file_name> [--graphviz] 
 ```
 
-### Windows
-Создание AST дерева исходного кода
-```
-./build/frontend/frontend.exe <file_name>
+### Вариант 2 - вручную:
+
+Создание AST дерева исходного кода:
+```sh
+./build/frontend/frontend <file_name>
 ```
 
-Запуск эмулятора языка
-```
-./build/simulator/simulator.exe <ast_file>
-```
-
-Генерация SVG представления AST дерева
-```
-./build/graphviz/graphviz.exe <ast_file>
+Запуск эмулятора языка:
+```sh
+./build/simulator/simulator <ast_file>
 ```
 
+Генерация SVG представления AST дерева:
+```sh
+./build/graphvizer/graphvizer <ast_file> <img_file>
+```
+
+Тестирование:
+```sh
+./tests/run_tests.sh ./run.sh
+```
