@@ -21,7 +21,7 @@ cmake --build ./build
 ## Запуск
 ### Linux / MacOS
 ```sh 
-./run.sh <file_name> [--graphviz] [--build-dir <dir>] 
+./run.sh <file_name> [--graphvizer] [--build-dir <dir>] 
 ```
 
 ### Windows
@@ -37,6 +37,6 @@ cmake --build ./build
 
 Генерация SVG представления AST дерева
 ```
-./build/graphviz/graphviz.exe <ast_file>
+./build/graphvizer/graphvizer.exe <ast_file>
 ```
 

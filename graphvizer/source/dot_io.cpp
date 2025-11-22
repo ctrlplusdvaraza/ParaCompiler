@@ -3,8 +3,30 @@
 #include "dot_graph.hpp"
 #include "dot_io.hpp"
 
-namespace compiler::graphviz
+
+namespace compiler::graphvizer
 {
+
+static std::string prepare_dotfile_label(const std::string &raw_string) {
+    std::string result;
+    result.reserve(raw_string.size() * 2);
+
+    for (char c : raw_string) {
+        switch (c) {
+            case '{': case '}':
+            case '|':
+            case '\\':
+            case '<': case '>':
+            case '&':
+                result.push_back('\\');
+                result.push_back(c);
+                break;
+            default:
+                result.push_back(c);
+        }
+    }
+    return result;
+}
 
 std::ostream& operator<<(std::ostream& stream, const GraphRankdir rankdir)
 {
@@ -184,14 +206,8 @@ std::ostream& operator<<(std::ostream& stream, const DotNode& node)
     stream << "fillcolor=\"#" << node.attributes.fill_color << "\",";
 
     stream << "label=\"{";
-    stream << "\\" << node.label << " | {";
-    for (std::size_t childId = 0; childId < node.children_cnt; childId++)
-    {
-        stream << "<C" << childId << "> (C" << childId << ")";
-        if (childId + 1 != node.children_cnt) { stream << " | "; }
-    }
-
-    stream << "}}\"]";
+    stream << prepare_dotfile_label(node.type_label) << " | " << prepare_dotfile_label(node.lexeme_label);
+    stream << "}\"]";
 
     return stream;
 }
@@ -199,11 +215,7 @@ std::ostream& operator<<(std::ostream& stream, const DotNode& node)
 std::ostream& operator<<(std::ostream& stream, const DotEdge& edge)
 {
     stream << "NODE_" << edge.start_node_id;
-    if (edge.start_child_id != std::numeric_limits<std::size_t>::max())
-    {
-        stream << ":<C" << edge.start_child_id << ">";
-    }
-
+ 
     stream << " -> ";
 
     stream << "NODE_" << edge.end_node_id;
@@ -217,4 +229,4 @@ std::ostream& operator<<(std::ostream& stream, const DotEdge& edge)
     return stream;
 }
 
-} // namespace compiler::graphviz
+} // namespace compiler::graphvizer
