@@ -44,4 +44,5 @@ jobs:
         path: |
           build/frontend/frontend
           build/graphvizer/graphvizer
+          build/simulator/simulator
 
