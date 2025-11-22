@@ -91,7 +91,7 @@
 %nterm <AstNodePtr> primary_expression primary_assignment
 %nterm <AstNodePtr> additive_expression multiplicative_expression 
 %nterm <AstNodePtr> PLUS_OR_MINUS MUL_OR_DIV_OR_PERCENT
-%nterm <AstNodePtr> unary_expression lvalue_expression postfix_expression
+%nterm <AstNodePtr> unary_expression prefix_expression postfix_expression
 %nterm <AstNodePtr> UNARY_OP PREFIX_OP POSTFIX_OP
 %nterm <AstNodePtr> logical_or_expression logical_and_expression logical_not_expression
 %nterm <AstNodePtr> cmp_expression CMP_OPERATORS
@@ -280,6 +280,7 @@ MUL_OR_DIV_OR_PERCENT
 
 unary_expression
     : postfix_expression { $$ = std::move($1); }
+    | prefix_expression  { $$ = std::move($1); }
     | primary_expression { $$ = std::move($1); }
     | UNARY_OP unary_expression {
         $1->children.push_back(std::move($2));
@@ -298,11 +299,19 @@ PREFIX_OP
     ;
 
 postfix_expression
-    : lvalue_expression POSTFIX_OP {
-        $2->children.push_back(std::move($1));
+    : IDENTIFIER POSTFIX_OP {
+        AstNodePtr id = std::make_unique<IdentifierNode>($1);
+        $2->children.push_back(std::move(id));
         $$ = std::move($2);
     }
-    | lvalue_expression { $$ = std::move($1); }
+    ;
+
+prefix_expression
+    : PREFIX_OP IDENTIFIER {
+        AstNodePtr id = std::make_unique<IdentifierNode>($2);
+        $1->children.push_back(std::move(id));
+        $$ = std::move($1);
+    }
     ;
 
 POSTFIX_OP
@@ -310,17 +319,9 @@ POSTFIX_OP
     | MINUSMINUS { $$ = std::make_unique<PostfixDecrementNode>($1); }
     ;
 
-lvalue_expression 
-    : IDENTIFIER { $$ = std::make_unique<IdentifierNode>($1); }
-    | L_ROUND_BR lvalue_expression R_ROUND_BR { $$ = std::move($2); }
-    | PREFIX_OP lvalue_expression {
-        $1->children.push_back(std::move($2));
-        $$ = std::move($1);
-    }
-    ;
-
 primary_expression
-    : LITERAL    { $$ = std::make_unique<LiteralNode>($1);    }
+    : IDENTIFIER { $$ = std::make_unique<IdentifierNode>($1); }
+    | LITERAL    { $$ = std::make_unique<LiteralNode>($1);    }
     | L_ROUND_BR expression R_ROUND_BR { $$ = std::move($2); }
     ;
 %%
