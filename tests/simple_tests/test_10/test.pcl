@@ -1,0 +1,313 @@
+a0 = ?;
+a1 = ?;
+a2 = ?;
+a3 = ?;
+a4 = ?;
+a5 = ?;
+a6 = ?;
+a7 = ?;
+a8 = ?;
+a9 = ?;
+a10 = ?;
+a11 = ?;
+a12 = ?;
+a13 = ?;
+a14 = ?;
+a15 = ?;
+a16 = ?;
+a17 = ?;
+a18 = ?;
+a19 = ?;
+a20 = ?;
+a21 = ?;
+a22 = ?;
+a23 = ?;
+a24 = ?;
+a25 = ?;
+a26 = ?;
+a27 = ?;
+a28 = ?;
+a29 = ?;
+a30 = ?;
+a31 = ?;
+a32 = ?;
+a33 = ?;
+a34 = ?;
+a35 = ?;
+a36 = ?;
+a37 = ?;
+a38 = ?;
+a39 = ?;
+a40 = ?;
+a41 = ?;
+a42 = ?;
+a43 = ?;
+a44 = ?;
+a45 = ?;
+a46 = ?;
+a47 = ?;
+a48 = ?;
+a49 = ?;
+a50 = ?;
+a51 = ?;
+a52 = ?;
+a53 = ?;
+a54 = ?;
+a55 = ?;
+a56 = ?;
+a57 = ?;
+a58 = ?;
+a59 = ?;
+a60 = ?;
+a61 = ?;
+a62 = ?;
+a63 = ?;
+a64 = ?;
+a65 = ?;
+a66 = ?;
+a67 = ?;
+a68 = ?;
+a69 = ?;
+a70 = ?;
+a71 = ?;
+a72 = ?;
+a73 = ?;
+a74 = ?;
+a75 = ?;
+a76 = ?;
+a77 = ?;
+a78 = ?;
+a79 = ?;
+a80 = ?;
+a81 = ?;
+a82 = ?;
+a83 = ?;
+a84 = ?;
+a85 = ?;
+a86 = ?;
+a87 = ?;
+a88 = ?;
+a89 = ?;
+a90 = ?;
+a91 = ?;
+a92 = ?;
+a93 = ?;
+a94 = ?;
+a95 = ?;
+a96 = ?;
+a97 = ?;
+a98 = ?;
+a99 = ?;
+
+i = 100;
+while (i > 0) {
+
+    j = 0;
+    while (j < 99) {
+
+        if (j == 0)  { if (a0  > a1)  { tmp=a0;  a0=a1;  a1=tmp; } }
+        if (j == 1)  { if (a1  > a2)  { tmp=a1;  a1=a2;  a2=tmp; } }
+        if (j == 2)  { if (a2  > a3)  { tmp=a2;  a2=a3;  a3=tmp; } }
+        if (j == 3)  { if (a3  > a4)  { tmp=a3;  a3=a4;  a4=tmp; } }
+        if (j == 4)  { if (a4  > a5)  { tmp=a4;  a4=a5;  a5=tmp; } }
+        if (j == 5)  { if (a5  > a6)  { tmp=a5;  a5=a6;  a6=tmp; } }
+        if (j == 6)  { if (a6  > a7)  { tmp=a6;  a6=a7;  a7=tmp; } }
+        if (j == 7)  { if (a7  > a8)  { tmp=a7;  a7=a8;  a8=tmp; } }
+        if (j == 8)  { if (a8  > a9)  { tmp=a8;  a8=a9;  a9=tmp; } }
+        if (j == 9)  { if (a9  > a10) { tmp=a9;  a9=a10; a10=tmp; } }
+        if (j == 10) { if (a10 > a11) { tmp=a10; a10=a11; a11=tmp; } }
+        if (j == 11) { if (a11 > a12) { tmp=a11; a11=a12; a12=tmp; } }
+        if (j == 12) { if (a12 > a13) { tmp=a12; a12=a13; a13=tmp; } }
+        if (j == 13) { if (a13 > a14) { tmp=a13; a13=a14; a14=tmp; } }
+        if (j == 14) { if (a14 > a15) { tmp=a14; a14=a15; a15=tmp; } }
+        if (j == 15) { if (a15 > a16) { tmp=a15; a15=a16; a16=tmp; } }
+        if (j == 16) { if (a16 > a17) { tmp=a16; a16=a17; a17=tmp; } }
+        if (j == 17) { if (a17 > a18) { tmp=a17; a17=a18; a18=tmp; } }
+        if (j == 18) { if (a18 > a19) { tmp=a18; a18=a19; a19=tmp; } }
+        if (j == 19) { if (a19 > a20) { tmp=a19; a19=a20; a20=tmp; } }
+        if (j == 20) { if (a20 > a21) { tmp=a20; a20=a21; a21=tmp; } }
+        if (j == 21) { if (a21 > a22) { tmp=a21; a21=a22; a22=tmp; } }
+        if (j == 22) { if (a22 > a23) { tmp=a22; a22=a23; a23=tmp; } }
+        if (j == 23) { if (a23 > a24) { tmp=a23; a23=a24; a24=tmp; } }
+        if (j == 24) { if (a24 > a25) { tmp=a24; a24=a25; a25=tmp; } }
+        if (j == 25) { if (a25 > a26) { tmp=a25; a25=a26; a26=tmp; } }
+        if (j == 26) { if (a26 > a27) { tmp=a26; a26=a27; a27=tmp; } }
+        if (j == 27) { if (a27 > a28) { tmp=a27; a27=a28; a28=tmp; } }
+        if (j == 28) { if (a28 > a29) { tmp=a28; a28=a29; a29=tmp; } }
+        if (j == 29) { if (a29 > a30) { tmp=a29; a29=a30; a30=tmp; } }
+        if (j == 30) { if (a30 > a31) { tmp=a30; a30=a31; a31=tmp; } }
+        if (j == 31) { if (a31 > a32) { tmp=a31; a31=a32; a32=tmp; } }
+        if (j == 32) { if (a32 > a33) { tmp=a32; a32=a33; a33=tmp; } }
+        if (j == 33) { if (a33 > a34) { tmp=a33; a33=a34; a34=tmp; } }
+        if (j == 34) { if (a34 > a35) { tmp=a34; a34=a35; a35=tmp; } }
+        if (j == 35) { if (a35 > a36) { tmp=a35; a35=a36; a36=tmp; } }
+        if (j == 36) { if (a36 > a37) { tmp=a36; a36=a37; a37=tmp; } }
+        if (j == 37) { if (a37 > a38) { tmp=a37; a37=a38; a38=tmp; } }
+        if (j == 38) { if (a38 > a39) { tmp=a38; a38=a39; a39=tmp; } }
+        if (j == 39) { if (a39 > a40) { tmp=a39; a39=a40; a40=tmp; } }
+        if (j == 40) { if (a40 > a41) { tmp=a40; a40=a41; a41=tmp; } }
+        if (j == 41) { if (a41 > a42) { tmp=a41; a41=a42; a42=tmp; } }
+        if (j == 42) { if (a42 > a43) { tmp=a42; a42=a43; a43=tmp; } }
+        if (j == 43) { if (a43 > a44) { tmp=a43; a43=a44; a44=tmp; } }
+        if (j == 44) { if (a44 > a45) { tmp=a44; a44=a45; a45=tmp; } }
+        if (j == 45) { if (a45 > a46) { tmp=a45; a45=a46; a46=tmp; } }
+        if (j == 46) { if (a46 > a47) { tmp=a46; a46=a47; a47=tmp; } }
+        if (j == 47) { if (a47 > a48) { tmp=a47; a47=a48; a48=tmp; } }
+        if (j == 48) { if (a48 > a49) { tmp=a48; a48=a49; a49=tmp; } }
+        if (j == 49) { if (a49 > a50) { tmp=a49; a49=a50; a50=tmp; } }
+        if (j == 50) { if (a50 > a51) { tmp=a50; a50=a51; a51=tmp; } }
+        if (j == 51) { if (a51 > a52) { tmp=a51; a51=a52; a52=tmp; } }
+        if (j == 52) { if (a52 > a53) { tmp=a52; a52=a53; a53=tmp; } }
+        if (j == 53) { if (a53 > a54) { tmp=a53; a53=a54; a54=tmp; } }
+        if (j == 54) { if (a54 > a55) { tmp=a54; a54=a55; a55=tmp; } }
+        if (j == 55) { if (a55 > a56) { tmp=a55; a55=a56; a56=tmp; } }
+        if (j == 56) { if (a56 > a57) { tmp=a56; a56=a57; a57=tmp; } }
+        if (j == 57) { if (a57 > a58) { tmp=a57; a57=a58; a58=tmp; } }
+        if (j == 58) { if (a58 > a59) { tmp=a58; a58=a59; a59=tmp; } }
+        if (j == 59) { if (a59 > a60) { tmp=a59; a59=a60; a60=tmp; } }
+        if (j == 60) { if (a60 > a61) { tmp=a60; a60=a61; a61=tmp; } }
+        if (j == 61) { if (a61 > a62) { tmp=a61; a61=a62; a62=tmp; } }
+        if (j == 62) { if (a62 > a63) { tmp=a62; a62=a63; a63=tmp; } }
+        if (j == 63) { if (a63 > a64) { tmp=a63; a63=a64; a64=tmp; } }
+        if (j == 64) { if (a64 > a65) { tmp=a64; a64=a65; a65=tmp; } }
+        if (j == 65) { if (a65 > a66) { tmp=a65; a65=a66; a66=tmp; } }
+        if (j == 66) { if (a66 > a67) { tmp=a66; a66=a67; a67=tmp; } }
+        if (j == 67) { if (a67 > a68) { tmp=a67; a67=a68; a68=tmp; } }
+        if (j == 68) { if (a68 > a69) { tmp=a68; a68=a69; a69=tmp; } }
+        if (j == 69) { if (a69 > a70) { tmp=a69; a69=a70; a70=tmp; } }
+        if (j == 70) { if (a70 > a71) { tmp=a70; a70=a71; a71=tmp; } }
+        if (j == 71) { if (a71 > a72) { tmp=a71; a71=a72; a72=tmp; } }
+        if (j == 72) { if (a72 > a73) { tmp=a72; a72=a73; a73=tmp; } }
+        if (j == 73) { if (a73 > a74) { tmp=a73; a73=a74; a74=tmp; } }
+        if (j == 74) { if (a74 > a75) { tmp=a74; a74=a75; a75=tmp; } }
+        if (j == 75) { if (a75 > a76) { tmp=a75; a75=a76; a76=tmp; } }
+        if (j == 76) { if (a76 > a77) { tmp=a76; a76=a77; a77=tmp; } }
+        if (j == 77) { if (a77 > a78) { tmp=a77; a77=a78; a78=tmp; } }
+        if (j == 78) { if (a78 > a79) { tmp=a78; a78=a79; a79=tmp; } }
+        if (j == 79) { if (a79 > a80) { tmp=a79; a79=a80; a80=tmp; } }
+        if (j == 80) { if (a80 > a81) { tmp=a80; a80=a81; a81=tmp; } }
+        if (j == 81) { if (a81 > a82) { tmp=a81; a81=a82; a82=tmp; } }
+        if (j == 82) { if (a82 > a83) { tmp=a82; a82=a83; a83=tmp; } }
+        if (j == 83) { if (a83 > a84) { tmp=a83; a83=a84; a84=tmp; } }
+        if (j == 84) { if (a84 > a85) { tmp=a84; a84=a85; a85=tmp; } }
+        if (j == 85) { if (a85 > a86) { tmp=a85; a85=a86; a86=tmp; } }
+        if (j == 86) { if (a86 > a87) { tmp=a86; a86=a87; a87=tmp; } }
+        if (j == 87) { if (a87 > a88) { tmp=a87; a87=a88; a88=tmp; } }
+        if (j == 88) { if (a88 > a89) { tmp=a88; a88=a89; a89=tmp; } }
+        if (j == 89) { if (a89 > a90) { tmp=a89; a89=a90; a90=tmp; } }
+        if (j == 90) { if (a90 > a91) { tmp=a90; a90=a91; a91=tmp; } }
+        if (j == 91) { if (a91 > a92) { tmp=a91; a91=a92; a92=tmp; } }
+        if (j == 92) { if (a92 > a93) { tmp=a92; a92=a93; a93=tmp; } }
+        if (j == 93) { if (a93 > a94) { tmp=a93; a93=a94; a94=tmp; } }
+        if (j == 94) { if (a94 > a95) { tmp=a94; a94=a95; a95=tmp; } }
+        if (j == 95) { if (a95 > a96) { tmp=a95; a95=a96; a96=tmp; } }
+        if (j == 96) { if (a96 > a97) { tmp=a96; a96=a97; a97=tmp; } }
+        if (j == 97) { if (a97 > a98) { tmp=a97; a97=a98; a98=tmp; } }
+        if (j == 98) { if (a98 > a99) { tmp=a98; a98=a99; a99=tmp; } }
+
+        j = j + 1;
+    }
+
+    i = i - 1;
+}
+
+print a0;
+print a1;
+print a2;
+print a3;
+print a4;
+print a5;
+print a6;
+print a7;
+print a8;
+print a9;
+print a10;
+print a11;
+print a12;
+print a13;
+print a14;
+print a15;
+print a16;
+print a17;
+print a18;
+print a19;
+print a20;
+print a21;
+print a22;
+print a23;
+print a24;
+print a25;
+print a26;
+print a27;
+print a28;
+print a29;
+print a30;
+print a31;
+print a32;
+print a33;
+print a34;
+print a35;
+print a36;
+print a37;
+print a38;
+print a39;
+print a40;
+print a41;
+print a42;
+print a43;
+print a44;
+print a45;
+print a46;
+print a47;
+print a48;
+print a49;
+print a50;
+print a51;
+print a52;
+print a53;
+print a54;
+print a55;
+print a56;
+print a57;
+print a58;
+print a59;
+print a60;
+print a61;
+print a62;
+print a63;
+print a64;
+print a65;
+print a66;
+print a67;
+print a68;
+print a69;
+print a70;
+print a71;
+print a72;
+print a73;
+print a74;
+print a75;
+print a76;
+print a77;
+print a78;
+print a79;
+print a80;
+print a81;
+print a82;
+print a83;
+print a84;
+print a85;
+print a86;
+print a87;
+print a88;
+print a89;
+print a90;
+print a91;
+print a92;
+print a93;
+print a94;
+print a95;
+print a96;
+print a97;
+print a98;
+print a99;

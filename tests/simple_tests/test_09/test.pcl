@@ -1,0 +1,17 @@
+i = ?;
+sum = 0;
+
+while (i > 0) {
+    j = 2;
+    while (j >= 0) {
+        k = 1;
+        while (k <= 3) {
+            sum += i * j - k;
+            k++;
+        }
+        j--;
+    }
+    i--;
+}
+
+print sum;

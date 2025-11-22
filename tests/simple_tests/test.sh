@@ -43,6 +43,7 @@ for testdir in "$script_dir"/test_*; do
     fi
 
     if ! diff -q "$output" "$expected" >/dev/null; then
+      ((failed++))
       printf "${RED}Test failed:${RESET} $testname\n"
       echo "--- Input:"
       cat "$stdin_file"
