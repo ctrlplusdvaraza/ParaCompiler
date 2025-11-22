@@ -1,6 +1,6 @@
 #!/bin/sh
 
-USAGE="Usage: $0 [--debug|--release] [--build-dir <dir>]"
+USAGE="Usage: $0 [--debug|--release]"
 
 BUILD_DIR="build"
 
@@ -26,15 +26,6 @@ while [ $# -gt 0 ]; do
         --debug)
             BUILD_TYPE=Debug
             SANITIZE=TRUE
-            ;;
-
-        --build-dir)
-            shift
-            if [ $# -eq 0 ]; then
-                echo "$USAGE"
-                exit 1
-            fi
-            BUILD_DIR="$1"
             ;;
 
         *)

@@ -30,7 +30,8 @@ flex_target(LEXER ${FLEX_SRC} ${LEXER_CODEGEN_DIR}/lexer.cpp
             DEFINES_FILE ${LEXER_CODEGEN_DIR}/lexer.hpp)
 
 bison_target(PARSER ${BISON_SRC} ${PARSER_CODEGEN_DIR}/parser.cpp
-             DEFINES_FILE ${PARSER_CODEGEN_DIR}/parser.hpp)
+             DEFINES_FILE ${PARSER_CODEGEN_DIR}/parser.hpp
+             COMPILE_FLAGS -Wcounterexamples)
 
 add_flex_bison_dependency(LEXER PARSER)
 
