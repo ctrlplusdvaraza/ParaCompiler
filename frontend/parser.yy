@@ -293,17 +293,17 @@ UNARY_OP
     | MINUS { $$ = std::make_unique<UnaryMinusNode>($1); }
     ;
 
-PREFIX_OP
-    : PLUSPLUS   { $$ = std::make_unique<PrefixIncrementNode>($1); }
-    | MINUSMINUS { $$ = std::make_unique<PrefixDecrementNode>($1); }
-    ;
-
 postfix_expression
     : IDENTIFIER POSTFIX_OP {
         AstNodePtr id = std::make_unique<IdentifierNode>($1);
         $2->children.push_back(std::move(id));
         $$ = std::move($2);
     }
+    ;
+
+POSTFIX_OP
+    : PLUSPLUS   { $$ = std::make_unique<PostfixIncrementNode>($1); }
+    | MINUSMINUS { $$ = std::make_unique<PostfixDecrementNode>($1); }
     ;
 
 prefix_expression
@@ -314,9 +314,9 @@ prefix_expression
     }
     ;
 
-POSTFIX_OP
-    : PLUSPLUS   { $$ = std::make_unique<PostfixIncrementNode>($1); }
-    | MINUSMINUS { $$ = std::make_unique<PostfixDecrementNode>($1); }
+PREFIX_OP
+    : PLUSPLUS   { $$ = std::make_unique<PrefixIncrementNode>($1); }
+    | MINUSMINUS { $$ = std::make_unique<PrefixDecrementNode>($1); }
     ;
 
 primary_expression

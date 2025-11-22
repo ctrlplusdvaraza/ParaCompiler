@@ -1,0 +1,24 @@
+n = ?;
+
+fst = 0;
+snd = 1;
+i = 0;
+
+while (i < n) {
+    tmp = fst;
+    fst = snd;
+    snd = snd + tmp;
+    i++;
+}
+
+print snd;
+
+res = 1;
+temp = ?;
+
+while (temp > 1) {
+    res = res * temp;
+    temp = temp - 1;
+}
+
+print res;
