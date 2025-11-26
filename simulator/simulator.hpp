@@ -1,9 +1,10 @@
-#include "serialization.hpp"
 #include <iostream>
 #include <limits>
 #include <stdexcept>
 #include <string>
 #include <unordered_map>
+
+#include "serialization.hpp"
 
 namespace compiler
 {
