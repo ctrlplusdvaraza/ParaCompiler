@@ -1,8 +1,5 @@
 project(frontend LANGUAGES CXX)
 
-set(LEXER_CODEGEN_DIR "${CMAKE_BINARY_DIR}/codegen/lexer")
-set(PARSER_CODEGEN_DIR "${CMAKE_BINARY_DIR}/codegen/parser")
-
 make_directory(${LEXER_CODEGEN_DIR})
 make_directory(${PARSER_CODEGEN_DIR})
 
@@ -12,12 +9,6 @@ set(BISON_SRC "${CMAKE_CURRENT_SOURCE_DIR}/parser.yy")
 find_package(FLEX REQUIRED)
 find_package(BISON REQUIRED)
 
-add_compile_options(
-    $<$<BOOL:${SANITIZE}>:-fsanitize=address,undefined>
-)
-add_link_options(
-    $<$<BOOL:${SANITIZE}>:-fsanitize=address,undefined>
-)
 
 include_directories(
 		    ${CMAKE_CURRENT_SOURCE_DIR}
@@ -40,11 +31,11 @@ add_flex_bison_dependency(LEXER PARSER)
 set(SRC_FILES
     ${FLEX_LEXER_OUTPUTS}
     ${BISON_PARSER_OUTPUTS}
-    main.cpp
     driver.cpp
 )
 
-add_executable(${PROJECT_NAME} ${SRC_FILES})
+add_library(${PROJECT_NAME}_lib ${SRC_FILES})
+add_executable(${PROJECT_NAME} ${SRC_FILES} main.cpp) 
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ast_serialization)
 

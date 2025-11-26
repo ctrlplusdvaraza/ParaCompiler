@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "frontend.hpp"
+#include "graphviz.hpp"
 #include "simulator.hpp"
 
 struct ProgramOptions
@@ -25,21 +26,29 @@ int main(int argc, char** argv)
         return 1;
     }
 
-    compiler::AstRootPtr ast_root = create_ast_from_source(options.source_filepath);
-    compiler::SimulatorState state;
-    compiler::simulate_ast(state, ast_root);
-
-    if (options.opt_graphviz)
+    try
     {
-        compiler::graphvizer::DotGraph dot_graph;
-        dot_graph.create_from_ast_tree(ast_root);
-        dot_graph.convert_to_image(options.graphviz_filepath);
+        compiler::AstRootPtr ast_root = compiler::create_ast_from_source(options.source_filepath);
+        compiler::SimulatorState state;
+        compiler::simulate_ast(state, ast_root);
+
+        if (options.graphviz)
+        {
+            compiler::graphviz::DotGraph dot_graph;
+            dot_graph.create_from_ast_tree(ast_root);
+            dot_graph.convert_to_image(options.graphviz_filepath);
+        }
+
+        if (options.ast)
+        {
+            ast_protobuf::SerializedAstRoot serialized = compiler::serialize_ast(ast_root);
+            compiler::write_ast_to_file(serialized, options.ast_filepath);
+        }
     }
-
-    if (options.opt_ast)
+    catch (const DriverException& ex)
     {
-        ast_protobuf::SerializedAstRoot serialized = compiler::serialize_ast(root);
-        compiler::write_ast_to_file(serialized, options.ast_filepath);
+        std::cerr << ex.what() << std::endl;
+        return 1;
     }
 
     return 0;
@@ -47,26 +56,25 @@ int main(int argc, char** argv)
 
 void print_usage(const char* program)
 {
-    std::cerr << "Usage: " << program << " [--graphviz[=output_file]] [--ast[=output_file]] <source_file>\n";
+    std::cerr << "Usage: " << program
+              << " [--graphviz[=output_file]] [--ast[=output_file]] <source_file>\n";
 }
 
 void initialize_ast_path_by_default(ProgramOptions& options)
 {
-    options.ast_filepath = make_ast_filepath(options.source_filepath);
+    options.ast_filepath = compiler::make_ast_filepath(options.source_filepath);
 }
 
 void initialize_graphviz_path_by_default(ProgramOptions& options)
 {
-    options.graphviz_filepath = make_graphviz_filepath(options.source_filepath);
+    options.graphviz_filepath = compiler::graphviz::make_graphviz_filepath(options.source_filepath);
 }
 
 bool parse_options(int argc, char** argv, ProgramOptions& options)
 {
-    option long_opts[] = {
-        {"graphviz", optional_argument, nullptr, 'g'},
-        {"ast",      optional_argument, nullptr, 'a'},
-        {0, 0, 0, 0}
-    };
+    option long_opts[] = {{"graphviz", optional_argument, nullptr, 'g'},
+                          {"ast", optional_argument, nullptr, 'a'},
+                          {0, 0, 0, 0}};
 
     int option;
     while ((option = getopt_long(argc, argv, "g::a::", long_opts, nullptr)) != -1)

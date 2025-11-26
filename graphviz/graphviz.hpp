@@ -1,12 +1,14 @@
 #pragma once
 
-#include "translation_unit_node.hpp"
 #include <cxxabi.h>
+#include <filesystem>
 #include <iomanip>
 #include <iostream>
 #include <string>
 #include <unordered_map>
 #include <vector>
+
+#include <ast.hpp>
 
 namespace compiler::graphviz
 {
@@ -187,6 +189,15 @@ inline std::string strip_namespace(const std::string& s)
     return (pos == std::string::npos) ? s : s.substr(pos + 2);
 }
 
+inline std::string make_graphviz_filepath(const std::string& source_filepath)
+{
+    std::filesystem::path source_filepath_obj(source_filepath);
+    std::filesystem::path ast_filepath_obj = source_filepath_obj.replace_extension(".svg");
+    std::string ast_filepath = ast_filepath_obj.string();
+
+    return ast_filepath;
+}
+
 class DotGraph
 {
   public:
@@ -201,7 +212,7 @@ class DotGraph
     static const constexpr std::string TEMP_DOT_FILEPATH = "temp.dot";
 
     void create_from_ast_tree(const compiler::AstRootPtr& root);
-    void convert_to_image(const char* image_path);
+    void convert_to_image(const std::string& image_path);
 
   private:
     DotNode create_dot_node(const compiler::AstNode* ast_node, ColorTable& node_color_table);

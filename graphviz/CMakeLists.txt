@@ -1,10 +1,9 @@
 project(graphviz LANGUAGES CXX)
 
-add_executable(graphviz 
-    ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
+set(SRC_FILE 
     ${CMAKE_CURRENT_SOURCE_DIR}/graphviz.cpp
 )
-    
+
 include_directories(
 		    ${CMAKE_CURRENT_SOURCE_DIR}
 		    ${CMAKE_SOURCE_DIR}/ast
@@ -14,4 +13,8 @@ include_directories(
             ${PARSER_CODEGEN_DIR}
 )
 
+add_executable(${PROJECT_NAME} ${SRC_FILE} main.cpp)
+add_library(${PROJECT_NAME}_lib ${SRC_FILE})
+
 target_link_libraries(${PROJECT_NAME} PRIVATE ast_serialization)
+target_link_libraries(${PROJECT_NAME}_lib PRIVATE ast_serialization)

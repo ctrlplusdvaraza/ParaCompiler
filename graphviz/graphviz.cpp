@@ -4,6 +4,7 @@
 #include <fstream>
 #include <iomanip>
 #include <sstream>
+#include <string>
 #include <vector>
 
 namespace compiler::graphviz
@@ -71,7 +72,7 @@ void DotGraph::create_from_ast_tree(const compiler::AstRootPtr& root)
     create_from_ast_tree_recursive(root.get(), node_color_table);
 }
 
-void DotGraph::convert_to_image(const char* image_path)
+void DotGraph::convert_to_image(const std::string& image_path)
 {
     std::ofstream dot_file(TEMP_DOT_FILEPATH, std::ios::binary);
     if (!dot_file)

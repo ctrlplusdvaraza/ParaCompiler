@@ -13,9 +13,9 @@ int main(int argc, char* argv[])
     try 
     {
         std::string source_filepath = argv[argc - 1];
-        std::string ast_filepath = make_ast_filepath(source_filepath);
+        std::string ast_filepath = compiler::make_ast_filepath(source_filepath);
 
-        compiler::AstRootPtr root = create_ast_from_source(source_filepath);
+        compiler::AstRootPtr root = compiler::create_ast_from_source(source_filepath);
 
         ast_protobuf::SerializedAstRoot serialized = compiler::serialize_ast(root);
         compiler::write_ast_to_file(serialized, ast_filepath);

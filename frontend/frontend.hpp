@@ -5,6 +5,9 @@
 
 #include "driver.hpp"
 
+namespace compiler
+{
+
 inline std::string make_ast_filepath(const std::string& source_filepath)
 {
     std::filesystem::path source_filepath_obj(source_filepath);
@@ -33,3 +36,5 @@ inline compiler::AstRootPtr create_ast_from_source(const std::string& source_fil
 
     return root;
 }
+
+} // namespace compiler
