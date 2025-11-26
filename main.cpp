@@ -1,5 +1,6 @@
 #include <getopt.h>
 #include <iostream>
+#include <iterator>
 #include <string>
 #include <vector>
 
@@ -29,8 +30,6 @@ int main(int argc, char** argv)
     try
     {
         compiler::AstRootPtr ast_root = compiler::create_ast_from_source(options.source_filepath);
-        compiler::SimulatorState state;
-        compiler::simulate_ast(state, ast_root);
 
         if (options.graphviz)
         {
@@ -44,8 +43,16 @@ int main(int argc, char** argv)
             ast_protobuf::SerializedAstRoot serialized = compiler::serialize_ast(ast_root);
             compiler::write_ast_to_file(serialized, options.ast_filepath);
         }
+
+        compiler::SimulatorState state;
+        compiler::simulate_ast(state, ast_root);
     }
     catch (const DriverException& ex)
+    {
+        std::cerr << ex.what() << std::endl;
+        return 1;
+    }
+    catch (const compiler::graphviz::GraphvizException& ex)
     {
         std::cerr << ex.what() << std::endl;
         return 1;

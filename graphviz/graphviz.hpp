@@ -4,6 +4,7 @@
 #include <filesystem>
 #include <iomanip>
 #include <iostream>
+#include <stdexcept>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -23,45 +24,45 @@ enum class GraphRankdir
 
 enum class NodeShape
 {
-    BOX,
-    ELLIPSE,
-    CIRCLE,
-    TRIANGLE,
-    DIAMOND,
-    STAR,
-    POLYGON,
-    TRAPEZIUM,
-    PARALLELOGRAM,
-    HEXAGON,
-    OCTAGON,
-    POINT,
-    EGG,
-    HOUSE,
-    PENTAGON,
-    NOTE,
-    TAB,
-    FOLDER,
-    BOX3D,
-    COMPONENT,
-    CYLINDER,
-    RECORD,
-    MRECORD,
+    box,
+    ellipse,
+    circle,
+    triangle,
+    diamond,
+    star,
+    polygon,
+    trapezium,
+    parallelogram,
+    hexagon,
+    octagon,
+    point,
+    egg,
+    house,
+    pentagon,
+    note,
+    tab,
+    folder,
+    box3d,
+    component,
+    cylinder,
+    record,
+    Mrecord,
 };
 
 enum class NodeStyle
 {
-    SOLID,
-    DASHED,
-    DOTTED,
-    BOLD,
-    FILLED,
-    STRIPED,
-    WEDGED,
-    RADIAL,
-    ROUNDED,
-    DIAGONALS,
-    INVISIBLE,
-    TAPERED
+    solid,
+    dashed,
+    dotted,
+    bold,
+    filled,
+    striped,
+    wedged,
+    radial,
+    rounded,
+    diagonals,
+    invisible,
+    tapered
 };
 
 struct Color
@@ -111,12 +112,30 @@ struct DotEdge
     DotEdgeAttributes attributes_;
 };
 
-inline auto escape_string(const std::string& str) { return std::quoted(str, ' '); }
-
-inline void to_lower(std::string str)
+inline auto escape_string(const std::string& str)
 {
-    std::transform(str.begin(), str.end(), str.begin(),
-                   [](unsigned char c) { return std::tolower(c); });
+    std::string result;
+    result.reserve(str.size() * 2);
+
+    for (const auto& c : str)
+    {
+        switch (c)
+        {
+            case '{':
+            case '}':
+            case '|':
+            case '\\':
+            case '<':
+            case '>':
+            case '&':
+                result.push_back('\\');
+                result.push_back(c);
+                break;
+            default:
+                result.push_back(c);
+        }
+    }
+    return result;
 }
 
 inline uint8_t get_random_byte() { return 56 + std::rand() % 200; }
@@ -161,7 +180,6 @@ template <typename T>
 std::ostream& enum_to_stream(std::ostream& stream, T val)
 {
     std::string name(get_enum_name_dynamic(val));
-    to_lower(name);
     stream << name;
     return stream;
 }
@@ -203,9 +221,9 @@ class DotGraph
   public:
     static const constexpr DotGraphAttributes DEFAULT_DOT_GRAPH_ATTRIBUTES = {
         .rankdir = GraphRankdir::TB,
-        .default_node_shape = NodeShape::MRECORD,
+        .default_node_shape = NodeShape::Mrecord,
         .default_node_color = Color{0, 0, 0},
-        .default_node_style = NodeStyle::FILLED,
+        .default_node_style = NodeStyle::filled,
         .default_edge_pen_width = 2,
         .default_edge_color = Color{0, 0, 0}};
 
@@ -225,5 +243,10 @@ class DotGraph
     std::vector<DotEdge> edges_{};
 };
 
+class GraphvizException : public std::runtime_error
+{
+  public:
+    using std::runtime_error::runtime_error;
+};
 
 } // namespace compiler::graphviz

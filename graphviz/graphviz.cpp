@@ -12,7 +12,15 @@ namespace compiler::graphviz
 
 std::ostream& operator<<(std::ostream& stream, const Color color)
 {
-    return stream << std::hex << color.r << color.g << color.b << std::dec;
+    std::ios_base::fmtflags original_flags = stream.flags();
+
+    stream << std::hex << std::setfill('0');
+
+    stream << std::setw(2) << +color.r << std::setw(2) << +color.g << std::setw(2) << +color.b;
+
+    stream.flags(original_flags);
+
+    return stream;
 }
 
 std::ostream& operator<<(std::ostream& stream, NodeStyle style)
@@ -74,7 +82,7 @@ void DotGraph::create_from_ast_tree(const compiler::AstRootPtr& root)
 
 void DotGraph::convert_to_image(const std::string& image_path)
 {
-    std::ofstream dot_file(TEMP_DOT_FILEPATH, std::ios::binary);
+    std::ofstream dot_file(TEMP_DOT_FILEPATH, std::ios::out);
     if (!dot_file)
     {
         std::cerr << "failed to create dot_file ifstream\n";
@@ -104,7 +112,7 @@ void DotGraph::convert_to_image(const std::string& image_path)
     auto result = std::system(image_gen_command.c_str());
 
     if (result != 0)
-        throw std::runtime_error("dot image generation failed");
+        throw GraphvizException("dot image generation failed");
 
     std::remove(TEMP_DOT_FILEPATH.c_str());
 }
