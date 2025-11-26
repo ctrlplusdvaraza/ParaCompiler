@@ -1,10 +1,9 @@
 project(graphvizer LANGUAGES CXX)
 
-set(SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/source")
 add_executable(graphvizer 
     ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
-    ${SOURCE_DIR}/dot_common.cpp
-    ${SOURCE_DIR}/dot_io.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/dot_common.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/dot_io.cpp
 )
     
 include_directories(

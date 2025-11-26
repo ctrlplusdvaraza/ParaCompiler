@@ -10,5 +10,5 @@ option(SANITIZE "Enable compiler sanitizers" OFF)
 add_subdirectory(protobuf)
 add_subdirectory(frontend)
 add_subdirectory(simulator)
-add_subdirectory(graphvizer)
+add_subdirectory(graphviz)
 
