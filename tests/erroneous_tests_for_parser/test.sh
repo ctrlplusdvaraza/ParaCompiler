@@ -35,7 +35,7 @@ for file in "$folder"/*.pcl; do
 done
 
 if [ $n_falled -eq 0 ]; then
-    printf "${GREEN}All $n_all tests in${RESET} $folder ${GREEN}passed${RESET}\n"
+    printf "${GREEN}All $n_all tests passed${RESET}\n"
 else 
-    printf "${RED}$n_falled/$n_all tests in${RESET} $folder ${RED}falled${RESET}\n"
+    printf "${RED}$n_falled/$n_all tests falled${RESET}\n"
 fi

@@ -50,7 +50,7 @@ cmake --build .
 ./build/graphvizer/graphvizer <ast_file> <img_file>
 ```
 
-Тестирование:
+ ## Тестирование (Linux)
 ```sh
 ./tests/run_tests.sh ./run.sh
 ```
