@@ -111,7 +111,8 @@ statement_list
     : %empty { $$ = std::make_unique<AstRoot>(); }
     | statement_list statement {
          AstRootPtr node = std::move($1);
-         node->children.push_back(std::move($2));
+         if ($2) 
+            node->children.push_back(std::move($2));
          $$ = std::move(node);
     }
     ;
@@ -169,6 +170,7 @@ compound_statement
 
 expression_statement
     : expression SEMICOLON { $$ = std::move($1); }
+    | SEMICOLON { $$ = nullptr; }
     ;
 
 expression
@@ -229,14 +231,6 @@ assignment_expression
         $2->children.push_back(std::move(identifier));
         $2->children.push_back(std::move($3));
         $$ = std::move($2);
-    }
-    | IDENTIFIER ASSIGN INPUT {
-      AstNodePtr input_node = std::make_unique<InputNode>($3);
-        AstNodePtr identifier_node = std::make_unique<IdentifierNode>($1);
-        AstNodePtr assign_node = std::make_unique<AssignmentNode>($2);
-        assign_node->children.push_back(std::move(identifier_node));
-        assign_node->children.push_back(std::move(input_node));
-        $$ = std::move(assign_node);
     }
     ;
 
@@ -323,6 +317,7 @@ primary_expression
     : IDENTIFIER { $$ = std::make_unique<IdentifierNode>($1); }
     | LITERAL    { $$ = std::make_unique<LiteralNode>($1);    }
     | L_ROUND_BR expression R_ROUND_BR { $$ = std::move($2); }
+    | INPUT { $$ = std::make_unique<InputNode>($1); }
     ;
 %%
 

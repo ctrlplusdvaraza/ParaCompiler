@@ -1,0 +1,4 @@
+i = 2 + (j = 1 + (k = ?));
+print k;
+print j;
+print i;
