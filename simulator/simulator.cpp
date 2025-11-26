@@ -53,73 +53,6 @@ bool execute_stmt(SimulatorState& state, const AstNodePtr& node)
     if (!node)
         return true;
 
-    if (node->is_node_type<AssignmentNode>())
-    {
-        const auto& children = node->children;
-        if (children.size() != 2)
-            throw std::runtime_error("Assignment node requires 2 children");
-
-        const auto& lhs = children[0];
-        if (!lhs->is_node_type<IdentifierNode>())
-            throw std::runtime_error("Left side of assignment must be identifier");
-
-        auto value = evaluate_expr(state, children[1]);
-        state.set_var(lhs->get_string_lexeme(), value);
-        return true;
-    }
-
-    if (node->is_node_type<AddAssignmentNode>())
-    {
-        const auto& children = node->children;
-        const auto& lhs = children[0];
-        auto& var = state.get_var_ref(lhs->get_string_lexeme());
-        var += evaluate_expr(state, children[1]);
-        return true;
-    }
-
-    if (node->is_node_type<SubAssignmentNode>())
-    {
-        const auto& children = node->children;
-        const auto& lhs = children[0];
-        auto& var = state.get_var_ref(lhs->get_string_lexeme());
-        var -= evaluate_expr(state, children[1]);
-        return true;
-    }
-
-    if (node->is_node_type<MulAssignmentNode>())
-    {
-        const auto& children = node->children;
-        const auto& lhs = children[0];
-        auto& var = state.get_var_ref(lhs->get_string_lexeme());
-        var *= evaluate_expr(state, children[1]);
-        return true;
-    }
-
-    if (node->is_node_type<DivAssignmentNode>())
-    {
-        const auto& children = node->children;
-        const auto& lhs = children[0];
-        auto& var = state.get_var_ref(lhs->get_string_lexeme());
-        auto divisor = evaluate_expr(state, children[1]);
-        if (divisor == 0)
-            throw std::runtime_error("Division by zero");
-        var /= divisor;
-        return true;
-    }
-
-    if (node->is_node_type<ModAssignmentNode>())
-    {
-        const auto& children = node->children;
-        const auto& lhs = children[0];
-        auto& var = state.get_var_ref(lhs->get_string_lexeme());
-        auto divisor = evaluate_expr(state, children[1]);
-        if (divisor == 0)
-            throw std::runtime_error("Modulo by zero");
-        var %= divisor;
-        return true;
-    }
-
-    // Control flow
     if (node->is_node_type<IfNode>())
     {
         const auto& children = node->children;
@@ -330,6 +263,75 @@ SimulatorState::ValueType evaluate_expr(SimulatorState& state, const AstNodePtr&
         }
 
         return value;
+    }
+
+    // assignments
+    
+    if (node->is_node_type<AssignmentNode>())
+    {
+        const auto& children = node->children;
+        if (children.size() != 2)
+            throw std::runtime_error("Assignment node requires 2 children");
+
+        const auto& lhs = children[0];
+        if (!lhs->is_node_type<IdentifierNode>())
+            throw std::runtime_error("Left side of assignment must be identifier");
+
+        auto value = evaluate_expr(state, children[1]);
+        state.set_var(lhs->get_string_lexeme(), value);
+        
+        return evaluate_expr(state, lhs);
+    }
+
+    if (node->is_node_type<AddAssignmentNode>())
+    {
+        const auto& children = node->children;
+        const auto& lhs = children[0];
+        auto& var = state.get_var_ref(lhs->get_string_lexeme());
+        var += evaluate_expr(state, children[1]);
+        return evaluate_expr(state, lhs);
+    }
+
+    if (node->is_node_type<SubAssignmentNode>())
+    {
+        const auto& children = node->children;
+       const auto& lhs = children[0];
+        auto& var = state.get_var_ref(lhs->get_string_lexeme());
+        var -= evaluate_expr(state, children[1]);
+        return evaluate_expr(state, lhs);
+    }
+
+    if (node->is_node_type<MulAssignmentNode>())
+    {
+        const auto& children = node->children;
+        const auto& lhs = children[0];
+        auto& var = state.get_var_ref(lhs->get_string_lexeme());
+        var *= evaluate_expr(state, children[1]);
+        return evaluate_expr(state, lhs);
+    }
+
+    if (node->is_node_type<DivAssignmentNode>())
+    {
+        const auto& children = node->children;
+        const auto& lhs = children[0];
+        auto& var = state.get_var_ref(lhs->get_string_lexeme());
+        auto divisor = evaluate_expr(state, children[1]);
+        if (divisor == 0)
+            throw std::runtime_error("Division by zero");
+        var /= divisor;
+        return evaluate_expr(state, lhs);
+    }
+
+    if (node->is_node_type<ModAssignmentNode>())
+    {
+        const auto& children = node->children;
+        const auto& lhs = children[0];
+        auto& var = state.get_var_ref(lhs->get_string_lexeme());
+        auto divisor = evaluate_expr(state, children[1]);
+        if (divisor == 0)
+            throw std::runtime_error("Modulo by zero");
+        var %= divisor;
+        return evaluate_expr(state, lhs);
     }
 
     throw std::runtime_error("Unknown node type in expression evaluation");
