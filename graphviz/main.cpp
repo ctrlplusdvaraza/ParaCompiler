@@ -1,8 +1,8 @@
 #include <string>
 
 #include "ast.hpp"
-#include "dot_graph.hpp"
 #include "serialization.hpp"
+#include "graphviz.hpp"
 
 int main(int argc, char** argv)
 {
@@ -21,9 +21,9 @@ int main(int argc, char** argv)
     try
     {
         ast_protobuf::SerializedAstRoot serialized_ast = compiler::read_ast_from_file(argv[1]);
-        compiler::AstRootPtr                  ast_root = compiler::deserialize_ast(serialized_ast);
+        compiler::AstRootPtr ast_root = compiler::deserialize_ast(serialized_ast);
 
-        compiler::graphvizer::DotGraph dot_graph;
+        compiler::graphviz::DotGraph dot_graph;
         dot_graph.create_from_ast_tree(ast_root);
         dot_graph.convert_to_image(argv[2]);
     }
