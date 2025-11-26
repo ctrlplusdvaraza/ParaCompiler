@@ -1,6 +1,6 @@
 #pragma once
 
-#include <memory>
+#include <stdexcept>
 #include <string>
 
 #include "ast.hpp"
@@ -8,7 +8,7 @@
 
 class Driver
 {
-public:
+  public:
     compiler::AstRootPtr ast_root;
     yy::location location;
 
@@ -16,9 +16,15 @@ public:
 
     compiler::AstRootPtr get_ast_root() { return std::move(ast_root); }
 
-    int parse_file(const std::string& file_path);
+    void parse_file(const std::string& file_path);
 
-private:
-    int input_file_initialize(const std::string& file_path);
+  private:
+    void input_file_initialize(const std::string& file_path);
     void input_file_close();
+};
+
+class DriverException : public std::runtime_error
+{
+  public:
+    using std::runtime_error::runtime_error;
 };

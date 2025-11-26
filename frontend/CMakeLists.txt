@@ -20,11 +20,12 @@ add_link_options(
 )
 
 include_directories(
-		    ${CMAKE_SOURCE_DIR}/include
 		    ${CMAKE_CURRENT_SOURCE_DIR}
+		    ${CMAKE_SOURCE_DIR}/ast
+		    ${CMAKE_SOURCE_DIR}/protobuf
 		    ${CMAKE_BINARY_DIR}/protobuf
-                    ${LEXER_CODEGEN_DIR}
-                    ${PARSER_CODEGEN_DIR})
+            ${LEXER_CODEGEN_DIR}
+            ${PARSER_CODEGEN_DIR})
 
 flex_target(LEXER ${FLEX_SRC} ${LEXER_CODEGEN_DIR}/lexer.cpp
             DEFINES_FILE ${LEXER_CODEGEN_DIR}/lexer.hpp)
@@ -44,5 +45,5 @@ set(SRC_FILES
 
 add_executable(${PROJECT_NAME} ${SRC_FILES})
 
-target_link_libraries(${PROJECT_NAME} PUBLIC ast_serialization)
+target_link_libraries(${PROJECT_NAME} PRIVATE ast_serialization)
 

@@ -6,11 +6,14 @@ add_executable(graphvizer
     ${SOURCE_DIR}/dot_common.cpp
     ${SOURCE_DIR}/dot_io.cpp
 )
-
-target_include_directories(${PROJECT_NAME} 
-    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
-    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../include
-    PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/../protobuf
+    
+include_directories(
+		    ${CMAKE_CURRENT_SOURCE_DIR}
+		    ${CMAKE_SOURCE_DIR}/ast
+		    ${CMAKE_SOURCE_DIR}/protobuf
+		    ${CMAKE_BINARY_DIR}/protobuf
+            ${LEXER_CODEGEN_DIR}
+            ${PARSER_CODEGEN_DIR}
 )
 
-target_link_libraries(${PROJECT_NAME} PUBLIC ast_serialization)
+target_link_libraries(${PROJECT_NAME} PRIVATE ast_serialization)

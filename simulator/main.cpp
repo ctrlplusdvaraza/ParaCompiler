@@ -1,4 +1,4 @@
-#include "simulator.cpp"
+#include "simulator.hpp"
 
 int main(int argc, char** argv)
 {

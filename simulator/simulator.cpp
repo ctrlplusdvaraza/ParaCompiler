@@ -1,50 +1,41 @@
-#include "ast.hpp"
-#include "serialization.hpp"
 #include <iostream>
 #include <limits>
 #include <stdexcept>
 #include <string>
 #include <unordered_map>
 
+#include "ast.hpp"
+#include "serialization.hpp"
+#include "simulator.hpp"
+
 namespace compiler
 {
 
-class SimulatorState
+void SimulatorState::set_var(const std::string& name, ValueType val) { state_vals_[name] = val; }
+
+SimulatorState::ValueType SimulatorState::get_var(const std::string& name) const
 {
-  public:
-    using ValueType = int64_t;
-
-    SimulatorState() = default;
-
-    void set_var(const std::string& name, ValueType val) { state_vals_[name] = val; }
-
-    ValueType get_var(const std::string& name) const
+    auto it = state_vals_.find(name);
+    if (it == state_vals_.end())
     {
-        auto it = state_vals_.find(name);
-        if (it == state_vals_.end())
-        {
-            throw std::runtime_error("Undefined variable: " + name);
-        }
-        return it->second;
+        throw std::runtime_error("Undefined variable: " + name);
     }
+    return it->second;
+}
 
-    bool has_var(const std::string& name) const
+bool SimulatorState::has_var(const std::string& name) const
+{
+    return state_vals_.find(name) != state_vals_.end();
+}
+
+SimulatorState::ValueType& SimulatorState::get_var_ref(const std::string& name)
+{
+    if (!has_var(name))
     {
-        return state_vals_.find(name) != state_vals_.end();
+        state_vals_[name] = 0;
     }
-
-    ValueType& get_var_ref(const std::string& name)
-    {
-        if (!has_var(name))
-        {
-            state_vals_[name] = 0;
-        }
-        return state_vals_[name];
-    }
-
-  private:
-    std::unordered_map<std::string, ValueType> state_vals_;
-};
+    return state_vals_[name];
+}
 
 SimulatorState::ValueType evaluate_expr(SimulatorState& state, const AstNodePtr& node);
 
@@ -266,7 +257,7 @@ SimulatorState::ValueType evaluate_expr(SimulatorState& state, const AstNodePtr&
     }
 
     // assignments
-    
+
     if (node->is_node_type<AssignmentNode>())
     {
         const auto& children = node->children;
@@ -279,7 +270,7 @@ SimulatorState::ValueType evaluate_expr(SimulatorState& state, const AstNodePtr&
 
         auto value = evaluate_expr(state, children[1]);
         state.set_var(lhs->get_string_lexeme(), value);
-        
+
         return evaluate_expr(state, lhs);
     }
 
@@ -295,7 +286,7 @@ SimulatorState::ValueType evaluate_expr(SimulatorState& state, const AstNodePtr&
     if (node->is_node_type<SubAssignmentNode>())
     {
         const auto& children = node->children;
-       const auto& lhs = children[0];
+        const auto& lhs = children[0];
         auto& var = state.get_var_ref(lhs->get_string_lexeme());
         var -= evaluate_expr(state, children[1]);
         return evaluate_expr(state, lhs);
@@ -346,4 +337,3 @@ void simulate_ast(SimulatorState& state, const AstRootPtr& root)
 }
 
 } // namespace compiler
-

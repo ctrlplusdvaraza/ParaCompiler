@@ -10,8 +10,8 @@ add_library(ast_serialization
 )
 
 include_directories(ast_serialization
-${CMAKE_SOURCE_DIR}/include
-${CMAKE_CURRENT_BINARY_DIR}/.
+    ${CMAKE_SOURCE_DIR}/ast
+    ${CMAKE_CURRENT_BINARY_DIR}/.
 )
 
 protobuf_generate(
