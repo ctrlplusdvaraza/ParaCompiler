@@ -28,29 +28,28 @@ cmake --build .
 
 ## Запуск (Linux)
 
-### Вариант 1 - используя скрипт:
 ```sh 
-./run.sh <file_name> [--graphviz] 
+./build/paracl [--graphviz[=output_file]] [--ast[=output_file]] <source_file>
 ```
 
-### Вариант 2 - вручную:
+### Запуск отдельных модулей компилятора (Linux):
 
-Создание AST дерева исходного кода:
+Фронтенд (построение AST-дерева):
 ```sh
 ./build/frontend/frontend <file_name>
 ```
 
-Запуск эмулятора языка:
+Симулятор (исполнение программы на ParaCL):
 ```sh
 ./build/simulator/simulator <ast_file>
 ```
 
-Генерация SVG представления AST дерева:
+Визуализатор AST (генерация SVG-графа):
 ```sh
-./build/graphvizer/graphvizer <ast_file> <img_file>
+./build/graphviz/graphviz <ast_file> <img_file>
 ```
 
  ## Тестирование (Linux)
 ```sh
-./tests/run_tests.sh ./run.sh
+./tests/run_tests.sh ./build/paracl
 ```

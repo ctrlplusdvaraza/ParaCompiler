@@ -25,7 +25,8 @@ include_directories(
 		    ${CMAKE_SOURCE_DIR}/protobuf
 		    ${CMAKE_BINARY_DIR}/protobuf
             ${LEXER_CODEGEN_DIR}
-            ${PARSER_CODEGEN_DIR})
+            ${PARSER_CODEGEN_DIR}
+)
 
 flex_target(LEXER ${FLEX_SRC} ${LEXER_CODEGEN_DIR}/lexer.cpp
             DEFINES_FILE ${LEXER_CODEGEN_DIR}/lexer.hpp)
