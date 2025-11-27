@@ -25,6 +25,12 @@ class SimulatorState
     std::unordered_map<std::string, ValueType> state_vals_;
 };
 
+class SimulatorException : public std::runtime_error
+{
+  public:
+    using std::runtime_error::runtime_error;
+};
+
 void simulate_ast(SimulatorState& state, const AstRootPtr& root);
 
 } // namespace compiler

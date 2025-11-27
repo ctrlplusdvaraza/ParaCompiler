@@ -18,7 +18,7 @@ SimulatorState::ValueType SimulatorState::get_var(const std::string& name) const
     auto it = state_vals_.find(name);
     if (it == state_vals_.end())
     {
-        throw std::runtime_error("Undefined variable: " + name);
+        throw SimulatorException("Undefined variable: " + name);
     }
     return it->second;
 }
@@ -104,7 +104,7 @@ SimulatorState::ValueType evaluate_expr(SimulatorState& state, const AstNodePtr&
 {
     if (!node)
     {
-        throw std::runtime_error("Null node in expression evaluation");
+        throw SimulatorException("Null node in expression evaluation");
     }
 
     if (node->is_node_type<LiteralNode>())
@@ -136,7 +136,7 @@ SimulatorState::ValueType evaluate_expr(SimulatorState& state, const AstNodePtr&
     {
         auto divisor = evaluate_expr(state, node->children[1]);
         if (divisor == 0)
-            throw std::runtime_error("Division by zero");
+            throw SimulatorException("Division by zero");
         return evaluate_expr(state, node->children[0]) / divisor;
     }
 
@@ -144,7 +144,7 @@ SimulatorState::ValueType evaluate_expr(SimulatorState& state, const AstNodePtr&
     {
         auto divisor = evaluate_expr(state, node->children[1]);
         if (divisor == 0)
-            throw std::runtime_error("Modulo by zero");
+            throw SimulatorException("Modulo by zero");
         return evaluate_expr(state, node->children[0]) % divisor;
     }
 
@@ -250,7 +250,7 @@ SimulatorState::ValueType evaluate_expr(SimulatorState& state, const AstNodePtr&
 
         if (std::cin.fail())
         {
-            throw std::runtime_error("Invalid input");
+            throw SimulatorException("Invalid input");
         }
 
         return value;
@@ -262,11 +262,11 @@ SimulatorState::ValueType evaluate_expr(SimulatorState& state, const AstNodePtr&
     {
         const auto& children = node->children;
         if (children.size() != 2)
-            throw std::runtime_error("Assignment node requires 2 children");
+            throw SimulatorException("Assignment node requires 2 children");
 
         const auto& lhs = children[0];
         if (!lhs->is_node_type<IdentifierNode>())
-            throw std::runtime_error("Left side of assignment must be identifier");
+            throw SimulatorException("Left side of assignment must be identifier");
 
         auto value = evaluate_expr(state, children[1]);
         state.set_var(lhs->get_string_lexeme(), value);
@@ -308,7 +308,7 @@ SimulatorState::ValueType evaluate_expr(SimulatorState& state, const AstNodePtr&
         auto& var = state.get_var_ref(lhs->get_string_lexeme());
         auto divisor = evaluate_expr(state, children[1]);
         if (divisor == 0)
-            throw std::runtime_error("Division by zero");
+            throw SimulatorException("Division by zero");
         var /= divisor;
         return evaluate_expr(state, lhs);
     }
@@ -320,12 +320,12 @@ SimulatorState::ValueType evaluate_expr(SimulatorState& state, const AstNodePtr&
         auto& var = state.get_var_ref(lhs->get_string_lexeme());
         auto divisor = evaluate_expr(state, children[1]);
         if (divisor == 0)
-            throw std::runtime_error("Modulo by zero");
+            throw SimulatorException("Modulo by zero");
         var %= divisor;
         return evaluate_expr(state, lhs);
     }
 
-    throw std::runtime_error("Unknown node type in expression evaluation");
+    throw SimulatorException("Unknown node type in expression evaluation");
 }
 
 void simulate_ast(SimulatorState& state, const AstRootPtr& root)
