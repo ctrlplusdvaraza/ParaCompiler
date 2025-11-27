@@ -13,8 +13,8 @@ include_directories(
             ${PARSER_CODEGEN_DIR}
 )
 
-add_executable(${PROJECT_NAME} ${SRC_FILE} main.cpp)
 add_library(${PROJECT_NAME}_lib ${SRC_FILE})
+add_executable(${PROJECT_NAME} main.cpp)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE ast_serialization)
 target_link_libraries(${PROJECT_NAME}_lib PRIVATE ast_serialization)
+target_link_libraries(${PROJECT_NAME} PRIVATE ast_serialization ${PROJECT_NAME}_lib)

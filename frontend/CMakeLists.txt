@@ -35,7 +35,8 @@ set(SRC_FILES
 )
 
 add_library(${PROJECT_NAME}_lib ${SRC_FILES})
-add_executable(${PROJECT_NAME} ${SRC_FILES} main.cpp) 
+add_executable(${PROJECT_NAME} main.cpp) 
 
-target_link_libraries(${PROJECT_NAME} PRIVATE ast_serialization)
+target_link_libraries(${PROJECT_NAME}_lib PRIVATE ast_serialization)
+target_link_libraries(${PROJECT_NAME} PRIVATE ast_serialization ${PROJECT_NAME}_lib)
 
