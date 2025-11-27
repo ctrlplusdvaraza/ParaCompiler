@@ -7,6 +7,9 @@
 
 extern FILE* yyin;
 
+namespace compiler
+{
+
 void Driver::parse_file(const std::string& file_path)
 {
     input_file_initialize(file_path);
@@ -37,3 +40,5 @@ void Driver::input_file_initialize(const std::string& file_path)
 }
 
 void Driver::input_file_close() { fclose(yyin); }
+
+} // namespace compiler

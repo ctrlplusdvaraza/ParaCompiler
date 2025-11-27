@@ -20,14 +20,14 @@ int main(int argc, char* argv[])
         ast_protobuf::SerializedAstRoot serialized = compiler::serialize_ast(root);
         compiler::write_ast_to_file(serialized, ast_filepath);
     }
-    catch (const DriverException& ex)
+    catch (const compiler::DriverException& ex)
     {
         std::cerr << ex.what() << std::endl;
         return 1;
     }
-    catch (...)
+    catch (const compiler::ProtobufException& ex)
     {
-        std::cerr << "Unhandled exception" << std::endl;
+        std::cerr << ex.what() << std::endl;
         return 1;
     }
     

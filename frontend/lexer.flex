@@ -9,7 +9,7 @@
     #include "driver.hpp"
     #include "parser.hpp"
 
-    #define YY_DECL yy::parser::symbol_type yylex(Driver& driver)
+    #define YY_DECL yy::parser::symbol_type yylex(compiler::Driver& driver)
     YY_DECL;
 
     #define YY_USER_ACTION location.columns(yyleng);

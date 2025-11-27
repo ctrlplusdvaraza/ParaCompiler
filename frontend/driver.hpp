@@ -6,6 +6,9 @@
 #include "ast.hpp"
 #include "location.hh"
 
+namespace compiler
+{
+
 class Driver
 {
   public:
@@ -28,3 +31,5 @@ class DriverException : public std::runtime_error
   public:
     using std::runtime_error::runtime_error;
 };
+
+} // namespace compiler

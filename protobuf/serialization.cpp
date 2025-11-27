@@ -1,9 +1,10 @@
+#include <fstream>
+#include <memory>
+
+#include "serialization.hpp"
 #include "ast.hpp"
 #include "ast.pb.h"
 #include "nodes.pb.h"
-#include <fstream>
-#include <memory>
-#include <stdexcept>
 
 namespace compiler
 {
@@ -76,12 +77,12 @@ ast_protobuf::SerializedAstRoot read_ast_from_file(const std::string filepath)
     std::ifstream in(filepath, std::ios::binary);
     if (!in)
     {
-        throw std::runtime_error("Failed to open file for reading: " + filepath);
+        throw ProtobufException("Failed to open file for reading: " + filepath);
     }
 
     if (!root.ParseFromIstream(&in))
     {
-        throw std::runtime_error("Failed to parse SerializedAstRoot from file: " + filepath);
+        throw ProtobufException("Failed to parse SerializedAstRoot from file: " + filepath);
     }
 
     return root;
@@ -92,12 +93,12 @@ void write_ast_to_file(const ast_protobuf::SerializedAstRoot& root, const std::s
     std::ofstream out(filepath, std::ios::binary);
     if (!out)
     {
-        throw std::runtime_error("Failed to open file for writing: " + filepath);
+        throw ProtobufException("Failed to open file for writing: " + filepath);
     }
 
     if (!root.SerializeToOstream(&out))
     {
-        throw std::runtime_error("Failed to write SerializedAstRoot to file: " + filepath);
+        throw ProtobufException("Failed to write SerializedAstRoot to file: " + filepath);
     }
 }
 
@@ -440,7 +441,7 @@ static AstNodePtr make_node_from_oneof(const ast_protobuf::SerializedAstNode& ms
                 return std::make_unique<NotNode>(std::string(node.lexeme()));
             }
         default:
-            throw std::runtime_error("SerializedAstNode has no node set");
+            throw ProtobufException("SerializedAstNode has no node set");
     }
 }
 

@@ -12,6 +12,7 @@ struct ProgramOptions
 {
     bool graphviz = false;
     bool ast = false;
+    bool simulation = true;
     std::string ast_filepath;
     std::string graphviz_filepath;
     std::string source_filepath;
@@ -44,15 +45,23 @@ int main(int argc, char** argv)
             compiler::write_ast_to_file(serialized, options.ast_filepath);
         }
 
-        compiler::SimulatorState state;
-        compiler::simulate_ast(state, ast_root);
+        if (options.simulation)
+        {
+            compiler::SimulatorState state;
+            compiler::simulate_ast(state, ast_root);
+        }
     }
-    catch (const DriverException& ex)
+    catch (const compiler::DriverException& ex)
     {
         std::cerr << ex.what() << std::endl;
         return 1;
     }
     catch (const compiler::graphviz::GraphvizException& ex)
+    {
+        std::cerr << ex.what() << std::endl;
+        return 1;
+    }
+    catch (const compiler::ProtobufException& ex)
     {
         std::cerr << ex.what() << std::endl;
         return 1;
@@ -68,8 +77,9 @@ int main(int argc, char** argv)
 
 void print_usage(const char* program)
 {
-    std::cerr << "Usage: " << program
-              << " [--graphviz[=output_file]] [--ast[=output_file]] <source_file>\n";
+    std::cerr
+        << "Usage: " << program
+        << " [--graphviz[=output_file]] [--ast[=output_file]] [--no-simulation] <source_file>\n";
 }
 
 void initialize_ast_path_by_default(ProgramOptions& options)
@@ -86,10 +96,11 @@ bool parse_options(int argc, char** argv, ProgramOptions& options)
 {
     option long_opts[] = {{"graphviz", optional_argument, nullptr, 'g'},
                           {"ast", optional_argument, nullptr, 'a'},
+                          {"no-simulation", no_argument, nullptr, 'n'},
                           {0, 0, 0, 0}};
 
     int option;
-    while ((option = getopt_long(argc, argv, "g::a::", long_opts, nullptr)) != -1)
+    while ((option = getopt_long(argc, argv, "g::a::n", long_opts, nullptr)) != -1)
     {
         switch (option)
         {
@@ -106,6 +117,9 @@ bool parse_options(int argc, char** argv, ProgramOptions& options)
                 {
                     options.ast_filepath = optarg;
                 }
+                break;
+            case 'n':
+                options.simulation = false;
                 break;
             default:
                 print_usage(argv[0]);

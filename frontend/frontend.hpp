@@ -30,7 +30,7 @@ inline compiler::AstRootPtr create_ast_from_source(const std::string& source_fil
     std::string source_filename = get_filename_from_path(source_filepath);
 
     Driver driver;
-    driver.parse_file(source_filename);
+    driver.parse_file(source_filepath);
     compiler::AstRootPtr root = driver.get_ast_root();
     root->set_file_name(source_filename);
 

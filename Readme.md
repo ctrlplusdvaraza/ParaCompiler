@@ -29,8 +29,10 @@ cmake --build .
 ## Запуск (Linux)
 
 ```sh 
-./build/paracl [--graphviz[=output_file]] [--ast[=output_file]] <source_file>
+./build/paracl [--graphviz[=output_file]] [--ast[=output_file]] [--no-simulation] <source_file>
 ```
+
+Если выходной файл для опций --graphviz (-g) и --ast (-a) не указан, то используется файл по умолчанию.
 
 ### Запуск отдельных модулей компилятора (Linux):
 
