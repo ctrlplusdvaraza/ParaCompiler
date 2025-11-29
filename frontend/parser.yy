@@ -14,6 +14,7 @@
     #include "driver.hpp"
 
     using namespace compiler; 
+    using namespace compiler::frontend; 
 }
 
 // inserting into parser.cpp
@@ -230,7 +231,7 @@ CMP_OPERATORS
 assignment_expression
     : logical_or_expression { $$ = std::move($1); }
     | IDENTIFIER primary_assignment assignment_expression {
-        if (!driver.names_environment.find_varible_in_top_scope($1)) {
+        if (!driver.names_environment.find_variable($1)) {
             driver.names_environment.put_variable($1);
         }
         AstNodePtr identifier = std::make_unique<IdentifierNode>($1);
@@ -295,7 +296,7 @@ UNARY_OP
 
 postfix_expression
     : IDENTIFIER POSTFIX_OP {
-        NameTableVariable *variable = driver.names_environment.get_variable($1);
+        Variable *variable = driver.names_environment.get_variable($1);
         if (variable == nullptr) {
             error(@1, "error: `" + $1 + "` was not declared in this scope");
             YYERROR;
@@ -313,7 +314,7 @@ POSTFIX_OP
 
 prefix_expression
     : PREFIX_OP IDENTIFIER {
-        NameTableVariable *variable = driver.names_environment.get_variable($2);
+        Variable *variable = driver.names_environment.get_variable($2);
         if (variable == nullptr) {
             error(@2, "error: `" + $2 + "` was not declared in this scope");
             YYERROR;
@@ -331,7 +332,7 @@ PREFIX_OP
 
 primary_expression
     : IDENTIFIER { 
-        NameTableVariable *variable = driver.names_environment.get_variable($1);
+        Variable *variable = driver.names_environment.get_variable($1);
         if (variable == nullptr) {
             error(@1, "error: `" + $1 + "` was not declared in this scope");
             YYERROR;
