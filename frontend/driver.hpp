@@ -5,7 +5,7 @@
 
 #include "ast.hpp"
 #include "location.hh"
-
+#include "nametable.hpp"
 namespace compiler
 {
 
@@ -14,6 +14,7 @@ class Driver
   public:
     compiler::AstRootPtr ast_root;
     yy::location location;
+    compiler::NamesEnviroment names_environment;
 
     Driver() = default;
 

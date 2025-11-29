@@ -159,11 +159,14 @@ while_statement
     ;
 
 compound_statement
-    : L_CURLY_BR statement_list R_CURLY_BR {
+    : L_CURLY_BR { driver.names_environment.push_scope(); }
+      statement_list R_CURLY_BR {
         AstNodePtr scope = std::make_unique<ScopeNode>($1);
-        for (AstNodePtr& child : $2->children) {
+        for (AstNodePtr& child : $3->children) {
             scope->children.push_back(std::move(child));
         }
+
+        driver.names_environment.pop_scope();
         $$ = std::move(scope);
     }
     ;
@@ -227,6 +230,9 @@ CMP_OPERATORS
 assignment_expression
     : logical_or_expression { $$ = std::move($1); }
     | IDENTIFIER primary_assignment assignment_expression {
+        if (!driver.names_environment.find_varible_in_top_scope($1)) {
+            driver.names_environment.put_variable($1);
+        }
         AstNodePtr identifier = std::make_unique<IdentifierNode>($1);
         $2->children.push_back(std::move(identifier));
         $2->children.push_back(std::move($3));
@@ -289,7 +295,12 @@ UNARY_OP
 
 postfix_expression
     : IDENTIFIER POSTFIX_OP {
-        AstNodePtr id = std::make_unique<IdentifierNode>($1);
+        NameTableVariable *variable = driver.names_environment.get_variable($1);
+        if (variable == nullptr) {
+            error(@1, "error: `" + $1 + "` was not declared in this scope");
+            YYERROR;
+        }
+        AstNodePtr id = std::make_unique<IdentifierNode>(variable->name);
         $2->children.push_back(std::move(id));
         $$ = std::move($2);
     }
@@ -302,7 +313,12 @@ POSTFIX_OP
 
 prefix_expression
     : PREFIX_OP IDENTIFIER {
-        AstNodePtr id = std::make_unique<IdentifierNode>($2);
+        NameTableVariable *variable = driver.names_environment.get_variable($2);
+        if (variable == nullptr) {
+            error(@2, "error: `" + $2 + "` was not declared in this scope");
+            YYERROR;
+        }
+        AstNodePtr id = std::make_unique<IdentifierNode>(variable->name);
         $1->children.push_back(std::move(id));
         $$ = std::move($1);
     }
@@ -314,7 +330,14 @@ PREFIX_OP
     ;
 
 primary_expression
-    : IDENTIFIER { $$ = std::make_unique<IdentifierNode>($1); }
+    : IDENTIFIER { 
+        NameTableVariable *variable = driver.names_environment.get_variable($1);
+        if (variable == nullptr) {
+            error(@1, "error: `" + $1 + "` was not declared in this scope");
+            YYERROR;
+        }
+        $$ = std::make_unique<IdentifierNode>($1); 
+    }
     | LITERAL    { $$ = std::make_unique<LiteralNode>($1);    }
     | L_ROUND_BR expression R_ROUND_BR { $$ = std::move($2); }
     | INPUT { $$ = std::make_unique<InputNode>($1); }
