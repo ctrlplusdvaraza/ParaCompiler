@@ -26,7 +26,8 @@ for testdir in "$script_dir"/test_*; do
 
   testname=$(basename "$testdir")
 
-  pcl="$testdir/test.pcl"
+  rel_testdir="${testdir#$PWD/}"
+  pcl="$rel_testdir/test.pcl"
 
   for stdin_file in "$testdir"/stdin_*.txt; do
     expected="${stdin_file/stdin_/expected_stdout_}"
@@ -37,7 +38,11 @@ for testdir in "$script_dir"/test_*; do
     status=$?
 
     if [ $status -ne 0 ]; then
-      printf "${RED}Runtime error in${RESET} $testname\n"
+      ((failed++))
+      printf "${RED}Runtime error in\n${RESET}$pcl\n"
+      echo "-----------------------------------------------------------"
+      cat "$pcl"
+      echo "-----------------------------------------------------------"
       rm "$output"
       continue
     fi
