@@ -16,14 +16,14 @@ struct NameTableVariable {
 class NameTable {
     std::unordered_map<std::string, std::unique_ptr<NameTableVariable>> data_;
   public:
-    int add_record(const std::string &varible_name) {
-        if (data_.find(varible_name) != data_.end()) { return -1; }
+    void add_record(const std::string &varible_name) {
+        if (data_.find(varible_name) != data_.end()) return;
+    
         NameTableVariable *raw_varible = new NameTableVariable(varible_name);
-        if (raw_varible == nullptr) { return -1; }
+        if (raw_varible == nullptr) throw std::bad_alloc();
     
         std::unique_ptr<NameTableVariable> variable = std::unique_ptr<NameTableVariable>(raw_varible);
-        data_[variable->name] = std::move(variable);
-        return 0;    
+        data_[variable->name] = std::move(variable);    
     }
 
     NameTableVariable *find_record(const std::string &varible_name) const {
@@ -46,13 +46,9 @@ class NamesEnviroment
         scopes_chain_.push_back(NameTable()); // global scope
     }
 
-    int put_variable(const std::string &name) {
+    void put_variable(const std::string &name) {
         assert(!scopes_chain_.empty());
-
-        if (find_varible_in_top_scope(name)) return -1; // name is already in scope 
-        if (scopes_chain_.back().add_record(name) != 0) return -1; // NameTableVariable allocation failed
-
-        return 0;
+        scopes_chain_.back().add_record(name); 
     }
 
     bool find_varible_in_top_scope(const std::string &name) const {
@@ -72,10 +68,9 @@ class NamesEnviroment
     
     void push_scope() { scopes_chain_.push_back(NameTable()); }
 
-    int pop_scope() {
-        if (scopes_chain_.empty()) return -1;
+    void pop_scope() {
+        assert(!scopes_chain_.empty());
         scopes_chain_.pop_back();
-        return 0;
     }
 
     void dump() const {

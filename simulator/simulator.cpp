@@ -11,33 +11,40 @@
 namespace compiler
 {
 
-void SimulatorState::set_var(const std::string& name, ValueType val) { state_vals_[name] = val; }
+ void SimulatorState::set_var(const std::string& name, const SimulatorNameTableVar::ValueType val) {
+    assert(!scopes_chain_.empty());
+    scopes_chain_.back().add_record(name, val); 
+}
 
-SimulatorState::ValueType SimulatorState::get_var(const std::string& name) const
-{
-    auto it = state_vals_.find(name);
-    if (it == state_vals_.end())
-    {
-        throw SimulatorException("Undefined variable: " + name);
+SimulatorNameTableVar::ValueType SimulatorState::get_var(const std::string &name) const {
+    SimulatorNameTableVar *result = nullptr;
+
+    for (auto it = scopes_chain_.rbegin(); it != scopes_chain_.rend(); it++) {
+        result = it->find_record(name);
+        if (result != nullptr) break;
     }
-    return it->second;
+
+    return result->value;
 }
 
 bool SimulatorState::has_var(const std::string& name) const
 {
-    return state_vals_.find(name) != state_vals_.end();
+    return (scopes_chain_.back().find_record(name) != nullptr);
 }
 
-SimulatorState::ValueType& SimulatorState::get_var_ref(const std::string& name)
+SimulatorNameTableVar::ValueType& SimulatorState::get_var_ref(const std::string& name)
 {
-    if (!has_var(name))
-    {
-        state_vals_[name] = 0;
+    SimulatorNameTableVar *result = nullptr;
+
+    for (auto it = scopes_chain_.rbegin(); it != scopes_chain_.rend(); it++) {
+        result = it->find_record(name);
+        if (result != nullptr) break;
     }
-    return state_vals_[name];
+
+    return result->value;
 }
 
-SimulatorState::ValueType evaluate_expr(SimulatorState& state, const AstNodePtr& node);
+SimulatorNameTableVar::ValueType evaluate_expr(SimulatorState& state, const AstNodePtr& node);
 
 bool execute_stmt(SimulatorState& state, const AstNodePtr& node)
 {
@@ -100,7 +107,7 @@ bool execute_stmt(SimulatorState& state, const AstNodePtr& node)
     return true;
 }
 
-SimulatorState::ValueType evaluate_expr(SimulatorState& state, const AstNodePtr& node)
+SimulatorNameTableVar::ValueType evaluate_expr(SimulatorState& state, const AstNodePtr& node)
 {
     if (!node)
     {
@@ -245,7 +252,7 @@ SimulatorState::ValueType evaluate_expr(SimulatorState& state, const AstNodePtr&
 
     if (node->is_node_type<InputNode>())
     {
-        SimulatorState::ValueType value;
+        SimulatorNameTableVar::ValueType value;
         std::cin >> value;
 
         if (std::cin.fail())
