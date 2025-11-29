@@ -11,37 +11,47 @@
 namespace compiler
 {
 
- void SimulatorState::set_var(const std::string& name, const SimulatorNameTableVar::ValueType val) {
-    assert(!scopes_chain_.empty());
-    scopes_chain_.back().add_record(name, val); 
-}
-
-SimulatorNameTableVar::ValueType SimulatorState::get_var(const std::string &name) const {
+SimulatorNameTableVar *SimulatorState::get_table_var_ptr(const std::string &name) const {
     SimulatorNameTableVar *result = nullptr;
-
     for (auto it = scopes_chain_.rbegin(); it != scopes_chain_.rend(); it++) {
         result = it->find_record(name);
         if (result != nullptr) break;
     }
 
-    return result->value;
+    return result;
+}
+
+void SimulatorState::set_var(const std::string& name, const SimulatorNameTableVar::ValueType val) {
+    assert(!scopes_chain_.empty());
+
+    if (!has_var(name)) { 
+        scopes_chain_.back().add_record(name, val); 
+        return;
+    }
+    else {get_var_ref(name) = val; }
+}
+
+SimulatorNameTableVar::ValueType SimulatorState::get_var(const std::string &name) const {
+    assert(has_var(name));
+    return get_table_var_ptr(name)->value;
 }
 
 bool SimulatorState::has_var(const std::string& name) const
 {
-    return (scopes_chain_.back().find_record(name) != nullptr);
+    return (get_table_var_ptr(name) != nullptr);
+}
+
+void SimulatorState::push_scope() { scopes_chain_.push_back(SimulatorNameTable()); }
+
+void SimulatorState::pop_scope() {
+    assert(!scopes_chain_.empty());
+    scopes_chain_.pop_back();
 }
 
 SimulatorNameTableVar::ValueType& SimulatorState::get_var_ref(const std::string& name)
 {
-    SimulatorNameTableVar *result = nullptr;
-
-    for (auto it = scopes_chain_.rbegin(); it != scopes_chain_.rend(); it++) {
-        result = it->find_record(name);
-        if (result != nullptr) break;
-    }
-
-    return result->value;
+    assert(has_var(name));
+    return get_table_var_ptr(name)->value;
 }
 
 SimulatorNameTableVar::ValueType evaluate_expr(SimulatorState& state, const AstNodePtr& node);
@@ -261,6 +271,16 @@ SimulatorNameTableVar::ValueType evaluate_expr(SimulatorState& state, const AstN
         }
 
         return value;
+    }
+
+    if (node->is_node_type<ScopeNode>()) {
+        state.push_scope();
+        for (const auto &stmt : node->children) {
+            execute_stmt(state, stmt);
+        }
+        state.pop_scope();
+
+        return true;
     }
 
     // assignments

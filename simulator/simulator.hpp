@@ -56,8 +56,13 @@ class SimulatorState
     SimulatorNameTableVar::ValueType get_var(const std::string &name) const;
     SimulatorNameTableVar::ValueType& get_var_ref(const std::string& name);
 
+    void push_scope();
+    void pop_scope();
+
   private:
     std::vector<SimulatorNameTable> scopes_chain_;
+
+    SimulatorNameTableVar *get_table_var_ptr(const std::string &name) const;
 };
 
 class SimulatorException : public std::runtime_error
