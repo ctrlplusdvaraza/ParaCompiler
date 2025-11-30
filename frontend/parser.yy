@@ -37,7 +37,14 @@
         scope->children.push_back(std::move(stmt));
         return scope;
     }
+
+    #define REPORT_UNDECLARED_VARIABLE(loc, name)                           \
+    do {                                                                    \
+        error(loc, "error: " + name + " was not declared in this scope");   \
+        YYERROR;                                                            \
+    } while (0)                                                         
 }
+
 
 %param { Driver& driver }
 
@@ -231,7 +238,7 @@ CMP_OPERATORS
 assignment_expression
     : logical_or_expression { $$ = std::move($1); }
     | IDENTIFIER primary_assignment assignment_expression {
-        if (!driver.names_environment.find_variable($1)) {
+        if (!driver.names_environment.find_variable($1)) { // merged declare/usage semantic
             driver.names_environment.put_variable($1);
         }
         AstNodePtr identifier = std::make_unique<IdentifierNode>($1);
@@ -296,12 +303,10 @@ UNARY_OP
 
 postfix_expression
     : IDENTIFIER POSTFIX_OP {
-        Variable *variable = driver.names_environment.get_variable($1);
-        if (variable == nullptr) {
-            error(@1, "error: `" + $1 + "` was not declared in this scope");
-            YYERROR;
-        }
-        AstNodePtr id = std::make_unique<IdentifierNode>(variable->name);
+        if (!driver.names_environment.check_variable_usage_semantic($1)) {
+            REPORT_UNDECLARED_VARIABLE(@1, $1);
+        }  
+        AstNodePtr id = std::make_unique<IdentifierNode>($1);
         $2->children.push_back(std::move(id));
         $$ = std::move($2);
     }
@@ -314,12 +319,10 @@ POSTFIX_OP
 
 prefix_expression
     : PREFIX_OP IDENTIFIER {
-        Variable *variable = driver.names_environment.get_variable($2);
-        if (variable == nullptr) {
-            error(@2, "error: `" + $2 + "` was not declared in this scope");
-            YYERROR;
-        }
-        AstNodePtr id = std::make_unique<IdentifierNode>(variable->name);
+        if (!driver.names_environment.check_variable_usage_semantic($2)) {
+            REPORT_UNDECLARED_VARIABLE(@2, $2);
+        }  
+        AstNodePtr id = std::make_unique<IdentifierNode>($2);
         $1->children.push_back(std::move(id));
         $$ = std::move($1);
     }
@@ -332,10 +335,8 @@ PREFIX_OP
 
 primary_expression
     : IDENTIFIER { 
-        Variable *variable = driver.names_environment.get_variable($1);
-        if (variable == nullptr) {
-            error(@1, "error: `" + $1 + "` was not declared in this scope");
-            YYERROR;
+        if (!driver.names_environment.check_variable_usage_semantic($1)) {
+            REPORT_UNDECLARED_VARIABLE(@1, $1);
         }
         $$ = std::make_unique<IdentifierNode>($1); 
     }

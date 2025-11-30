@@ -4,41 +4,28 @@
 #include <unordered_map>
 
 #include "ast.hpp"
+#include "nametable_record.hpp"
 
 namespace compiler::frontend
 {
 
-struct Variable
-{
-    const std::string name;
-
-    Variable(const std::string& n) : name(std::move(n)) {}
-};
-
 class NameTable
 {
   public:
-    using VariableName = std::string;
-    using VariablePtr = std::unique_ptr<Variable>;
-
-  public:
-    void add_record(const std::string& varible_name)
+    void add_record(const RecordNameType& record_name)
     {
-        if (data_.find(varible_name) != data_.end())
+        if (data_.find(record_name) != data_.end())
         {
             return;
         }
 
-        data_[varible_name] = std::make_unique<Variable>(varible_name);
+        data_[record_name] = std::make_unique<NameTableVariable>(record_name);
     }
 
-    Variable* find_record(const std::string& varible_name) const
+    const AbstractNameTableRecord *get_record(const RecordNameType& record_name) const
     {
-        if (data_.find(varible_name) == data_.end())
-        {
-            return nullptr;
-        }
-        return data_.find(varible_name)->second.get();
+        if (data_.find(record_name) == data_.end()) return nullptr;
+        return data_.find(record_name)->second.get();
     }
 
     void dump() const
@@ -50,7 +37,7 @@ class NameTable
     }
 
   private:
-    std::unordered_map<VariableName, VariablePtr> data_;
+    std::unordered_map<RecordNameType, RecordPtr> data_;
 };
 
 class NamesEnviroment
@@ -61,36 +48,31 @@ class NamesEnviroment
         scopes_chain_.push_back(NameTable()); // global scope
     }
 
-    void put_variable(const std::string& name)
-    {
-        assert(!scopes_chain_.empty());
-        scopes_chain_.back().add_record(name);
-    }
-
-    Variable* get_variable(const std::string& name) const
-    {
-        Variable* result = nullptr;
-
-        for (auto it = scopes_chain_.rbegin(); it != scopes_chain_.rend(); ++it)
-        {
-            result = it->find_record(name);
-            if (result != nullptr)
-            {
-                break;
-            }
-        }
-
-        return result;
-    }
-
-    bool find_variable(const std::string& name) { return (get_variable(name) != nullptr); }
-
     void push_scope() { scopes_chain_.push_back(NameTable()); }
-
     void pop_scope()
     {
         assert(!scopes_chain_.empty());
         scopes_chain_.pop_back();
+    }
+
+    void put_variable(const RecordNameType& name)
+    {
+        assert(!scopes_chain_.empty());
+        scopes_chain_.back().add_record(name);
+    }
+    // put_function, put_class etc...
+    
+    bool find_variable(const RecordNameType& name) {
+        const AbstractNameTableRecord *result = get_record_from_chain(name);
+        if (result == nullptr) return false;
+        if (!result->is_node_type<NameTableVariable>()) return false;
+
+        return true;
+    }
+    // find_function, find_class etc...
+    
+    bool check_variable_usage_semantic(const RecordNameType& name) {
+        return find_variable(name);
     }
 
     void dump() const
@@ -104,9 +86,26 @@ class NamesEnviroment
         }
         std::cout << "============================\n";
     }
-
+  
   private:
     std::vector<NameTable> scopes_chain_;
+
+    const AbstractNameTableRecord* get_record_from_chain(const RecordNameType& name) const
+    {
+        const AbstractNameTableRecord* result = nullptr;
+
+        for (auto it = scopes_chain_.rbegin(); it != scopes_chain_.rend(); ++it)
+        {
+            result = it->get_record(name);
+            if (result != nullptr)
+            {
+                break;
+            }
+        }
+
+        return result;
+    }
+
 };
 
 }; // namespace compiler::frontend
