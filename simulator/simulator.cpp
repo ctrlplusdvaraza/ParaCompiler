@@ -11,33 +11,50 @@
 namespace compiler
 {
 
-void SimulatorState::set_var(const std::string& name, ValueType val) { state_vals_[name] = val; }
-
-SimulatorState::ValueType SimulatorState::get_var(const std::string& name) const
-{
-    auto it = state_vals_.find(name);
-    if (it == state_vals_.end())
-    {
-        throw SimulatorException("Undefined variable: " + name);
+SimulatorNameTableVar *SimulatorState::get_table_var_ptr(const std::string &name) const {
+    SimulatorNameTableVar *result = nullptr;
+    for (auto it = scopes_chain_.rbegin(); it != scopes_chain_.rend(); it++) {
+        result = it->find_record(name);
+        if (result != nullptr) break;
     }
-    return it->second;
+
+    return result;
+}
+
+void SimulatorState::set_var(const std::string& name, const SimulatorNameTableVar::ValueType val) {
+    assert(!scopes_chain_.empty());
+
+    if (!has_var(name)) { 
+        scopes_chain_.back().add_record(name, val); 
+        return;
+    }
+    else {get_var_ref(name) = val; }
+}
+
+SimulatorNameTableVar::ValueType SimulatorState::get_var(const std::string &name) const {
+    assert(has_var(name));
+    return get_table_var_ptr(name)->value;
 }
 
 bool SimulatorState::has_var(const std::string& name) const
 {
-    return state_vals_.find(name) != state_vals_.end();
+    return (get_table_var_ptr(name) != nullptr);
 }
 
-SimulatorState::ValueType& SimulatorState::get_var_ref(const std::string& name)
+void SimulatorState::push_scope() { scopes_chain_.push_back(SimulatorNameTable()); }
+
+void SimulatorState::pop_scope() {
+    assert(!scopes_chain_.empty());
+    scopes_chain_.pop_back();
+}
+
+SimulatorNameTableVar::ValueType& SimulatorState::get_var_ref(const std::string& name)
 {
-    if (!has_var(name))
-    {
-        state_vals_[name] = 0;
-    }
-    return state_vals_[name];
+    assert(has_var(name));
+    return get_table_var_ptr(name)->value;
 }
 
-SimulatorState::ValueType evaluate_expr(SimulatorState& state, const AstNodePtr& node);
+SimulatorNameTableVar::ValueType evaluate_expr(SimulatorState& state, const AstNodePtr& node);
 
 bool execute_stmt(SimulatorState& state, const AstNodePtr& node)
 {
@@ -100,7 +117,7 @@ bool execute_stmt(SimulatorState& state, const AstNodePtr& node)
     return true;
 }
 
-SimulatorState::ValueType evaluate_expr(SimulatorState& state, const AstNodePtr& node)
+SimulatorNameTableVar::ValueType evaluate_expr(SimulatorState& state, const AstNodePtr& node)
 {
     if (!node)
     {
@@ -245,7 +262,7 @@ SimulatorState::ValueType evaluate_expr(SimulatorState& state, const AstNodePtr&
 
     if (node->is_node_type<InputNode>())
     {
-        SimulatorState::ValueType value;
+        SimulatorNameTableVar::ValueType value;
         std::cin >> value;
 
         if (std::cin.fail())
@@ -254,6 +271,16 @@ SimulatorState::ValueType evaluate_expr(SimulatorState& state, const AstNodePtr&
         }
 
         return value;
+    }
+
+    if (node->is_node_type<ScopeNode>()) {
+        state.push_scope();
+        for (const auto &stmt : node->children) {
+            execute_stmt(state, stmt);
+        }
+        state.pop_scope();
+
+        return true;
     }
 
     // assignments

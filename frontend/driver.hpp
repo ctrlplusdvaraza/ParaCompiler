@@ -5,6 +5,7 @@
 
 #include "ast.hpp"
 #include "location.hh"
+#include "nametable.hpp"
 
 namespace compiler
 {
@@ -12,12 +13,13 @@ namespace compiler
 class Driver
 {
   public:
-    compiler::AstRootPtr ast_root;
+    AstRootPtr ast_root;
     yy::location location;
+    frontend::NamesEnviroment names_environment;
 
     Driver() = default;
 
-    compiler::AstRootPtr get_ast_root() { return std::move(ast_root); }
+    AstRootPtr get_ast_root() { return std::move(ast_root); }
 
     void parse_file(const std::string& file_path);
 

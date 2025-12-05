@@ -21,10 +21,13 @@ n_all=0
 n_falled=0
 for file in "$folder"/*.pcl; do
   if [ -f "$file" ]; then
-    "$program" "$file" > /dev/null 2>&1
+
+    output="$("$program" "$file" 2>&1)"
     status=$?
+
     ((n_all++))
-    if [ $status -eq 0 ]; then
+
+    if [ $status -eq 0 ] || ! grep -q "Error during parsing" <<< "$output"; then
       ((n_falled++))
       printf "${RED}Test should not have been compiled${RESET}\n$file\n"
       echo "-----------------------------------------------------------"

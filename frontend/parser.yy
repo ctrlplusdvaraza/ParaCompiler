@@ -14,6 +14,7 @@
     #include "driver.hpp"
 
     using namespace compiler; 
+    using namespace compiler::frontend; 
 }
 
 // inserting into parser.cpp
@@ -36,7 +37,14 @@
         scope->children.push_back(std::move(stmt));
         return scope;
     }
+
+    #define REPORT_UNDECLARED_VARIABLE(loc, name)                           \
+    do {                                                                    \
+        error(loc, "error: " + name + " was not declared in this scope");   \
+        YYERROR;                                                            \
+    } while (0)                                                         
 }
+
 
 %param { Driver& driver }
 
@@ -159,11 +167,14 @@ while_statement
     ;
 
 compound_statement
-    : L_CURLY_BR statement_list R_CURLY_BR {
+    : L_CURLY_BR { driver.names_environment.push_scope(); }
+      statement_list R_CURLY_BR {
         AstNodePtr scope = std::make_unique<ScopeNode>($1);
-        for (AstNodePtr& child : $2->children) {
+        for (AstNodePtr& child : $3->children) {
             scope->children.push_back(std::move(child));
         }
+
+        driver.names_environment.pop_scope();
         $$ = std::move(scope);
     }
     ;
@@ -227,6 +238,9 @@ CMP_OPERATORS
 assignment_expression
     : logical_or_expression { $$ = std::move($1); }
     | IDENTIFIER primary_assignment assignment_expression {
+        if (!driver.names_environment.find_variable($1)) { // merged declare/usage semantic
+            driver.names_environment.put_variable($1);
+        }
         AstNodePtr identifier = std::make_unique<IdentifierNode>($1);
         $2->children.push_back(std::move(identifier));
         $2->children.push_back(std::move($3));
@@ -289,6 +303,9 @@ UNARY_OP
 
 postfix_expression
     : IDENTIFIER POSTFIX_OP {
+        if (!driver.names_environment.check_variable_usage_semantic($1)) {
+            REPORT_UNDECLARED_VARIABLE(@1, $1);
+        }  
         AstNodePtr id = std::make_unique<IdentifierNode>($1);
         $2->children.push_back(std::move(id));
         $$ = std::move($2);
@@ -302,6 +319,9 @@ POSTFIX_OP
 
 prefix_expression
     : PREFIX_OP IDENTIFIER {
+        if (!driver.names_environment.check_variable_usage_semantic($2)) {
+            REPORT_UNDECLARED_VARIABLE(@2, $2);
+        }  
         AstNodePtr id = std::make_unique<IdentifierNode>($2);
         $1->children.push_back(std::move(id));
         $$ = std::move($1);
@@ -314,7 +334,12 @@ PREFIX_OP
     ;
 
 primary_expression
-    : IDENTIFIER { $$ = std::make_unique<IdentifierNode>($1); }
+    : IDENTIFIER { 
+        if (!driver.names_environment.check_variable_usage_semantic($1)) {
+            REPORT_UNDECLARED_VARIABLE(@1, $1);
+        }
+        $$ = std::make_unique<IdentifierNode>($1); 
+    }
     | LITERAL    { $$ = std::make_unique<LiteralNode>($1);    }
     | L_ROUND_BR expression R_ROUND_BR { $$ = std::move($2); }
     | INPUT { $$ = std::make_unique<InputNode>($1); }
