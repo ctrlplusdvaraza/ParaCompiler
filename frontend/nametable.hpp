@@ -105,7 +105,6 @@ class NamesEnviroment
 
         return result;
     }
-
 };
 
 }; // namespace compiler::frontend
