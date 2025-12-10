@@ -1,7 +1,6 @@
 project(serializer LANGUAGES CXX)
 
-find_package(Protobuf REQUIRED)  
-find_package(absl CONFIG REQUIRED)
+find_package(Protobuf REQUIRED)
 
 add_library(ast_serialization
     ${CMAKE_CURRENT_SOURCE_DIR}/ast.proto
@@ -18,8 +17,5 @@ protobuf_generate(
     TARGET ast_serialization
 )
 
-target_link_libraries(ast_serialization PUBLIC protobuf::libprotobuf 
-    absl::log_internal_check_op
-    absl::check
-    absl::log)
+target_link_libraries(ast_serialization PUBLIC protobuf::libprotobuf)
 
