@@ -1,55 +1,40 @@
+cmake_minimum_required(VERSION 3.20)
 project(serializer LANGUAGES CXX)
+
+add_library(ast_serialization
+  ${CMAKE_CURRENT_SOURCE_DIR}/serialization.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/ast.proto
+  ${CMAKE_CURRENT_SOURCE_DIR}/nodes.proto
+)
 
 find_package(Protobuf REQUIRED)
 
-find_package(absl QUIET)
+if(DEFINED Protobuf_PROTOC_EXECUTABLE AND NOT EXISTS "${Protobuf_PROTOC_EXECUTABLE}")
+  message(FATAL_ERROR "Protobuf_PROTOC_EXECUTABLE is set but does not exist: ${Protobuf_PROTOC_EXECUTABLE}")
+endif()
 
-add_library(ast_serialization
-    ${CMAKE_CURRENT_SOURCE_DIR}/ast.proto
-    ${CMAKE_CURRENT_SOURCE_DIR}/nodes.proto
-    ${CMAKE_CURRENT_SOURCE_DIR}/serialization.cpp
+set(PROTO_GEN_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated")
+
+file(MAKE_DIRECTORY "${PROTO_GEN_DIR}")
+
+target_include_directories(ast_serialization
+  PUBLIC
+    ${CMAKE_SOURCE_DIR}/ast
+    ${PROTO_GEN_DIR}
 )
 
-include_directories(ast_serialization
-    ${CMAKE_SOURCE_DIR}/ast
-    ${CMAKE_CURRENT_BINARY_DIR}/.
+target_link_libraries(ast_serialization
+  PUBLIC
+    protobuf::libprotobuf
 )
 
 protobuf_generate(
-    TARGET ast_serialization
+  TARGET ast_serialization
+  LANGUAGE cpp
+  PROTOC_OUT_DIR "${PROTO_GEN_DIR}"
+  IMPORT_DIRS "${CMAKE_CURRENT_SOURCE_DIR}"
+  PROTOS
+    "${CMAKE_CURRENT_SOURCE_DIR}/ast.proto"
+    "${CMAKE_CURRENT_SOURCE_DIR}/nodes.proto"
 )
-
-target_link_libraries(ast_serialization PUBLIC protobuf::libprotobuf)
-
-if(absl_FOUND)
-    set(ABSL_TARGETS
-        absl::log_internal_check_op
-        absl::log_internal_message
-        absl::status
-        absl::statusor
-        absl::strings
-        absl::cord
-        absl::absl_check
-        absl::absl_log
-    )
-    
-    foreach(ABSL_TARGET ${ABSL_TARGETS})
-        if(TARGET ${ABSL_TARGET})
-            target_link_libraries(ast_serialization PUBLIC ${ABSL_TARGET})
-        endif()
-    endforeach()
-elseif(TARGET absl::abseil)
-    # Older abseil versions might use a single target
-    target_link_libraries(ast_serialization PUBLIC absl::abseil)
-endif()
-
-if(NOT absl_FOUND AND NOT TARGET absl::abseil)
-    find_library(ABSL_BASE_LIB absl_base)
-    if(ABSL_BASE_LIB)
-        find_path(ABSL_INCLUDE_DIR absl/base/config.h)
-        if(ABSL_INCLUDE_DIR)
-            target_include_directories(ast_serialization PUBLIC ${ABSL_INCLUDE_DIR})
-        endif()
-    endif()
-endif()
 
