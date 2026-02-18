@@ -92,7 +92,7 @@
 %nterm <AstRootPtr> translation_unit
 %nterm <AstRootPtr> statement_list
 
-%nterm <AstNodePtr> statement
+%nterm <AstNodePtr> statement matched_statement unmatched_statement
 %nterm <AstNodePtr> expression_statement
 %nterm <AstNodePtr> expression
 %nterm <AstNodePtr> assignment_expression
@@ -104,8 +104,8 @@
 %nterm <AstNodePtr> logical_or_expression logical_and_expression logical_not_expression
 %nterm <AstNodePtr> cmp_expression CMP_OPERATORS
 %nterm <AstNodePtr> compound_statement
-%nterm <AstNodePtr> if_statement
-%nterm <AstNodePtr> while_statement
+%nterm <AstNodePtr> if_statement_matched if_statement_unmatched
+%nterm <AstNodePtr> while_statement_matched while_statement_unmatched
 %nterm <AstNodePtr> print_statement
 
 %%
@@ -125,12 +125,22 @@ statement_list
     }
     ;
 
-statement 
+statement
+    : matched_statement   { $$ = std::move($1); }
+    | unmatched_statement { $$ = std::move($1); }
+    ;
+
+matched_statement
     : print_statement      { $$ = std::move($1); }
     | expression_statement { $$ = std::move($1); }
     | compound_statement   { $$ = std::move($1); }
-    | if_statement         { $$ = std::move($1); }
-    | while_statement      { $$ = std::move($1); }
+    | while_statement_matched        { $$ = std::move($1); }
+    | if_statement_matched { $$ = std::move($1); }
+    ;
+
+unmatched_statement
+    : while_statement_unmatched        { $$ = std::move($1); }
+    | if_statement_unmatched { $$ = std::move($1); }
     ;
 
 print_statement
@@ -141,14 +151,8 @@ print_statement
     }
     ;
 
-if_statement
-    : IF L_ROUND_BR expression R_ROUND_BR statement {
-        AstNodePtr node = std::make_unique<IfNode>($1);
-        node->children.push_back(std::move($3));
-        node->children.push_back(WrapInScope(std::move($5)));
-        $$ = std::move(node);
-    }
-    | IF L_ROUND_BR expression R_ROUND_BR statement ELSE statement {
+if_statement_matched
+    : IF L_ROUND_BR expression R_ROUND_BR matched_statement ELSE matched_statement {
         AstNodePtr node = std::make_unique<IfNode>($1);
         node->children.push_back(std::move($3));
         node->children.push_back(WrapInScope(std::move($5)));
@@ -157,8 +161,33 @@ if_statement
     }
     ;
 
-while_statement
-    : WHILE L_ROUND_BR expression R_ROUND_BR statement {
+if_statement_unmatched
+    : IF L_ROUND_BR expression R_ROUND_BR statement {
+        AstNodePtr node = std::make_unique<IfNode>($1);
+        node->children.push_back(std::move($3));
+        node->children.push_back(WrapInScope(std::move($5)));
+        $$ = std::move(node);
+    }
+    | IF L_ROUND_BR expression R_ROUND_BR matched_statement ELSE unmatched_statement {
+        AstNodePtr node = std::make_unique<IfNode>($1);
+        node->children.push_back(std::move($3));
+        node->children.push_back(WrapInScope(std::move($5)));
+        node->children.push_back(WrapInScope(std::move($7)));
+        $$ = std::move(node);
+    }
+    ;
+
+while_statement_matched
+    : WHILE L_ROUND_BR expression R_ROUND_BR matched_statement {
+        AstNodePtr node = std::make_unique<WhileNode>($1);
+        node->children.push_back(std::move($3));
+        node->children.push_back(WrapInScope(std::move($5)));
+        $$ = std::move(node);
+    }
+    ;
+
+while_statement_unmatched
+    : WHILE L_ROUND_BR expression R_ROUND_BR unmatched_statement {
         AstNodePtr node = std::make_unique<WhileNode>($1);
         node->children.push_back(std::move($3));
         node->children.push_back(WrapInScope(std::move($5)));
